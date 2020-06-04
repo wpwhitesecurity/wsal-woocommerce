@@ -170,6 +170,7 @@ function wsal_woocommerce_extension_mu_plugin_add_custom_sensors_and_events_dirs
 function wsal_woocommerce_extension_mu_plugin_custom_sensors_path( $paths = array() ) {
 	$paths   = ( is_array( $paths ) ) ? $paths : array();
 	$paths[] = trailingslashit( trailingslashit( dirname( __FILE__ ) ) . 'wp-security-audit-log' . DIRECTORY_SEPARATOR . 'custom-sensors' );
+	error_log( print_r( $paths, true ) );
 	return $paths;
 }
 
