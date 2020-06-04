@@ -198,7 +198,10 @@ function wsal_woocommerce_extension_mu_plugin_add_custom_events_path( $paths ) {
  */
 function wsal_woocommerce_extension_add_custom_event_objects( $objects ) {
 	$new_objects = array(
-		'wpforms' => esc_html__( 'WooCommerce', 'wp-security-audit-log' ),
+		'woocommerce-product'  => __( 'WooCommerce Product', 'wp-security-audit-log' ),
+		'woocommerce-store'    => __( 'WooCommerce Store', 'wp-security-audit-log' ),
+		'woocommerce-coupon'   => __( 'WooCommerce Coupon', 'wp-security-audit-log' ),
+		'woocommerce-category' => __( 'WooCommerce Category', 'wp-security-audit-log' ),
 	);
 
 	// combine the two arrays.
@@ -217,7 +220,12 @@ function wsal_woocommerce_extension_add_custom_event_objects( $objects ) {
  */
 function wsal_woocommerce_extension_add_custom_ignored_cpt( $post_types ) {
 	$new_post_types = array(
-		'wpforms',    // WP Forms CPT.
+		'product',             // WooCommerce Product CPT.
+		'shop_coupon',         // WooCommerse Coupon CPT.
+		'shop_order',          // WooCommerce Order CPT.
+		'shop_order_refund',   // WooCommerce Order Refund CPT.
+		'product_variation',   // WooCommerce Product Variation CPT.
+		'wc_product_tab',      // WooCommerce Product Tab CPT.
 	);
 
 	// combine the two arrays.
