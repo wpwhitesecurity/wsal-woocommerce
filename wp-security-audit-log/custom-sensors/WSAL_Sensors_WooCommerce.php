@@ -346,8 +346,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			return;
 		}
 
-		error_log( print_r( 'FF', true ) );
-
 		if ( 'product' === $old_post->post_type ) {
 			$editor_link = $this->GetEditorLink( $new_post );
 			if ( 'publish' === $new_post->post_status ) {

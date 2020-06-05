@@ -145,6 +145,7 @@ add_action( 'wp_ajax_wsal_woocommerce_extension_dismiss_notice', 'wsal_woocommer
 * Hook into WSAL's action that runs before sensors get loaded.
 */
 add_action( 'wsal_before_sensor_load', 'wsal_woocommerce_extension_mu_plugin_add_custom_sensors_and_events_dirs' );
+add_action( 'init', 'wsal_woocommerce_extension_mu_plugin_add_custom_sensors_and_events_dirs' );
 
 /**
  * Used to hook into the `wsal_before_sensor_load` action to add some filters
@@ -154,7 +155,7 @@ add_action( 'wsal_before_sensor_load', 'wsal_woocommerce_extension_mu_plugin_add
  */
 function wsal_woocommerce_extension_mu_plugin_add_custom_sensors_and_events_dirs( $sensor ) {
 	add_filter( 'wsal_custom_sensors_classes_dirs', 'wsal_woocommerce_extension_mu_plugin_custom_sensors_path' );
-	add_filter( 'wsal_custom_alerts_dirs', 'wsal_woocommerce_extension_mu_plugin_add_custom_events_path' );
+	add_filter( 'wsal_custom_alerts_dirs', 'wsal_woocommerce_extension_mu_plugin_add_custom_events_path', 3 );
 	return $sensor;
 }
 
@@ -170,7 +171,6 @@ function wsal_woocommerce_extension_mu_plugin_add_custom_sensors_and_events_dirs
 function wsal_woocommerce_extension_mu_plugin_custom_sensors_path( $paths = array() ) {
 	$paths   = ( is_array( $paths ) ) ? $paths : array();
 	$paths[] = trailingslashit( trailingslashit( dirname( __FILE__ ) ) . 'wp-security-audit-log' . DIRECTORY_SEPARATOR . 'custom-sensors' );
-	error_log( print_r( $paths, true ) );
 	return $paths;
 }
 
@@ -185,7 +185,7 @@ function wsal_woocommerce_extension_mu_plugin_custom_sensors_path( $paths = arra
  */
 function wsal_woocommerce_extension_mu_plugin_add_custom_events_path( $paths ) {
 	$paths   = ( is_array( $paths ) ) ? $paths : array();
-	$paths[] = trailingslashit( trailingslashit( dirname( __FILE__ ) ) . 'wp-security-audit-log' );
+	$paths[] = trailingslashit( dirname( __FILE__ ) ) . 'wp-security-audit-log';
 	return $paths;
 }
 
@@ -258,17 +258,22 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $name ) {
  * @method wsal_woocommerce_extension_add_custom_meta_format_value
  * @since  1.0.0
  */
-function wsal_woocommerce_extension_add_custom_meta_format_value( $value, $name ) {
-	$check_value = (string) $value;
-	if ( '%EditorLinkForm%' === $name ) {
-		if ( 'NULL' !== $check_value ) {
-			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View form in the editor', 'wp-security-audit-log' ) . '</a>';
-		} else {
-			return '';
-		}
-	}
-	return $value;
-}
+ function wsal_woocommerce_extension_add_custom_meta_format_value( $value, $name ) {
+ 	$check_value = (string) $value;
+ 	if ( '%EditorLinkForm%' === $name ) {
+ 		if ( 'NULL' !== $check_value ) {
+ 			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View form in the editor', 'wp-security-audit-log' ) . '</a>';
+ 		} else {
+ 			return '';
+ 		}
+ 	}
+ 	return $value;
+ }
+
+ function wsal_woocommerce_extension_load_public_sensors( $value ) {
+	$value[] = 'FrontendWooCommerce';
+ 	return $value;
+ }
 
 /**
  * Add our filters.
@@ -277,3 +282,4 @@ add_filter( 'wsal_link_filter', 'wsal_woocommerce_extension_add_custom_meta_form
 add_filter( 'wsal_meta_formatter_custom_formatter', 'wsal_woocommerce_extension_add_custom_meta_format', 10, 2 );
 add_filter( 'wsal_event_objects', 'wsal_woocommerce_extension_add_custom_event_objects' );
 add_filter( 'wsal_ignored_custom_post_types', 'wsal_woocommerce_extension_add_custom_ignored_cpt' );
+add_filter( 'wsal_load_public_sensors', 'wsal_woocommerce_extension_load_public_sensors' );
