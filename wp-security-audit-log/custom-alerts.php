@@ -89,6 +89,10 @@ $custom_alerts = array(
 			array( 9056, WSAL_LOW, __( 'User changed the name of a product category', 'wp-security-audit-log' ), __( 'Previous name: %OldName% %LineBreak% New name: %NewName% %LineBreak% Category slug: %CategorySlug% %LineBreak% %ProductCatLink%', 'wp-security-audit-log' ), 'woocommerce-category', 'renamed' ),
 		),
 
+		__( 'WC Tags', 'wp-security-audit-log' ) => array(
+			array( 9101, WSAL_INFORMATIONAL, __( 'User created a new product tag', 'wp-security-audit-log' ), __( 'A new product tag called %CategoryName% %LineBreak% Category slug is %Slug% %LineBreak% %ProductTagLink%', 'wp-security-audit-log' ), 'woocommerce-category', 'created' ),
+		),
+
 		__( 'Attributes', 'wp-security-audit-log' ) => array(
 			array( 9057, WSAL_MEDIUM, __( 'User created a new attribute', 'wp-security-audit-log' ), __( 'A new attribute in WooCommerce called %AttributeName% %LineBreak% Attribute slug: %AttributeSlug%', 'wp-security-audit-log' ), 'woocommerce-store', 'created' ),
 			array( 9058, WSAL_LOW, __( 'User deleted an attribute', 'wp-security-audit-log' ), __( 'The WooCommerce attribute called %AttributeName% %LineBreak% Attribute slug: %AttributeSlug%', 'wp-security-audit-log' ), 'woocommerce-store', 'deleted' ),

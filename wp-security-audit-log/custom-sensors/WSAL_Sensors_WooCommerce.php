@@ -179,6 +179,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		add_action( 'woocommerce_product_quick_edit_save', array( $this, 'inline_product_changed' ), 10, 1 );
 
 		add_action( 'updated_option', array( $this, 'settings_updated' ), 10, 3 );
+
+		add_action( 'create_product_tag', array( $this, 'EventTagCreation' ), 10, 1 );
 	}
 
 	/**
@@ -394,6 +396,25 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					'CategoryName'   => $term->name,
 					'Slug'           => $term->slug,
 					'ProductCatLink' => $this->get_taxonomy_edit_link( $term_id ),
+				)
+			);
+		}
+	}
+
+	/**
+	 * Trigger events 9002
+	 *
+	 * @param int|WP_Term $term_id - Term ID.
+	 */
+	public function EventTagCreation( $term_id = null ) {
+		$term = get_term( $term_id );
+		if ( ! empty( $term ) ) {
+			$this->plugin->alerts->Trigger(
+				9101,
+				array(
+					'CategoryName'   => $term->name,
+					'Slug'           => $term->slug,
+					'ProductTagLink' => $this->get_taxonomy_edit_link( $term_id ),
 				)
 			);
 		}
@@ -3283,6 +3304,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param array  $args     - Arguments passed to wp_update_term().
 	 */
 	public function event_product_cat_updated( $data, $term_id, $taxonomy, $args ) {
+		error_log( print_r( $taxonomy, true ) );
 		// Check if the taxonomy is `product_cat`.
 		if ( 'product_cat' === $taxonomy ) {
 			// Get term data.

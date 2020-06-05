@@ -260,13 +260,14 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $name ) {
  */
  function wsal_woocommerce_extension_add_custom_meta_format_value( $value, $name ) {
  	$check_value = (string) $value;
- 	if ( '%EditorLinkForm%' === $name ) {
+	if ( '%ProductTagLink%' === $name ) {
  		if ( 'NULL' !== $check_value ) {
- 			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View form in the editor', 'wp-security-audit-log' ) . '</a>';
+ 			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View tag', 'wp-security-audit-log' ) . '</a>';
  		} else {
  			return '';
  		}
  	}
+
  	return $value;
  }
 
