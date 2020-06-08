@@ -203,6 +203,7 @@ function wsal_woocommerce_extension_add_custom_event_objects( $objects ) {
 		'woocommerce-store'    => __( 'WooCommerce Store', 'wp-security-audit-log' ),
 		'woocommerce-coupon'   => __( 'WooCommerce Coupon', 'wp-security-audit-log' ),
 		'woocommerce-category' => __( 'WooCommerce Category', 'wp-security-audit-log' ),
+		'woocommerce-tag'      => __( 'WooCommerce Tag', 'wp-security-audit-log' ),
 	);
 
 	// combine the two arrays.

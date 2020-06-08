@@ -169,6 +169,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		add_action( 'wp_update_term_data', array( $this, 'event_product_cat_updated' ), 10, 4 );
 		add_action( 'update_term_meta', array( $this, 'event_cat_display_updated' ), 10, 4 );
 		add_action( 'delete_product_cat', array( $this, 'event_product_cat_deleted' ), 10, 4 );
+		add_action( 'delete_product_tag', array( $this, 'event_product_tag_deleted' ), 10, 4 );
 		add_action( 'wsal_before_post_meta_create_event', array( $this, 'log_coupon_meta_created_event' ), 10, 4 );
 		add_action( 'wsal_before_post_meta_update_event', array( $this, 'log_coupon_meta_update_events' ), 10, 5 );
 		add_action( 'wsal_before_post_meta_delete_event', array( $this, 'log_coupon_meta_delete_event' ), 10, 4 );
@@ -395,7 +396,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				array(
 					'CategoryName'   => $term->name,
 					'Slug'           => $term->slug,
-					'ProductCatLink' => $this->get_taxonomy_edit_link( $term_id ),
+					'ProductCatLink' => $this->get_taxonomy_edit_link( $term_id, 'product_tag' ),
 				)
 			);
 		}
@@ -414,7 +415,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				array(
 					'CategoryName'   => $term->name,
 					'Slug'           => $term->slug,
-					'ProductTagLink' => $this->get_taxonomy_edit_link( $term_id ),
+					'ProductTagLink' => $this->get_taxonomy_edit_link( $term_id, 'product_tag' ),
 				)
 			);
 		}
@@ -3304,7 +3305,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param array  $args     - Arguments passed to wp_update_term().
 	 */
 	public function event_product_cat_updated( $data, $term_id, $taxonomy, $args ) {
-		error_log( print_r( $taxonomy, true ) );
+
 		// Check if the taxonomy is `product_cat`.
 		if ( 'product_cat' === $taxonomy ) {
 			// Get term data.
@@ -3375,6 +3376,56 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				);
 			}
 		}
+
+		if ( 'product_tag' === $taxonomy ) {
+			// Get term data.
+			$new_name      = isset( $data['name'] ) ? $data['name'] : false;
+			$new_slug      = isset( $data['slug'] ) ? $data['slug'] : false;
+			$new_parent_id = isset( $args['parent'] ) ? $args['parent'] : false;
+
+			// New parent category.
+			$new_parent_cat = false;
+			if ( 0 !== $new_parent_id ) {
+				$new_parent_cat = get_term( $new_parent_id, $taxonomy );
+			}
+
+			// Get old data.
+			$term     = get_term( $term_id, $taxonomy );
+			$old_name = $term->name;
+			$old_slug = $term->slug;
+
+			// Old parent category.
+			$old_parent_cat = false;
+			if ( $term->parent ) {
+				$old_parent_cat = get_term( $term->parent, $taxonomy );
+			}
+
+			// Update if both slugs are not same.
+			if ( $old_slug !== $new_slug ) {
+				$this->plugin->alerts->Trigger(
+					9104,
+					array(
+						'TagName'        => $new_name,
+						'OldSlug'        => $old_slug,
+						'NewSlug'        => $new_slug,
+						'ProductTagLink' => $this->get_taxonomy_edit_link( $term_id, 'product_tag' ),
+					)
+				);
+			}
+
+			// Update if both names are not same.
+			if ( $old_name !== $new_name ) {
+				$this->plugin->alerts->Trigger(
+					9103,
+					array(
+						'OldName'        => $old_name,
+						'NewName'        => $new_name,
+						'Slug'           => $term->slug,
+						'ProductTagLink' => $this->get_taxonomy_edit_link( $term_id, 'product_tag' ),
+					)
+				);
+			}
+		}
 		return $data;
 	}
 
@@ -3426,14 +3477,27 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param mixed $deleted_term - Copy of the already-deleted term, in the form specified by the parent function. WP_Error otherwise.
 	 * @param array $object_ids   - List of term object IDs.
 	 */
-	public function event_product_cat_deleted( $term_id, $tt_id, $deleted_term, $object_ids ) {
-		if ( 'product_cat' === $deleted_term->taxonomy ) {
+	 public function event_product_cat_deleted( $term_id, $tt_id, $deleted_term, $object_ids ) {
+ 		if ( 'product_cat' === $deleted_term->taxonomy ) {
+ 			$this->plugin->alerts->Trigger(
+ 				9052,
+ 				array(
+ 					'CategoryID'   => $deleted_term->term_id,
+ 					'CategoryName' => $deleted_term->name,
+ 					'CategorySlug' => $deleted_term->slug,
+ 				)
+ 			);
+ 		}
+ 	}
+
+	public function event_product_tag_deleted( $term_id, $tt_id, $deleted_term, $object_ids ) {
+		if ( 'product_tag' === $deleted_term->taxonomy ) {
 			$this->plugin->alerts->Trigger(
-				9052,
+				9102,
 				array(
-					'CategoryID'   => $deleted_term->term_id,
-					'CategoryName' => $deleted_term->name,
-					'CategorySlug' => $deleted_term->slug,
+					'ID'   => $deleted_term->term_id,
+					'Name' => $deleted_term->name,
+					'Slug' => $deleted_term->slug,
 				)
 			);
 		}

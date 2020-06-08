@@ -90,7 +90,10 @@ $custom_alerts = array(
 		),
 
 		__( 'WC Tags', 'wp-security-audit-log' ) => array(
-			array( 9101, WSAL_INFORMATIONAL, __( 'User created a new product tag', 'wp-security-audit-log' ), __( 'A new product tag called %CategoryName% %LineBreak% Category slug is %Slug% %LineBreak% %ProductTagLink%', 'wp-security-audit-log' ), 'woocommerce-category', 'created' ),
+			array( 9101, WSAL_INFORMATIONAL, __( 'User created a new product tag', 'wp-security-audit-log' ), __( 'A new product tag called %CategoryName% %LineBreak% Category slug is %Slug% %LineBreak% %ProductTagLink%', 'wp-security-audit-log' ), 'woocommerce-tag', 'created' ),
+			array( 9102, WSAL_INFORMATIONAL, __( 'User deleted a product tag', 'wp-security-audit-log' ), __( 'Deleted the tag %Name% %LineBreak% Slug is %Slug%', 'wp-security-audit-log' ), 'woocommerce-tag', 'deleted' ),
+			array( 9103, WSAL_INFORMATIONAL, __( 'User renamed product tag', 'wp-security-audit-log' ), __( 'Previous name %OldName% %LineBreak% New name %NewName% %LineBreak% Slug is %Slug% %LineBreak% %ProductTagLink%', 'wp-security-audit-log' ), 'woocommerce-tag', 'renamed' ),
+			array( 9104, WSAL_INFORMATIONAL, __( 'User changed product tag slug', 'wp-security-audit-log' ), __( 'Changed the slug of the tag: %TagName% %LineBreak% Previous slug: %OldSlug% %LineBreak% New slug: %NewSlug% %LineBreak% %ProductTagLink%', 'wp-security-audit-log' ), 'woocommerce-tag', 'modified' ),
 		),
 
 		__( 'Attributes', 'wp-security-audit-log' ) => array(
