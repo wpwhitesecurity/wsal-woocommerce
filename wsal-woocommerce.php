@@ -244,6 +244,7 @@ function wsal_woocommerce_extension_add_custom_ignored_cpt( $post_types ) {
  */
 function wsal_woocommerce_extension_add_custom_meta_format( $value, $name ) {
 	$check_value = (string) $value;
+
 	if ( '%EditorLinkProduct%' === $name ) {
 		if ( 'NULL' !== $check_value ) {
 			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View product in editor', 'wp-security-audit-log' ) . '</a>';
@@ -251,6 +252,7 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $name ) {
 			return '';
 		}
 	}
+
 	if ( '%StockOrderID%' === $name ) {
 		if ( 'NULL' !== $check_value ) {
 			$order     = get_post( $value );
@@ -262,6 +264,15 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $name ) {
 			return '';
 		}
 	}
+	
+	if ( '%EditorLinkCoupon%' === $name ) {
+		if ( 'NULL' !== $check_value ) {
+			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View coupon in editor', 'wp-security-audit-log' ) . '</a>';
+		} else {
+			return '';
+		}
+	}
+
 	return $value;
 }
 
@@ -283,6 +294,13 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $name ) {
 	if ( '%EditorLinkProduct%' === $name ) {
 		if ( 'NULL' !== $check_value ) {
 			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View product in editor', 'wp-security-audit-log' ) . '</a>';
+		} else {
+			return '';
+		}
+	}
+	if ( '%EditorLinkCoupon%' === $name ) {
+		if ( 'NULL' !== $check_value ) {
+			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View coupon in editor', 'wp-security-audit-log' ) . '</a>';
 		} else {
 			return '';
 		}
