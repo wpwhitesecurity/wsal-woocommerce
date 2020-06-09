@@ -251,6 +251,17 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $name ) {
 			return '';
 		}
 	}
+	if ( '%StockOrderID%' === $name ) {
+		if ( 'NULL' !== $check_value ) {
+			$order     = get_post( $value );
+			$new_order = new WC_Order( $value );
+			$editor_title = wsal_woocommerce_extension_get_order_title( $new_order );
+			$editor_link  = wsal_woocommerce_extension_get_editor_link( $order );
+			return '<br>' . __( 'Order name:', 'wp-security-audit-log' ) . ' <a target="_blank" href="' . esc_url( $editor_link['value'] ) . '">' . $editor_title . '</a>';
+		} else {
+			return '';
+		}
+	}
 	return $value;
 }
 
@@ -282,6 +293,84 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $name ) {
  function wsal_woocommerce_extension_load_public_sensors( $value ) {
 	$value[] = 'FrontendWooCommerce';
  	return $value;
+ }
+
+ /**
+	* Get editor link.
+	*
+	* @param WP_Post $post        - Product post object.
+	* @return array  $editor_link - Name and value link.
+	*/
+function wsal_woocommerce_extension_get_editor_link( $post ) {
+	 // Meta value key.
+	 if ( 'shop_order' === $post->post_type ) {
+		 $name = 'EditorLinkOrder';
+	 } else {
+		 $name = 'EditorLinkProduct';
+	 }
+
+	 // Get editor post link URL.
+	 $value = get_edit_post_link( $post->ID );
+
+	 // If the URL is not empty then set values.
+	 if ( ! empty( $value ) ) {
+		 $editor_link = array(
+			 'name'  => $name, // Meta key.
+			 'value' => $value, // Meta value.
+		 );
+	 } else {
+		 // Get post object.
+		 $post = get_post( $post->ID );
+
+		 // Set URL action.
+		 if ( 'revision' === $post->post_type ) {
+			 $action = '';
+		 } else {
+			 $action = '&action=edit';
+		 }
+
+		 // Get and check post type object.
+		 $post_type_object = get_post_type_object( $post->post_type );
+		 if ( ! $post_type_object ) {
+			 return;
+		 }
+
+		 // Set editor link manually.
+		 if ( $post_type_object->_edit_link ) {
+			 $link = admin_url( sprintf( $post_type_object->_edit_link . $action, $post->ID ) );
+		 } else {
+			 $link = '';
+		 }
+
+		 $editor_link = array(
+			 'name'  => $name, // Meta key.
+			 'value' => $link, // Meta value.
+		 );
+	 }
+
+	 return $editor_link;
+ }
+
+ function wsal_woocommerce_extension_get_order_title( $order ) {
+	 if ( ! $order ) {
+		 return false;
+	 }
+	 if ( is_int( $order ) ) {
+		 $order = new WC_Order( $order );
+	 }
+	 if ( ! $order instanceof WC_Order ) {
+		 return false;
+	 }
+
+	 if ( $order->get_billing_first_name() || $order->get_billing_last_name() ) {
+		 $buyer = trim( sprintf( '%1$s %2$s', $order->get_billing_first_name(), $order->get_billing_last_name() ) );
+	 } elseif ( $order->get_billing_company() ) {
+		 $buyer = trim( $order->get_billing_company() );
+	 } elseif ( $order->get_customer_id() ) {
+		 $user  = get_user_by( 'id', $order->get_customer_id() );
+		 $buyer = ucwords( $user->display_name );
+	 }
+	 return '#' . $order->get_order_number() . ' ' . $buyer;
  }
 
 /**
