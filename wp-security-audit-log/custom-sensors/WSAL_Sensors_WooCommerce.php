@@ -243,7 +243,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param integer $update  - True if product update, false if product is new.
 	 */
 	public function EventChanged( $post_id, $post, $update ) {
-		error_log( print_r( 'EventChanged', true ) );
 		if ( ! $update ) {
 			$this->EventCreation( $this->_old_post, $post );
 			return;
@@ -2375,7 +2374,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			}
 			if ( ! empty( $product->post_title ) ) {
 				$event = 9072;
-				if ( ! $this->WasTriggered( $event ) && ! $this->WasTriggered( 9001 ) ) {
+				if ( ! $this->WasTriggered( $event ) && ! $this->WasTriggered( 9001 ) || ! $this->was_triggered_recently( 9000 ) ) {
 					$editor_link = $this->GetEditorLink( $product );
 					$this->plugin->alerts->Trigger(
 						$event,
