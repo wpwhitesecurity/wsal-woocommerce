@@ -118,13 +118,13 @@ $custom_alerts = array(
 		),
 
 		__( 'Orders', 'wp-security-audit-log' ) => array(
-			array( 9035, WSAL_LOW, __( 'A WooCommerce order has been placed', 'wp-security-audit-log' ), __( 'A new order has been placed %LineBreak% Order name: %OrderTitle% %LineBreak% %EditorLinkOrder%', 'wp-security-audit-log' ), 'woocommerce-store', 'created' ),
-			array( 9036, WSAL_INFORMATIONAL, __( 'WooCommerce order status changed', 'wp-security-audit-log' ), __( 'Marked an order %OrderTitle% as %OrderStatus% %LineBreak% %EditorLinkOrder%', 'wp-security-audit-log' ), 'woocommerce-store', 'modified' ),
-			array( 9037, WSAL_MEDIUM, __( 'User moved a WooCommerce order to trash', 'wp-security-audit-log' ), __( 'Moved the order %OrderTitle% to trash', 'wp-security-audit-log' ), 'woocommerce-store', 'deleted' ),
-			array( 9038, WSAL_LOW, __( 'User moved a WooCommerce order out of trash', 'wp-security-audit-log' ), __( 'Restored the order %OrderTitle% from the trash %LineBreak% %EditorLinkOrder%', 'wp-security-audit-log' ), 'woocommerce-store', 'restored' ),
-			array( 9039, WSAL_LOW, __( 'User permanently deleted a WooCommerce order', 'wp-security-audit-log' ), __( 'Permanently deleted the order %OrderTitle%', 'wp-security-audit-log' ), 'woocommerce-store', 'deleted' ),
-			array( 9040, WSAL_MEDIUM, __( 'User edited a WooCommerce order', 'wp-security-audit-log' ), __( 'Edited the details in order %OrderTitle% %LineBreak% %EditorLinkOrder%', 'wp-security-audit-log' ), 'woocommerce-store', 'modified' ),
-			array( 9041, WSAL_HIGH, __( 'User refunded a WooCommerce order', 'wp-security-audit-log' ), __( 'Refunded the order %OrderTitle% %LineBreak% %EditorLinkOrder%', 'wp-security-audit-log' ), 'woocommerce-store', 'modified' ),
+			array( 9035, WSAL_LOW, __( 'A WooCommerce order has been placed', 'wp-security-audit-log' ), __( 'A new order has been placed %LineBreak% Order name: %OrderTitle% %LineBreak% %EditorLinkOrder%', 'wp-security-audit-log' ), 'woocommerce-order', 'created' ),
+			array( 9036, WSAL_INFORMATIONAL, __( 'WooCommerce order status changed', 'wp-security-audit-log' ), __( 'Marked an order %OrderTitle% as %OrderStatus% %LineBreak% %EditorLinkOrder%', 'wp-security-audit-log' ), 'woocommerce-order', 'modified' ),
+			array( 9037, WSAL_MEDIUM, __( 'User moved a WooCommerce order to trash', 'wp-security-audit-log' ), __( 'Moved the order %OrderTitle% to trash', 'wp-security-audit-log' ), 'woocommerce-order', 'deleted' ),
+			array( 9038, WSAL_LOW, __( 'User moved a WooCommerce order out of trash', 'wp-security-audit-log' ), __( 'Restored the order %OrderTitle% from the trash %LineBreak% %EditorLinkOrder%', 'wp-security-audit-log' ), 'woocommerce-order', 'restored' ),
+			array( 9039, WSAL_LOW, __( 'User permanently deleted a WooCommerce order', 'wp-security-audit-log' ), __( 'Permanently deleted the order %OrderTitle%', 'wp-security-audit-log' ), 'woocommerce-order', 'deleted' ),
+			array( 9040, WSAL_MEDIUM, __( 'User edited a WooCommerce order', 'wp-security-audit-log' ), __( 'Edited the details in order %OrderTitle% %LineBreak% %EditorLinkOrder%', 'wp-security-audit-log' ), 'woocommerce-order', 'modified' ),
+			array( 9041, WSAL_HIGH, __( 'User refunded a WooCommerce order', 'wp-security-audit-log' ), __( 'Refunded the order %OrderTitle% %LineBreak% %EditorLinkOrder%', 'wp-security-audit-log' ), 'woocommerce-order', 'modified' ),
 		),
 
 		__( 'User Profile', 'wp-security-audit-log' ) => array(
