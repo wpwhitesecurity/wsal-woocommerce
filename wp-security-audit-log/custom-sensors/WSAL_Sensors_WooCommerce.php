@@ -243,6 +243,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param integer $update  - True if product update, false if product is new.
 	 */
 	public function EventChanged( $post_id, $post, $update ) {
+		error_log( print_r( 'EventChanged', true ) );
 		if ( ! $update ) {
 			$this->EventCreation( $this->_old_post, $post );
 			return;
@@ -2975,7 +2976,13 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
  			// @codingStandardsIgnoreEnd
  		}
 
- 		$attribute_names      = isset( $data['attribute_names'] ) ? array_map( 'sanitize_text_field', wp_unslash( $data['attribute_names'] ) ) : false;
+		if ( isset( $this->_old_product_attributes[0] ) ) {
+			$old_attributes = $this->_old_product_attributes[0];
+		} else {
+			$old_attributes = array();
+		}
+
+		$attribute_names      = isset( $data['attribute_names'] ) ? array_map( 'sanitize_text_field', wp_unslash( $data['attribute_names'] ) ) : false;
  		$attribute_position   = isset( $data['attribute_position'] ) ? array_map( 'sanitize_text_field', wp_unslash( $data['attribute_position'] ) ) : false;
  		$attribute_visibility = isset( $data['attribute_visibility'] ) ? array_map( 'sanitize_text_field', wp_unslash( $data['attribute_visibility'] ) ) : false;
  		$attribute_values     = isset( $data['attribute_values'] ) ? $data['attribute_values'] : false;
@@ -2993,8 +3000,28 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
  			}
 
  			// Compare old and new attributes.
- 			$added_attributes   = array_diff_key( $new_attributes, $post_attributes );
- 			$deleted_attributes = array_diff_key( $post_attributes, $new_attributes );
+			if ( empty( $old_attributes ) ) {
+				$added_attributes   = array_diff_key( $new_attributes, $post_attributes );
+			} else {
+				$added_attributes   = array_diff_key( $post_attributes, $old_attributes );
+			}
+			if ( empty( $old_attributes ) ) {
+				$deleted_attributes = array_diff_key( $post_attributes, $new_attributes );
+			} else {
+				$deleted_attributes = array_diff_key( $old_attributes, $post_attributes );
+			}
+
+			$compare_changed_items = array_diff_assoc(
+				array_map( 'serialize', $added_attributes ),
+				array_map( 'serialize', $deleted_attributes )
+			);
+			$changed_items = array_map( 'unserialize', $compare_changed_items );
+
+			$compare_added = array_diff(
+				array_map( 'serialize', $added_attributes ),
+				array_map( 'serialize', $changed_items )
+			);
+			$diff_check = array_map( 'unserialize', $compare_added );
 
  			// Get product editor link.
  			$editor_link = $this->GetEditorLink( $oldpost );
@@ -3003,9 +3030,14 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
  			$result = 0;
 
  			// Event 9047.
- 			if ( ! empty( $added_attributes ) ) {
+ 			if ( ! empty( $added_attributes ) && empty( $diff_check ) ) {
  				foreach ( $added_attributes as $added_attribute ) {
- 					if ( $added_attribute && ! empty( $added_attribute['name'] ) ) {
+					$old_name     = array( array_search( $added_attribute['value'], array_column( $changed_items, 'value', 'name' ) ) );
+					$deleted_name = array( array_search( $added_attribute['value'], array_column( $deleted_attributes, 'value', 'name' ) ) );
+					if ( ! empty( $old_name[0] ) && ! empty( $deleted_name[0] ) ) {
+						continue;
+					}
+ 					if ( $added_attribute && ! empty( $added_attribute['name'] ) && ! empty( $added_attribute['value'] ) ) {
  						$this->plugin->alerts->Trigger(
  							9047,
  							array(
@@ -3025,61 +3057,48 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
  			// Event 9050.
  			if ( ! empty( $deleted_attributes ) ) {
  				foreach ( $deleted_attributes as $deleted_attribute ) {
- 					$this->plugin->alerts->Trigger(
- 						9050,
- 						array(
- 							'AttributeName'      => $deleted_attribute['name'],
- 							'AttributeValue'     => $deleted_attribute['value'],
- 							'ProductID'          => $oldpost->ID,
- 							'ProductTitle'       => $oldpost->post_title,
- 							'ProductStatus'      => $oldpost->post_status,
- 							'ProductUrl'         => get_permalink( $oldpost->ID ),
- 							$editor_link['name'] => $editor_link['value'],
- 						)
- 					);
- 					$result = 1;
+					$old_name = array( array_search( $deleted_attribute['value'], array_column( $changed_items, 'value', 'name' ) ) );
+					if ( ! empty( $old_name[0] ) ) {
+						continue;
+					}
+					$this->plugin->alerts->Trigger(
+						9050,
+						array(
+							'AttributeName'      => $deleted_attribute['name'],
+							'AttributeValue'     => $deleted_attribute['value'],
+							'ProductID'          => $oldpost->ID,
+							'ProductTitle'       => $oldpost->post_title,
+							'ProductStatus'      => $oldpost->post_status,
+							'ProductUrl'         => get_permalink( $oldpost->ID ),
+							$editor_link['name'] => $editor_link['value'],
+						)
+					);
+					$result = 1;
  				}
  			}
 
- 			// Event 9048, 9049 & 9051.
- 			if ( ! empty( $new_attributes ) ) {
- 				foreach ( $new_attributes as $attr_key => $new_attr ) {
- 					// Get old attribute value.
- 					$old_value = '';
- 					if ( false !== strpos( $attr_key, 'pa_' ) ) {
- 						$old_value = $this->get_wc_product_attributes( $oldpost, $attr_key );
- 					} else {
- 						$old_value = isset( $post_attributes[ $attr_key ]['value'] ) ? $post_attributes[ $attr_key ]['value'] : false;
- 					}
- 					$new_value = isset( $new_attr['value'] ) ? $new_attr['value'] : false; // Get new attribute value.
-
+ 			// Event 9049
+			if ( ! empty( $changed_items ) ) {
+ 				foreach ( $changed_items as $attr_key => $new_attr ) {
  					// Get old and new attribute names.
- 					$old_name = isset( $post_attributes[ $attr_key ]['name'] ) ? $post_attributes[ $attr_key ]['name'] : false;
- 					$new_name = isset( $new_attr['name'] ) ? $new_attr['name'] : false;
+ 					$old_name = array( array_search( $new_attr['value'], array_column( $deleted_attributes, 'value', 'name' ) ) );
+					if ( ! empty( $old_name ) ) {
+						$old_name = (string) $old_name[0];
+					} else {
+						$old_name = isset( $post_attributes[ $attr_key ]['name'] ) ? $post_attributes[ $attr_key ]['name'] : false;
+					}
+					$new_name = isset( $new_attr['name'] ) ? $new_attr['name'] : false;
 
- 					// Get old and new attribute visibility.
- 					$old_visible = isset( $post_attributes[ $attr_key ]['is_visible'] ) ? (int) $post_attributes[ $attr_key ]['is_visible'] : false;
- 					$new_visible = isset( $new_attr['is_visible'] ) ? (int) $new_attr['is_visible'] : false;
 
- 					// Value change.
- 					if ( $old_value && $new_value && $old_value !== $new_value ) {
- 						$this->plugin->alerts->Trigger(
- 							9048,
- 							array(
- 								'AttributeName'      => $new_attr['name'],
- 								'OldValue'           => $old_value,
- 								'NewValue'           => $new_value,
- 								'ProductID'          => $oldpost->ID,
- 								'ProductTitle'       => $oldpost->post_title,
- 								'ProductStatus'      => $oldpost->post_status,
- 								$editor_link['name'] => $editor_link['value'],
- 							)
- 						);
- 						$result = 1;
- 					}
+					if ( ! empty( $old_attributes ) && isset( $old_attributes[ $attr_key ] ) ) {
+						$old_name    = $old_attributes[ $attr_key ]['name'];
+					}
 
  					// Name change.
- 					if ( $old_name && $new_name && $old_name !== $new_name ) {
+ 					if ( ! empty( $old_name ) && $old_name !== $new_name ) {
+						if ( ! $new_name ) {
+							continue;
+						}
  						$this->plugin->alerts->Trigger(
  							9049,
  							array(
@@ -3095,24 +3114,75 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
  						);
  						$result = 1;
  					}
-
- 					// Visibility change.
- 					if ( ! empty( $new_attr['name'] ) && $old_visible !== $new_visible ) {
- 						$this->plugin->alerts->Trigger(
- 							9051,
- 							array(
- 								'AttributeName'       => $new_attr['name'],
- 								'AttributeVisiblilty' => 1 === $new_visible ? __( 'Visible', 'wp-security-audit-log' ) : __( 'Non-Visible', 'wp-security-audit-log' ),
- 								'ProductID'           => $oldpost->ID,
- 								'ProductTitle'        => $oldpost->post_title,
- 								'ProductStatus'       => $oldpost->post_status,
- 								$editor_link['name']  => $editor_link['value'],
- 							)
- 						);
- 						$result = 1;
- 					}
  				}
  			}
+
+			if ( ! empty( $new_attributes ) ) {
+				foreach ( $new_attributes as $attr_key => $new_attr ) {
+
+					// Get old attribute value.
+					$old_value = '';
+					if ( false !== strpos( $attr_key, 'pa_' ) ) {
+						$old_value = $this->get_wc_product_attributes( $oldpost, $attr_key );
+					} else {
+						$old_value = isset( $post_attributes[ $attr_key ]['value'] ) ? $post_attributes[ $attr_key ]['value'] : false;
+					}
+					$new_value = isset( $new_attr['value'] ) ? $new_attr['value'] : false; // Get new attribute value.
+
+					// Get old and new attribute names.
+					$old_name = array( array_search( $new_attr['value'], array_column( $deleted_attributes, 'value', 'name' ) ) );
+					if ( ! empty( $old_name ) ) {
+						$old_name = (string) $old_name[0];
+					} else {
+						$old_name = isset( $post_attributes[ $attr_key ]['name'] ) ? $post_attributes[ $attr_key ]['name'] : false;
+					}
+					$new_name = isset( $new_attr['name'] ) ? $new_attr['name'] : false;
+
+					// Get old and new attribute visibility.
+					$old_visible = isset( $post_attributes[ $attr_key ]['is_visible'] ) ? (int) $post_attributes[ $attr_key ]['is_visible'] : false;
+					$new_visible = isset( $new_attr['is_visible'] ) ? (int) $new_attr['is_visible'] : false;
+
+					if ( ! empty( $old_attributes ) && isset( $old_attributes[ $attr_key ] ) ) {
+						$old_value   = $old_attributes[ $attr_key ]['value'];
+						$old_name    = $old_attributes[ $attr_key ]['name'];
+						$old_visible = $old_attributes[ $attr_key ]['is_visible'];
+					}
+
+					// Value change.
+					if ( $old_value && $new_value && $old_value !== $new_value ) {
+						$this->plugin->alerts->Trigger(
+							9048,
+							array(
+								'AttributeName'      => $new_attr['name'],
+								'OldValue'           => $old_value,
+								'NewValue'           => $new_value,
+								'ProductID'          => $oldpost->ID,
+								'ProductTitle'       => $oldpost->post_title,
+								'ProductStatus'      => $oldpost->post_status,
+								$editor_link['name'] => $editor_link['value'],
+							)
+						);
+						$result = 1;
+					}
+
+					// Visibility change.
+					if ( ! empty( $old_name ) && ! empty( $new_attr['name'] ) && $old_visible !== $new_visible && ! $result ) {
+						$this->plugin->alerts->Trigger(
+							9051,
+							array(
+								'AttributeName'       => $new_attr['name'],
+								'AttributeVisiblilty' => 1 === $new_visible ? __( 'Visible', 'wp-security-audit-log' ) : __( 'Non-Visible', 'wp-security-audit-log' ),
+								'ProductID'           => $oldpost->ID,
+								'ProductTitle'        => $oldpost->post_title,
+								'ProductStatus'       => $oldpost->post_status,
+								$editor_link['name']  => $editor_link['value'],
+							)
+						);
+						$result = 1;
+					}
+				}
+			}
+
  			return $result;
  		}
  		return 0;
