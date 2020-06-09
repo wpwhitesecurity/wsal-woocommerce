@@ -244,9 +244,9 @@ function wsal_woocommerce_extension_add_custom_ignored_cpt( $post_types ) {
  */
 function wsal_woocommerce_extension_add_custom_meta_format( $value, $name ) {
 	$check_value = (string) $value;
-	if ( '%EditorLinkForm%' === $name ) {
+	if ( '%EditorLinkProduct%' === $name ) {
 		if ( 'NULL' !== $check_value ) {
-			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View form in the editor', 'wp-security-audit-log' ) . '</a>';
+			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View product in editor', 'wp-security-audit-log' ) . '</a>';
 		} else {
 			return '';
 		}
@@ -269,7 +269,13 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $name ) {
  			return '';
  		}
  	}
-
+	if ( '%EditorLinkProduct%' === $name ) {
+		if ( 'NULL' !== $check_value ) {
+			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View product in editor', 'wp-security-audit-log' ) . '</a>';
+		} else {
+			return '';
+		}
+	}
  	return $value;
  }
 
