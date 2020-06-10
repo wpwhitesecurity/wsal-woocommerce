@@ -220,6 +220,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$this->_old_cats   = 'product' === $post->post_type ? $this->GetProductCategories( $this->_old_post ) : null;
 			$this->_old_data   = 'product' === $post->post_type ? $this->GetProductData( $this->old_product ) : null;
 			$this->_old_product_attributes = get_post_meta( $post->ID, '_product_attributes' );
+			$this->_old_meta_data = get_post_meta( $post->ID, '', false );
 		}
 	}
 
@@ -3585,7 +3586,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 */
 	public function log_coupon_meta_created_event( $log_event, $meta_key, $meta_value, $coupon ) {
 
-		if ( ! empty( $meta_key ) && 'minimum_amount' === $meta_key || ! empty( $meta_key ) && 'maximum_amount' === $meta_key ) {
+		$usage_restriction_meta = array( 'individual_use', 'product_ids', 'exclude_product_ids', 'product_categories', 'exclude_product_categories', 'exclude_sale_items', 'minimum_amount', 'maximum_amount', 'customer_email' );
+
+		if ( ! empty( $meta_key ) && in_array( $meta_key, $usage_restriction_meta, true ) ) {
 			$this->log_coupon_meta_update_events( $log_event, $meta_key, $meta_value, false , $coupon );
 			return false;
 		}
@@ -3597,7 +3600,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		if ( ! empty( $meta_key ) && 'total_sales' === $meta_key ) {
 			return false;
 		}
-
 
 		return $log_event;
 	}
@@ -3655,22 +3657,16 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				// Set event id.
 				$event_id = 9066;
 			} elseif ( in_array( $meta_key, $usage_restriction_meta, true ) ) {
-				if ( ! isset( $old_meta_obj->val ) && $meta_value ) {
-					$event_type = 'created';
-					$event_id   = 9067;
-				} elseif ( ! $meta_value ) {
-					$event_type = 'deleted';
-					$event_id   = 9067;
-				} else {
-					$event_type = 'modified';
-					$event_id   = 9067;
-				}
+				$event_type = 'modified';
+				$event_id   = 9067;
+
+				$meta_key = ucfirst( str_replace( '_', ' ', $meta_key ) );
 
 				// Set usage restriction meta data.
-				$coupon_data['MetaKey']      = $meta_key;
-				$coupon_data['OldMetaValue'] = isset( $old_meta_obj->val ) ? $old_meta_obj->val : false;
-				$coupon_data['NewMetaValue'] = $meta_value;
-				$coupon_data['EventType']    = $event_type;
+				$coupon_data['MetaKey']         = $meta_key;
+				$coupon_data['OldMetaValue']    = isset( $old_meta_obj->val ) ? $old_meta_obj->val : '0';
+				$coupon_data['NewMetaValue']    = ! empty( $meta_value ) ? $meta_value : '0';
+				$coupon_data['EventType']       = $event_type;
 
 				if ( false === $this->is_9067_logged ) {
 					$this->is_9067_logged = true;
@@ -3709,8 +3705,13 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 */
 	public function log_coupon_meta_delete_event( $log_event, $meta_key, $meta_value, $coupon ) {
 
-		if ( ! empty( $meta_key ) && 'minimum_amount' === $meta_key || ! empty( $meta_key ) && 'maximum_amount' === $meta_key ) {
-			$this->log_coupon_meta_update_events( $log_event, $meta_key, $meta_value, false, $coupon );
+		$usage_restriction_meta = array( 'individual_use', 'product_ids', 'exclude_product_ids', 'product_categories', 'exclude_product_categories', 'exclude_sale_items', 'minimum_amount', 'maximum_amount', 'customer_email' );
+
+		if ( ! empty( $meta_key ) && in_array( $meta_key, $usage_restriction_meta, true ) ) {
+			$post_attributes        = array();
+			$post_attributes['val'] = isset( $this->_old_meta_data ) ? $this->_old_meta_data[ $meta_key ][0] : false;
+			$post_attributes        = (object) $post_attributes;
+			$this->log_coupon_meta_update_events( $log_event, $meta_key, $meta_value, $post_attributes, $coupon );
 			return false;
 		}
 

@@ -264,10 +264,25 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $name ) {
 			return '';
 		}
 	}
-	
+
 	if ( '%EditorLinkCoupon%' === $name ) {
 		if ( 'NULL' !== $check_value ) {
 			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View coupon in editor', 'wp-security-audit-log' ) . '</a>';
+		} else {
+			return '';
+		}
+	}
+
+	if ( '%OldCouponUsageMetaValue%' === $name ) {
+		if ( 'NULL' !== $check_value ) {
+			return 'Previous usage restriction: <strong>' . $check_value . '</strong><br>';
+		} else {
+			return '';
+		}
+	}
+	if ( '%NewCouponUsageMetaValue%' === $name ) {
+		if ( 'NULL' !== $check_value ) {
+			return 'New usage restriction: <strong>' . $check_value . '</strong><br>';
 		} else {
 			return '';
 		}
