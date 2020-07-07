@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: WP Activity Log Extension for WooCommerce
+ * Plugin Name: WP Activity Log Extension for Woo
  * Plugin URI: https://wpactivitylog.com/extensions/
- * Description: A WP Activity Log plugin extension
+ * Description: A WP Activity Log plugin extension for WooCommerce
  * Text Domain: wp-security-audit-log
  * Author: WP White Security
  * Author URI: http://www.wpwhitesecurity.com/
