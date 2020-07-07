@@ -1,4 +1,4 @@
-=== WP Activity Log for WooCommerce ===
+=== WP Activity Log for Woo ===
 Contributors: WPWhiteSecurity
 Plugin URI: https://wpactivitylog.com/
 License: GPLv3
