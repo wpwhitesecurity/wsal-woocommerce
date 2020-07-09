@@ -2972,7 +2972,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 		if ( ! $data ) {
  			// @codingStandardsIgnoreStart
- 			$data = array_map( 'sanitize_text_field', wp_unslash( $_POST );
+ 			$data = array_map( 'sanitize_text_field', wp_unslash( $_POST ) );
  			// @codingStandardsIgnoreEnd
 		}
 
@@ -3101,7 +3101,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						$this->plugin->alerts->Trigger(
 							9049,
 							array(
-								'AttributeName'      => sanitize_text_field( $new_attr['name'] ) ),
+								'AttributeName'      => sanitize_text_field( $new_attr['name'] ),
 								'OldValue'           => sanitize_text_field( $old_name ),
 								'NewValue'           => sanitize_text_field( $new_name ),
 								'ProductID'          => esc_attr( $oldpost->ID ),
@@ -3199,7 +3199,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	private function check_variations_change( $oldpost, $data = false ) {
 		if ( ! $data ) {
 			// @codingStandardsIgnoreLine
-			$data = array_map( 'sanitize_text_field', wp_unslash( $_POST );
+			$data = array_map( 'sanitize_text_field', wp_unslash( $_POST ) );
 		}
 
 		if ( ! empty( $data['variable_post_id'] ) ) {
