@@ -2377,7 +2377,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				$event = 9072;
 				if ( ! $this->WasTriggered( $event ) && ! $this->WasTriggered( 9001 ) || ! $this->was_triggered_recently( 9000 ) ) {
 					$editor_link = $this->GetEditorLink( $product );
-					$this->plugin->alerts->Trigger(
+					$this->plugin->alerts->TriggerIf(
 						$event,
 						array(
 							'PostID'             => esc_attr( $product->ID ),
@@ -2386,12 +2386,21 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							'ProductTitle'       => sanitize_text_field( $product->post_title ),
 							'ProductUrl'         => get_permalink( $product->ID ),
 							$editor_link['name'] => $editor_link['value'],
-						)
+						),
+						array( $this, 'must_not_be_fresh_post' )
+
 					);
 				}
 			}
 		}
 		return $product;
+	}
+
+	public function must_not_be_fresh_post( WSAL_AlertManager $manager ) {
+		if ( $manager->WillOrHasTriggered( 9000 ) ) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
