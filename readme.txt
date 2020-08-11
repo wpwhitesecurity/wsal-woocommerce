@@ -41,7 +41,7 @@ Below are some of the user and plugin changes you can keep a log of when you ins
 * Coupon changes, for example when a new coupon is created, or some values or usage restrictions are changed,
 
 
-Refer to the [activity logs event IDs for WooCommerce](https://wpactivitylog.com/support/kb/list-wordpress-activity-log-event-ids/#woocommerce?utm_source=wordpress.org&utm_medium=referral&utm_campaign=WSAL&utm_content=plugin+repos+description)) for a complete list of the changes the plugin can keep a log of.
+Refer to the [activity logs event IDs for WooCommerce](https://wpactivitylog.com/support/kb/list-wordpress-activity-log-event-ids/#woocommerce?utm_source=wordpress.org&utm_medium=referral&utm_campaign=WSAL&utm_content=plugin+repos+description) for a complete list of the changes the plugin can keep a log of.
 
 == Installation ==
 
