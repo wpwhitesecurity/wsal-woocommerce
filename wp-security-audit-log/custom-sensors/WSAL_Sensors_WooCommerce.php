@@ -2654,8 +2654,27 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param WSAL_AlertManager $manager - Alert manager instance.
 	 * @return boolean
 	 */
-	public function must_not_contain_refund( WSAL_AlertManager $manager ) {
+	 public function must_not_contain_refund( WSAL_AlertManager $manager ) {
+ 		if ( $manager->WillOrHasTriggered( 9041 ) ) {
+ 			return false;
+ 		}
+ 		return true;
+ 	}
+
+	/**
+	 * Checks if event 9041 or 9036 has triggered or if it will
+	 * trigger.
+	 *
+	 * @since 4.1.3
+	 *
+	 * @param WSAL_AlertManager $manager - Alert manager instance.
+	 * @return boolean
+	 */
+	public function must_not_contain_refund_or_modification( WSAL_AlertManager $manager ) {
 		if ( $manager->WillOrHasTriggered( 9041 ) ) {
+			return false;
+		}
+		if ( $manager->WillOrHasTriggered( 9036 ) ) {
 			return false;
 		}
 		return true;
@@ -2687,7 +2706,12 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		);
 
 		// Log event.
-		$this->plugin->alerts->TriggerIf( 9040, $event_data, array( $this, 'must_not_contain_refund' ) );
+		if ( $this->was_triggered_recently( 9036 ) ) {
+			error_log( print_r( '9036 was triggered', true ) );
+		}
+
+		$this->plugin->alerts->TriggerIf( 9040, $event_data, array( $this, 'must_not_contain_refund_or_modification' ) );
+
 	}
 
 	/**
@@ -4019,5 +4043,28 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		// once we know the answer to this don't check again to avoid queries.
 		$this->cached_alert_checks[ $alert_id ] = $known_to_trigger;
 		return $known_to_trigger;
+	}
+
+	/**
+	 * Check if the alert was triggered.
+	 *
+	 * @param integer|array $alert_id - Alert code.
+	 * @return boolean
+	 */
+	private function was_triggered( $alert_id ) {
+		$query = new WSAL_Models_OccurrenceQuery();
+		$query->addOrderBy( 'created_on', true );
+		$query->setLimit( 1 );
+		$last_occurence = $query->getAdapter()->Execute( $query );
+
+		if ( ! empty( $last_occurence ) ) {
+			if ( ! is_array( $alert_id ) && $last_occurence[0]->alert_id === $alert_id ) {
+				return true;
+			} elseif ( is_array( $alert_id ) && in_array( $last_occurence[0]->alert_id, $alert_id, true ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
