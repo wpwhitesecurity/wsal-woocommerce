@@ -2715,10 +2715,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		);
 
 		// Log event.
-		if ( $this->was_triggered_recently( 9036 ) ) {
-			error_log( print_r( '9036 was triggered', true ) );
-		}
-
 		$this->plugin->alerts->TriggerIf( 9040, $event_data, array( $this, 'must_not_contain_refund_or_modification' ) );
 
 	}
@@ -3649,6 +3645,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @return bool
 	 */
 	public function log_coupon_meta_update_events( $log_meta_event, $meta_key, $meta_value, $old_meta_obj, $coupon ) {
+
 		// If meta key does not match with any coupon meta key, then return.
 		if ( ! empty( $meta_key ) && ( ! in_array( $meta_key, $this->coupon_meta, true ) || 'shop_coupon' !== $coupon->post_type ) ) {
 			return $log_meta_event;
