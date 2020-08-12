@@ -182,6 +182,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		add_action( 'updated_option', array( $this, 'settings_updated' ), 10, 3 );
 
 		add_action( 'create_product_tag', array( $this, 'EventTagCreation' ), 10, 1 );
+		add_action( 'update_postmeta', array( $this, 'detect_stock_level_change' ), 10, 4 );
 	}
 
 	/**
@@ -3946,6 +3947,30 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	}
 
 	/**
+	 * Trigger 9106 (stock level change by 3rd party).
+	 */
+	public function detect_stock_level_change( $meta_id, $object_id, $meta_key, $meta_value ) {
+		if ( '_stock' === $meta_key ) {
+			$post           = get_post( $object_id );
+			$editor_link    = $this->GetEditorLink( $post );
+			$old_stock      = get_post_meta( $object_id, '_stock', true );
+			$product_status = get_post_meta( $object_id, '_stock_status', true );
+			$this->plugin->alerts->TriggerIf(
+				9106,
+				array(
+					'PostID'             => $post->ID,
+					'ProductTitle'       => $post->post_title,
+					'ProductStatus'      => ! $product_status ? $post->post_status : $product_status,
+					'OldValue'           => ! empty( $old_stock ) ? $old_stock : 0,
+					'NewValue'           => $meta_value,
+					$editor_link['name'] => $editor_link['value'],
+				),
+				array( $this, 'must_not_edit_or_order' )
+			);
+		}
+	}
+
+	/**
 	 * Check if meta key belongs to WooCommerce user meta.
 	 *
 	 * @since 3.4
@@ -4072,5 +4097,15 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		}
 
 		return false;
+	}
+
+	public function must_not_edit_or_order( WSAL_AlertManager $manager ) {
+		if ( $manager->WillOrHasTriggered( 9019 ) ) {
+			return false;
+		}
+		if ( $manager->WillOrHasTriggered( 9105 ) ) {
+			return false;
+		}
+		return true;
 	}
 }
