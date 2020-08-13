@@ -3694,18 +3694,16 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 				$previous_value = isset( $old_meta_obj->val ) ? $old_meta_obj->val : '0';
 
-				// Check to see this is an actual change. If old value is 0 and new one is 'no', we should not fire.
-				if ( '0' === $previous_value && 'no' !== $meta_value ) {
-					// Set usage restriction meta data.
-					$coupon_data['MetaKey']      = $meta_key;
-					$coupon_data['OldMetaValue'] = $previous_value;
-					$coupon_data['NewMetaValue'] = ! empty( $meta_value ) ? $meta_value : '0';
-					$coupon_data['EventType']    = $event_type;
+				// Set usage restriction meta data.
+				$coupon_data['MetaKey']      = $meta_key;
+				$coupon_data['OldMetaValue'] = $previous_value;
+				$coupon_data['NewMetaValue'] = ! empty( $meta_value ) ? $meta_value : '0';
+				$coupon_data['EventType']    = $event_type;
 
-					if ( false === $this->is_9067_logged ) {
-						$this->is_9067_logged = true;
-					}
+				if ( false === $this->is_9067_logged ) {
+					$this->is_9067_logged = true;
 				}
+
 			} elseif ( in_array( $meta_key, $usage_limits_meta, true ) ) {
 				// Set usage limits meta data.
 				$coupon_data['MetaKey']      = $meta_key;
@@ -3721,10 +3719,17 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 			if ( $event_id && ! empty( $coupon_data ) ) {
 				// Log the event.
-				$this->plugin->alerts->Trigger( $event_id, $coupon_data );
+				$this->plugin->alerts->TriggerIf( $event_id, $coupon_data, array( $this, 'must_not_be_new_coupon' ) );
 			}
 		}
 		return false;
+	}
+
+	public function must_not_be_new_coupon( WSAL_AlertManager $manager ) {
+		if ( $manager->WillOrHasTriggered( 9063 ) ) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
