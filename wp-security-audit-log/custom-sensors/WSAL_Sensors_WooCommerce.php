@@ -3686,20 +3686,25 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 				// Set event id.
 				$event_id = 9066;
-			} elseif ( in_array( $meta_key, $usage_restriction_meta, true ) ) {
+			} elseif ( in_array( $meta_key, $usage_restriction_meta, true ) && ( $meta_value ) ) {
 				$event_type = 'modified';
 				$event_id   = 9067;
 
 				$meta_key = ucfirst( str_replace( '_', ' ', $meta_key ) );
 
-				// Set usage restriction meta data.
-				$coupon_data['MetaKey']      = $meta_key;
-				$coupon_data['OldMetaValue'] = isset( $old_meta_obj->val ) ? $old_meta_obj->val : '0';
-				$coupon_data['NewMetaValue'] = ! empty( $meta_value ) ? $meta_value : '0';
-				$coupon_data['EventType']    = $event_type;
+				$previous_value = isset( $old_meta_obj->val ) ? $old_meta_obj->val : '0';
 
-				if ( false === $this->is_9067_logged ) {
-					$this->is_9067_logged = true;
+				// Check to see this is an actual change. If old value is 0 and new one is 'no', we should not fire.
+				if ( '0' === $previous_value && 'no' !== $meta_value ) {
+					// Set usage restriction meta data.
+					$coupon_data['MetaKey']      = $meta_key;
+					$coupon_data['OldMetaValue'] = $previous_value;
+					$coupon_data['NewMetaValue'] = ! empty( $meta_value ) ? $meta_value : '0';
+					$coupon_data['EventType']    = $event_type;
+
+					if ( false === $this->is_9067_logged ) {
+						$this->is_9067_logged = true;
+					}
 				}
 			} elseif ( in_array( $meta_key, $usage_limits_meta, true ) ) {
 				// Set usage limits meta data.
