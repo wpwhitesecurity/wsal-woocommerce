@@ -5,11 +5,11 @@ License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.html
 Tags: activity log for WooCommerce, WP Activity Log extension, activity logs
 Requires at least: 3.6
-Tested up to: 5.4.2
-Stable tag: 1.0
+Tested up to: 5.5
+Stable tag: 1.1
 Requires PHP: 5.6
 
-Keep a log of changes that happen in the WooCommerce store, products, orders & more.
+Keep a detailed log of your team's changes in the WooCommerce store, products, orders & more.
 
 == Description ==
 
@@ -76,6 +76,19 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 
 == Changelog ==
 
+= 1.1 (2020-08-14) =
+
+* **New event ID**
+	* 9106: Product stock quantity changed automatically via a third party plugin.
+	
+* **Improvements**
+	* Added a new section for product stock changes in the Enable/Disable events.
+	* Better coverage of stock changes done via third party plugins.
+	
+* **Bud fixes**
+	* Plugin was reporting multiple events when new product is saved as draft.
+	* Event ID 9040 (modified order) when event ID 9036 (changed order status) was reported.
+	
 = 1.0 (2020-08-12) =
 
 Release notes: [New activity log extension for WooCommerce](https://wpactivitylog.com/wsal-4-1-3/)
