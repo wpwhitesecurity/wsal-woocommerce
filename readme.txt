@@ -85,7 +85,7 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 	* Added a new section for product stock changes in the Enable/Disable events.
 	* Better coverage of stock changes done via third party plugins.
 	
-* **Bud fixes**
+* **Bug fixes**
 	* Plugin was reporting multiple events when new product is saved as draft.
 	* Event ID 9040 (modified order) when event ID 9036 (changed order status) was reported.
 	
