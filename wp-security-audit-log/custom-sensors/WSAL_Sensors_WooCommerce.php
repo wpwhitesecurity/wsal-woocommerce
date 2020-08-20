@@ -627,19 +627,19 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$new_visibility = '';
 
 		if ( $oldpost->post_password ) {
-			$old_visibility = __( 'Password Protected', 'wp-security-audit-log' );
+			$old_visibility = __( 'Password Protected', 'wsal-woocommerce' );
 		} elseif ( 'publish' === $this->old_status ) {
-			$old_visibility = __( 'Public', 'wp-security-audit-log' );
+			$old_visibility = __( 'Public', 'wsal-woocommerce' );
 		} elseif ( 'private' === $this->old_status ) {
-			$old_visibility = __( 'Private', 'wp-security-audit-log' );
+			$old_visibility = __( 'Private', 'wsal-woocommerce' );
 		}
 
 		if ( $newpost->post_password ) {
-			$new_visibility = __( 'Password Protected', 'wp-security-audit-log' );
+			$new_visibility = __( 'Password Protected', 'wsal-woocommerce' );
 		} elseif ( 'publish' === $newpost->post_status ) {
-			$new_visibility = __( 'Public', 'wp-security-audit-log' );
+			$new_visibility = __( 'Public', 'wsal-woocommerce' );
 		} elseif ( 'private' === $newpost->post_status ) {
-			$new_visibility = __( 'Private', 'wp-security-audit-log' );
+			$new_visibility = __( 'Private', 'wsal-woocommerce' );
 		}
 
 		if ( $old_visibility && $new_visibility && ( $old_visibility !== $new_visibility ) ) {
@@ -1826,7 +1826,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 									$old_country_codes .= WC()->countries->countries[ $old_country_code ] . ', ';
 								}
 							} else {
-								$old_country_codes = __( 'None, ', 'wp-security-audit-log' );
+								$old_country_codes = __( 'None, ', 'wsal-woocommerce' );
 							}
 							// Check if any new values are present
 							if ( ! empty( $value ) ) {
@@ -1835,7 +1835,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 									$country_codes .= WC()->countries->countries[ $country_code ] . ', ';
 								}
 							} else {
-								$country_codes = __( 'None', 'wp-security-audit-log' );
+								$country_codes = __( 'None', 'wsal-woocommerce' );
 							}
 							$this->plugin->alerts->Trigger(
 								9086,
@@ -1860,7 +1860,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 									$old_country_codes .= WC()->countries->countries[ $old_country_code ] . ', ';
 								}
 							} else {
-								$old_country_codes = __( 'None, ', 'wp-security-audit-log' );
+								$old_country_codes = __( 'None, ', 'wsal-woocommerce' );
 							}
 							// Check if any new values are present
 							if ( ! empty( $value ) ) {
@@ -1869,7 +1869,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 									$country_codes .= WC()->countries->countries[ $country_code ] . ', ';
 								}
 							} else {
-								$country_codes = __( 'None', 'wp-security-audit-log' );
+								$country_codes = __( 'None', 'wsal-woocommerce' );
 							}
 							$this->plugin->alerts->Trigger(
 								9087,
@@ -1906,7 +1906,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 									$old_country_codes .= WC()->countries->countries[ $old_country_code ] . ', ';
 								}
 							} else {
-								$old_country_codes = __( 'None, ', 'wp-security-audit-log' );
+								$old_country_codes = __( 'None, ', 'wsal-woocommerce' );
 							}
 							// Check if any new values are present
 							if ( ! empty( $value ) ) {
@@ -1915,7 +1915,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 									$country_codes .= WC()->countries->countries[ $country_code ] . ', ';
 								}
 							} else {
-								$country_codes = __( 'None', 'wp-security-audit-log' );
+								$country_codes = __( 'None', 'wsal-woocommerce' );
 							}
 							$this->plugin->alerts->Trigger(
 								9089,
@@ -2193,11 +2193,11 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 */
 	private function GetStockStatusName( $slug ) {
 		if ( 'instock' === $slug ) {
-			return __( 'In stock', 'wp-security-audit-log' );
+			return __( 'In stock', 'wsal-woocommerce' );
 		} elseif ( 'outofstock' === $slug ) {
-			return __( 'Out of stock', 'wp-security-audit-log' );
+			return __( 'Out of stock', 'wsal-woocommerce' );
 		} elseif ( 'onbackorder' === $slug ) {
-			return __( 'On backorder', 'wp-security-audit-log' );
+			return __( 'On backorder', 'wsal-woocommerce' );
 		}
 	}
 
@@ -3200,7 +3200,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							9051,
 							array(
 								'AttributeName'       => sanitize_text_field( $new_attr['name'] ),
-								'AttributeVisiblilty' => 1 === $new_visible ? __( 'Visible', 'wp-security-audit-log' ) : __( 'Non-Visible', 'wp-security-audit-log' ),
+								'AttributeVisiblilty' => 1 === $new_visible ? __( 'Visible', 'wsal-woocommerce' ) : __( 'Non-Visible', 'wsal-woocommerce' ),
 								'ProductID'           => esc_attr( $oldpost->ID ),
 								'ProductTitle'        => sanitize_text_field( $oldpost->post_title ),
 								'ProductStatus'       => sanitize_text_field( $oldpost->post_status ),
