@@ -2276,9 +2276,16 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @return string
 	 */
 	private function GetConfig( $option_name ) {
-		$fn = $this->IsMultisite() ? 'get_site_option' : 'get_option';
-		return $fn( 'woocommerce_' . $option_name );
+		// If this is multisite AND we have some kind of value, we can return it.
+		if ( $this->IsMultisite() && ! empty( get_site_option( 'woocommerce_' . $option_name ) ) ) {
+			// get_site_option is not empty, so lets return it.
+			return get_site_option( 'woocommerce_' . $option_name );
+		} else {
+			// Otherwise, looking the sites wp_options table, even in multisite.
+			return get_option( 'woocommerce_' . $option_name );
+		}
 	}
+
 
 	/**
 	 * Check post type.
@@ -2389,7 +2396,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							$editor_link['name'] => $editor_link['value'],
 						),
 						array( $this, 'must_not_be_fresh_post' )
-
 					);
 				}
 			}
@@ -2664,12 +2670,12 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param WSAL_AlertManager $manager - Alert manager instance.
 	 * @return boolean
 	 */
-	 public function must_not_contain_refund( WSAL_AlertManager $manager ) {
- 		if ( $manager->WillOrHasTriggered( 9041 ) ) {
- 			return false;
- 		}
- 		return true;
- 	}
+	public function must_not_contain_refund( WSAL_AlertManager $manager ) {
+		if ( $manager->WillOrHasTriggered( 9041 ) ) {
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * Checks if event 9041 or 9036 has triggered or if it will
@@ -3703,7 +3709,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				if ( false === $this->is_9067_logged ) {
 					$this->is_9067_logged = true;
 				}
-
 			} elseif ( in_array( $meta_key, $usage_limits_meta, true ) ) {
 				// Set usage limits meta data.
 				$coupon_data['MetaKey']      = $meta_key;
