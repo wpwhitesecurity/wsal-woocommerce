@@ -210,18 +210,20 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param integer $post_id - Product ID.
 	 */
 	public function get_before_post_edit_data( $post_id ) {
-		$post_id = (int) $post_id; // Making sure that the post id is integer.
-		$post    = get_post( $post_id ); // Get post.
+		$post_id  = (int) $post_id; // Making sure that the post id is integer.
+		$post     = get_post( $post_id ); // Get post.
+		$thumb_id = get_post_thumbnail_id( $post->ID );
 
 		if ( ! empty( $post ) && $post instanceof WP_Post && in_array( $post->post_type, array( 'product', 'shop_order', 'shop_coupon' ), true ) ) {
-			$this->_old_post               = $post;
-			$this->old_product             = 'product' === $post->post_type ? wc_get_product( $post->ID ) : null;
-			$this->old_status              = $post->post_status;
-			$this->_old_link               = get_post_permalink( $post_id, false, true );
-			$this->_old_cats               = 'product' === $post->post_type ? $this->GetProductCategories( $this->_old_post ) : null;
-			$this->_old_data               = 'product' === $post->post_type ? $this->GetProductData( $this->old_product ) : null;
-			$this->_old_product_attributes = get_post_meta( $post->ID, '_product_attributes' );
-			$this->_old_meta_data          = get_post_meta( $post->ID, '', false );
+			$this->_old_post                = $post;
+			$this->old_product              = 'product' === $post->post_type ? wc_get_product( $post->ID ) : null;
+			$this->old_status               = $post->post_status;
+			$this->_old_link                = get_post_permalink( $post_id, false, true );
+			$this->_old_cats                = 'product' === $post->post_type ? $this->GetProductCategories( $this->_old_post ) : null;
+			$this->_old_data                = 'product' === $post->post_type ? $this->GetProductData( $this->old_product ) : null;
+			$this->_old_product_attributes  = get_post_meta( $post->ID, '_product_attributes' );
+			$this->_old_meta_data           = get_post_meta( $post->ID, '', false );
+			$this->_old_attachment_metadata = wp_get_attachment_metadata( $thumb_id );
 		}
 	}
 
@@ -289,7 +291,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					+ $this->check_backorders_setting( $this->_old_post )
 					+ $this->check_upsells_change( $this->_old_post )
 					+ $this->check_cross_sell_change( $this->_old_post )
-					+ $this->check_attributes_change( $this->_old_post );
+					+ $this->check_attributes_change( $this->_old_post )
+					+ $this->check_image_change( $this->_old_post );
 
 				if ( ! $changes ) {
 					// Change Permalink.
@@ -3220,6 +3223,73 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 			return $result;
 		}
+		return 0;
+	}
+
+	/**
+	 * Check Product Attributes Change.
+	 *
+	 * @since 3.3.1
+	 *
+	 * @param WP_Post $oldpost - WP Post type object.
+	 * @param array   $data    - Data array.
+	 * @return int
+	 */
+	private function check_image_change( $oldpost, $data = false ) {
+
+		if ( ! $data ) {
+			// @codingStandardsIgnoreStart
+			$data = array_map( 'sanitize_text_field', wp_unslash( $_POST ) );
+			// @codingStandardsIgnoreEnd
+		}
+
+		// Setup our variables.
+		$thumb_id                = get_post_thumbnail_id( $oldpost->ID );
+		$old_attachment_metadata = $this->_old_attachment_metadata;
+		$attachment_metadata     = wp_get_attachment_metadata( $data['_thumbnail_id'] );
+		$get_upload_dir          = wp_get_upload_dir();
+		$event_id                = 9095;
+		$editor_link             = $this->GetEditorLink( $oldpost );
+		$alert_needed            = false;
+
+		// Push editor link into event data early.
+		$event_data              = array(
+			$editor_link['name'] => $editor_link['value']
+		);
+
+		// Featued image added.
+		if ( empty( $old_attachment_metadata ) && ! empty( $attachment_metadata ) ) {
+			$event_data['EventType'] = 'added';
+			$event_data['name']      = basename( $attachment_metadata['file'] );
+			$event_data['path']      = $get_upload_dir['basedir'] . DIRECTORY_SEPARATOR . $attachment_metadata['file'];
+			$alert_needed = true;
+		}
+
+		// Featued image removed.
+		if ( empty( $attachment_metadata ) && ! empty( $old_attachment_metadata ) ) {
+			$event_data['EventType'] = 'deleted';
+			$event_data['name']      = basename( $old_attachment_metadata['file'] );
+			$event_data['path']      = $get_upload_dir['basedir'] . DIRECTORY_SEPARATOR . $old_attachment_metadata['file'];
+			$alert_needed = true;
+		}
+
+		// Featured image modified.
+		if ( ! empty( $attachment_metadata ) && ! empty( $old_attachment_metadata ) && ( $attachment_metadata !== $old_attachment_metadata ) ) {
+			$event_id                = 9096;
+			$event_data['EventType'] = 'modified';
+			$event_data['old_name']  = basename( $old_attachment_metadata['file'] );
+			$event_data['old_path']  = $get_upload_dir['basedir'] . DIRECTORY_SEPARATOR . $old_attachment_metadata['file'];
+			$event_data['name']      = basename( $attachment_metadata['file'] );
+			$event_data['path']      = $get_upload_dir['basedir'] . DIRECTORY_SEPARATOR . $attachment_metadata['file'];
+			$alert_needed = true;
+		}
+
+		// Its go time.
+		if ( $alert_needed ) {
+			$this->plugin->alerts->Trigger( $event_id, $event_data );
+			return 1;
+		}
+
 		return 0;
 	}
 
