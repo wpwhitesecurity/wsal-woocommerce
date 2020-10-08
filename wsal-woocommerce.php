@@ -35,8 +35,12 @@
 	REQUIRED. Here we include and fire up the main core class. This will be needed regardless so be sure to leave line 37-39 in tact.
 */
 require_once plugin_dir_path( __FILE__ ) . 'core/class-extension-core.php';
-$plugin_text_domain =  'wsal-woocommerce';
-$wsal_extension = new \WPWhiteSecurity\ActivityLog\Extensions\Common\Core( $plugin_text_domain );
+$core_settings = array(
+	'text_domain'        => 'wsal-woocommerce',
+	'custom_alert_path'  => trailingslashit( dirname( __FILE__ ) ) . 'wp-security-audit-log',
+	'custom_sensor_path' => trailingslashit( trailingslashit( dirname( __FILE__ ) ) . 'wp-security-audit-log' . DIRECTORY_SEPARATOR . 'custom-sensors' ),
+);
+$wsal_extension = new WPWhiteSecurity\ActivityLog\Extensions\Common\Core( $core_settings );
 
 /**
  * Adds new custom event objects for our plugin
