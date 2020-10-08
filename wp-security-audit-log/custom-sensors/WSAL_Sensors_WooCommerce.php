@@ -1301,7 +1301,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					'PostID'             => esc_attr( $oldpost->ID ),
 					'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 					'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
-					'OldValue'           => ! empty( $old_value ) ? $old_value : 0,
+					'OldValue'           => ! empty( $old_value ) ? $old_value : '0',
 					'NewValue'           => $new_value,
 					$editor_link['name'] => $editor_link['value'],
 				)

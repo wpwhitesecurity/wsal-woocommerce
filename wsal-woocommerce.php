@@ -259,6 +259,16 @@ function wsal_woocommerce_extension_get_editor_link( $post ) {
 	 return '#' . $order->get_order_number() . ' ' . $buyer;
  }
 
+ /**
+ * Add sub cateogry titles to ToggleView page in WSAL.
+ */
+function wsal_woocommerce_extension_togglealerts_sub_category_titles( $title, $alert_id ) {
+	if ( 9105 === $alert_id ) {
+		$title = esc_html_e( 'Product stock changes:', 'wp-security-audit-log' );
+	}
+	return $title;
+}
+
 /**
  * Add our filters.
  */
@@ -267,3 +277,4 @@ add_filter( 'wsal_meta_formatter_custom_formatter', 'wsal_woocommerce_extension_
 add_filter( 'wsal_event_objects', 'wsal_woocommerce_extension_add_custom_event_objects' );
 add_filter( 'wsal_ignored_custom_post_types', 'wsal_woocommerce_extension_add_custom_ignored_cpt' );
 add_filter( 'wsal_load_public_sensors', 'wsal_woocommerce_extension_load_public_sensors' );
+add_filter( 'wsal_togglealerts_sub_category_titles', 'wsal_woocommerce_extension_togglealerts_sub_category_titles', 10, 2 );
