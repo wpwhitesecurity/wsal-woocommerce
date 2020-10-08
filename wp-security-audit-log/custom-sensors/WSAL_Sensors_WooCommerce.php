@@ -293,6 +293,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					+ $this->check_cross_sell_change( $this->_old_post )
 					+ $this->check_attributes_change( $this->_old_post )
 					+ $this->check_image_change( $this->_old_post );
+					+ $this->check_download_limit_change( $this->_old_meta_data );
 
 				if ( ! $changes ) {
 					// Change Permalink.
@@ -961,6 +962,13 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 */
 	protected function CheckModifyChange( $oldpost, $newpost ) {
 		if ( 'trash' === $oldpost->post_status || 'trash' === $newpost->post_status || 'auto-draft' === $oldpost->post_status ) {
+			return 0;
+		}
+
+		// If the only change by this point is the "post_modified" time, then we really dont want
+		// to trigger this event.
+		$check_for_changes = array_diff( (array) $oldpost, (array) $newpost );
+		if ( ! empty( $check_for_changes ) && array_key_exists( 'post_modified', $check_for_changes ) ) {
 			return 0;
 		}
 
@@ -3227,9 +3235,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	}
 
 	/**
-	 * Check Product Attributes Change.
-	 *
-	 * @since 3.3.1
+	 * Check Product Image Change.
 	 *
 	 * @param WP_Post $oldpost - WP Post type object.
 	 * @param array   $data    - Data array.
@@ -3291,6 +3297,55 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		}
 
 		return 0;
+	}
+
+	/**
+	 * Check Product Download Limit Change.
+	 *
+	 * @param WP_Post $oldpost - WP Post type object.
+	 * @param array   $data    - Data array.
+	 * @return int
+	 */
+	private function check_download_limit_change( $oldpost, $data = false ) {
+
+		if ( ! $data ) {
+			// @codingStandardsIgnoreStart
+			$data = array_map( 'sanitize_text_field', wp_unslash( $_POST ) );
+			// @codingStandardsIgnoreEnd
+		}
+
+		$event_id     = false;
+		$editor_link  = $this->GetEditorLink( $this->_old_post );
+		$alert_needed = false;
+
+		// Push editor link into event data early.
+		$event_data = array(
+			$editor_link['name']        => $editor_link['value'],
+		);
+
+		$event_data['new_value']      = $data['_download_expiry'];
+		$event_data['product_name']   = $data['post_title'];
+		$event_data['ID']             = $data['post_ID'];
+
+		// Event 9097 (Modified the download limit of the product).
+		if ( $oldpost['_download_limit'][0] !== $data['_download_limit'] ) {
+			$event_id                     = 9097;
+			$event_data['previous_value'] = $oldpost['_download_limit'][0];
+			$event_data['new_value']      = $data['_download_limit'];
+			$this->plugin->alerts->Trigger( $event_id, $event_data );
+			$alert_needed = true;
+		}
+
+		// Event 9098 (Modified the download expires of the product).
+		if ( $oldpost['_download_expiry'][0] !== $data['_download_expiry'] ) {
+			$event_id                     = 9098;
+			$event_data['previous_value'] = $oldpost['_download_expiry'][0];
+			$event_data['new_value']      = $data['_download_expiry'];
+			$this->plugin->alerts->Trigger( $event_id, $event_data );
+			$alert_needed = true;
+		}
+
+		return $alert_needed;
 	}
 
 	/**
