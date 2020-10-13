@@ -55,7 +55,7 @@ if ( ! class_exists( '\WPWhiteSecurity\ActivityLog\Extensions\Common\Core' ) ) {
 			add_action( 'wsal_before_sensor_load', array( $this, 'add_custom_sensors_and_events_dirs' ) );
 			add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
 
-			add_action( 'init', array( $this, 'add_custom_sensors_and_events_dirs' ) );
+			add_action( 'wsal_before_sensor_load', array( $this, 'add_custom_sensors_and_events_dirs' ) );
 		}
 
 		/**
