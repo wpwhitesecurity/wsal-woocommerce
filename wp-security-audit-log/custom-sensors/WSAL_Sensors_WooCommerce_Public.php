@@ -50,21 +50,6 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 		add_filter( 'woocommerce_update_product_stock_query', array( $this, 'set_old_stock_for_orders' ), 10, 3 );
 		add_action( 'woocommerce_product_set_stock', array( $this, 'product_stock_changed' ), 10, 1 );
 		add_action( 'woocommerce_variation_set_stock', array( $this, 'product_stock_changed' ), 10, 1 );
-		add_action( 'woocommerce_download_product', array( $this, 'detect_file_download' ), 10, 6 );
-	}
-
-	public function detect_file_download( $download_get_user_email, $download_get_order_key, $download_get_product_id, $download_get_user_id, $download_get_download_id, $download_get_order_id ) {
-		// $product       = wc_get_product( $download_get_product_id );
-		// $product_title = $product->get_title();
-		//
-		// $this->plugin->alerts->Trigger(
-		// 	9099,
-		// 	array(
-		// 		'product_name'  => $download_get_product_id,
-		// 		'ID'            => $product_title,
-		// 		'email_address' => $download_get_user_email,
-		// 	)
-		// );
 	}
 
 	/**

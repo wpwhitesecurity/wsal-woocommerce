@@ -10,6 +10,39 @@ add_filter( 'wsal_event_objects', 'wsal_woocommerce_extension_add_custom_event_o
 add_filter( 'wsal_ignored_custom_post_types', 'wsal_woocommerce_extension_add_custom_ignored_cpt' );
 add_filter( 'wsal_load_public_sensors', 'wsal_woocommerce_extension_load_public_sensors' );
 add_filter( 'wsal_togglealerts_sub_category_titles', 'wsal_woocommerce_extension_togglealerts_sub_category_titles', 10, 2 );
+add_action( 'woocommerce_download_product', 'detect_file_download', 10, 6 );
+
+/**
+ * Detect file downloads within WC. This is here and not in a sensor as we currently cant seem to catch this filter
+ * using the usual init priority.
+ *
+ * @param  string $download_get_user_email  User email.
+ * @param  string $download_get_order_key   Order key.
+ * @param  string $download_get_product_id  Item id.
+ * @param  string $download_get_user_id     User ID.
+ * @param  string $download_get_download_id Download ID.
+ * @param  string $download_get_order_id    Order ID.
+ */
+function detect_file_download( $download_get_user_email, $download_get_order_key, $download_get_product_id, $download_get_user_id, $download_get_download_id, $download_get_order_id ) {
+  $product       = wc_get_product( $download_get_product_id );
+  $product_title = $product->get_title();
+
+  $wsal = WpSecurityAuditLog::GetInstance();
+
+  if ( ! isset( $wsal->alerts ) ) {
+    $wsal->alerts = new WSAL_AlertManager( $wsal );
+  }
+
+  $wsal->alerts->Trigger(
+  	9099,
+  	array(
+  		'product_name'  => $product_title,
+  		'ID'            => $download_get_product_id,
+  		'email_address' => $download_get_user_email,
+  	)
+  );
+}
+
 
 /**
  * Adds new custom event objects for our plugin

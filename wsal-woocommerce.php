@@ -42,12 +42,16 @@ $core_settings = array(
 );
 $wsal_extension = new WPWhiteSecurity\ActivityLog\Extensions\Common\Core( $core_settings );
 
+if ( ! defined( 'WSAL_CLASS_PREFIX' ) ) {
+	define( 'WSAL_CLASS_PREFIX', 'WSAL_' );
+}
+
+define( 'WSAL_WC_EXTENSION_PATH', plugin_dir_path( __FILE__ ) );
+
 /*
 	Ensure custom events are always avaiable.
  */
 add_filter( 'wsal_custom_alerts_dirs', array( $wsal_extension, 'add_custom_events_path' ) );
-
-define( 'WSAL_WC_EXTENSION_PATH', plugin_dir_path( __FILE__ ) );
 
 // Include extension specific functions.
 require_once plugin_dir_path( __FILE__ ) . 'includes/wsal-functions.php';
