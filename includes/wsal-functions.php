@@ -10,6 +10,9 @@ add_filter( 'wsal_event_objects', 'wsal_woocommerce_extension_add_custom_event_o
 add_filter( 'wsal_ignored_custom_post_types', 'wsal_woocommerce_extension_add_custom_ignored_cpt' );
 add_filter( 'wsal_load_public_sensors', 'wsal_woocommerce_extension_load_public_sensors' );
 add_filter( 'wsal_togglealerts_sub_category_titles', 'wsal_woocommerce_extension_togglealerts_sub_category_titles', 10, 2 );
+add_action( 'wsal_togglealerts_append_content_to_toggle', 'append_content_to_toggle'  );
+
+// Special events.
 add_action( 'woocommerce_download_product', 'detect_file_download', 10, 6 );
 
 /**
@@ -43,6 +46,26 @@ function detect_file_download( $download_get_user_email, $download_get_order_key
   );
 }
 
+/**
+ * Append some extra content below an event in the ToggleAlerts view.
+ */
+function append_content_to_toggle( $alert_id ) {
+
+  if ( 9035 === $alert_id ) {
+    $settings               = WpSecurityAuditLog::GetInstance()->settings();
+    $frontend_events        = $settings::get_frontend_events();
+    $enable_wc_for_visitors = ( isset( $frontend_events['woocommerce'] ) && $frontend_events['woocommerce'] ) ? true : false;
+    ?>
+    <tr>
+      <td></td>
+      <td>
+        <input name="frontend-events[woocommerce]" type="checkbox" id="frontend-events[woocommerce]" value="1" <?php checked( $enable_wc_for_visitors ); ?> />
+      </td>
+      <td colspan="2"><?php esc_html_e( 'Keep a log of visitor orders, stock changes and other public events?', 'wsal-woocommerce' ); ?></td>
+    </tr>
+    <?php
+  }
+}
 
 /**
  * Adds new custom event objects for our plugin
