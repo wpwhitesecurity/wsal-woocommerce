@@ -86,6 +86,19 @@ function append_content_to_toggle( $alert_id ) {
       </td>
       <td colspan="2"><?php esc_html_e( 'Log all stock changes. Disable this setting to only keep a log of stock changes done manually via the WooCommerce dashboard. Therefore automated stock changes typically done via customers placing orders or via other plugins will not be logged.', 'wsal-woocommerce' ); ?></td>
     </tr>
+    <script type="text/javascript">
+    jQuery(document).ready(function(){
+      // Specific for alert 9019
+      jQuery("input[value=9019]").on("change", function(){
+        var check = jQuery("input[value=9019]").is(":checked");
+        if(check) {
+          jQuery("#wc_all_stock_changes").attr ( "checked" ,"checked" );
+        } else {
+          jQuery("#wc_all_stock_changes").removeAttr('checked');
+        }
+      });
+    });
+    </script>
     <?php
   }
 }
