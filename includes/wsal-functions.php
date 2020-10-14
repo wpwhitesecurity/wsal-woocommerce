@@ -65,6 +65,22 @@ function append_content_to_toggle( $alert_id ) {
     </tr>
     <?php
   }
+
+  if ( 9019 === $alert_id ) {
+    $wsal = WpSecurityAuditLog::GetInstance()->settings();
+    $wc_all_stock_changes = $wsal->GetGlobalBooleanSetting( 'wc-all-stock-changes', true );
+    ?>
+    <tr>
+      <td></td>
+      <td>
+        <input name="wc_all_stock_changes" type="checkbox" id="wc_all_stock_changes" value="1" <?php checked( $wc_all_stock_changes ); ?> />
+      </td>
+      <td colspan="2"><?php esc_html_e( 'Log all stock changes. Disable this setting to only keep a log of stock changes done manually via the WooCommerce dashboard. Therefore automated stock changes typically done via customers placing orders or via other plugins will not be logged.', 'wsal-woocommerce' ); ?></td>
+    </tr>
+    <?php
+  }
+
+  return $alert_id;
 }
 
 /**
@@ -307,8 +323,17 @@ function wsal_woocommerce_extension_get_editor_link( $post ) {
  * Add sub cateogry titles to ToggleView page in WSAL.
  */
 function wsal_woocommerce_extension_togglealerts_sub_category_titles( $title, $alert_id ) {
-	if ( 9105 === $alert_id ) {
-		$title = esc_html_e( 'Product stock changes:', 'wp-security-audit-log' );
+  if ( 9105 === $alert_id ) {
+		$title = esc_html_e( 'Product stock changes:', 'wsal-woocommerce' );
 	}
+  if ( 9007 === $alert_id ) {
+    $title = esc_html__( 'Product Admin:', 'wsal-woocommerce' );
+  }
+  if ( 9015 === $alert_id ) {
+    $title = esc_html_e( 'Product Stock Changes:', 'wsal-woocommerce' );
+  }
+  if ( 9047 === $alert_id ) {
+    $title = esc_html_e( 'Product Attributes:', 'wsal-woocommerce' );
+  }
 	return $title;
 }
