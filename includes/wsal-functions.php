@@ -9,11 +9,20 @@ add_filter( 'wsal_meta_formatter_custom_formatter', 'wsal_woocommerce_extension_
 add_filter( 'wsal_event_objects', 'wsal_woocommerce_extension_add_custom_event_objects' );
 add_filter( 'wsal_ignored_custom_post_types', 'wsal_woocommerce_extension_add_custom_ignored_cpt' );
 add_filter( 'wsal_load_public_sensors', 'wsal_woocommerce_extension_load_public_sensors' );
+add_filter( 'wsal_togglealerts_sub_category_events', 'wsal_woocommerce_extension_togglealerts_sub_category_events' );
 add_filter( 'wsal_togglealerts_sub_category_titles', 'wsal_woocommerce_extension_togglealerts_sub_category_titles', 10, 2 );
-add_action( 'wsal_togglealerts_append_content_to_toggle', 'append_content_to_toggle'  );
+add_action( 'wsal_togglealerts_append_content_to_toggle', 'append_content_to_toggle' );
+add_action( 'wsal_togglealerts_process_save_settings', 'togglealerts_process_save_settings', 10, 1 );
 
 // Special events.
 add_action( 'woocommerce_download_product', 'detect_file_download', 10, 6 );
+
+function togglealerts_process_save_settings( $post_data ) {
+  $wsal = WpSecurityAuditLog::GetInstance();
+  if ( isset( $post_data['wc_all_stock_changes'] ) && ! empty( $post_data['wc_all_stock_changes'] ) ) {
+    $wsal->SetGlobalBooleanSetting( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
+  }
+}
 
 /**
  * Detect file downloads within WC. This is here and not in a sensor as we currently cant seem to catch this filter
@@ -67,7 +76,7 @@ function append_content_to_toggle( $alert_id ) {
   }
 
   if ( 9019 === $alert_id ) {
-    $wsal = WpSecurityAuditLog::GetInstance()->settings();
+    $wsal = WpSecurityAuditLog::GetInstance();
     $wc_all_stock_changes = $wsal->GetGlobalBooleanSetting( 'wc-all-stock-changes', true );
     ?>
     <tr>
@@ -79,8 +88,6 @@ function append_content_to_toggle( $alert_id ) {
     </tr>
     <?php
   }
-
-  return $alert_id;
 }
 
 /**
@@ -324,16 +331,25 @@ function wsal_woocommerce_extension_get_editor_link( $post ) {
  */
 function wsal_woocommerce_extension_togglealerts_sub_category_titles( $title, $alert_id ) {
   if ( 9105 === $alert_id ) {
-		$title = esc_html_e( 'Product stock changes:', 'wsal-woocommerce' );
+		$title = esc_html__( 'Product stock changes:', 'wsal-woocommerce' );
 	}
   if ( 9007 === $alert_id ) {
     $title = esc_html__( 'Product Admin:', 'wsal-woocommerce' );
   }
   if ( 9015 === $alert_id ) {
-    $title = esc_html_e( 'Product Stock Changes:', 'wsal-woocommerce' );
+    $title = esc_html__( 'Product Stock Changes:', 'wsal-woocommerce' );
   }
   if ( 9047 === $alert_id ) {
-    $title = esc_html_e( 'Product Attributes:', 'wsal-woocommerce' );
+    $title = esc_html__( 'Product Attributes:', 'wsal-woocommerce' );
   }
 	return $title;
+}
+
+/**
+ * Add specific events so we can use them for category titles.
+ */
+function wsal_woocommerce_extension_togglealerts_sub_category_events( $sub_category_events ) {
+	$new_events          = array( 9105, 9007, 9015, 9047 );
+	$sub_category_events = array_merge( $sub_category_events, $new_events );
+	return $sub_category_events;
 }
