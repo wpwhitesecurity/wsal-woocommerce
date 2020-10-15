@@ -342,7 +342,7 @@ function wsal_woocommerce_extension_get_editor_link( $post ) {
  /**
  * Add sub cateogry titles to ToggleView page in WSAL.
  */
-function wsal_woocommerce_extension_togglealerts_sub_category_titles( $title, $alert_id ) {
+function wsal_woocommerce_extension_togglealerts_sub_category_titles( $title = '', $alert_id = '' ) {
   if ( 9105 === $alert_id ) {
 		$title = esc_html__( 'Product stock changes:', 'wsal-woocommerce' );
 	}
