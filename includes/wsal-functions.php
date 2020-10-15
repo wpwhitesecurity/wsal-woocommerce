@@ -373,13 +373,17 @@ function wsal_woocommerce_extension_togglealerts_sub_category_events( $sub_categ
  * always able to check/uncheck WC events as normal regardless of WSAL version.
  */
 function wsal_woocommerce_extension_togglealerts_js_code() {
-?>
-    <script type="text/javascript">
-    jQuery(document).ready(function(){
-      jQuery( '#tab-woocommerce [type="checkbox"]' ).removeAttr( 'disabled' );
-    });
-    </script>
-<?php
+  global $current_screen;
+  // Only dequeue on our admin pages.
+  if ( isset( $current_screen->base ) && strpos( $current_screen->base, 'wsal-togglealerts' ) !== false ) {
+    ?>
+        <script type="text/javascript">
+        jQuery(document).ready(function(){
+          jQuery( '#tab-woocommerce [type="checkbox"]' ).removeAttr( 'disabled' );
+        });
+        </script>
+    <?php
+  }
 }
 
 add_action( 'admin_footer', 'wsal_woocommerce_extension_togglealerts_js_code' );
