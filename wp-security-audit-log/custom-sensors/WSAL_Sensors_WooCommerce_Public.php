@@ -1,10 +1,10 @@
 <?php
 /**
- * Sensor: Public Activity
+ * Sensor: Public WooCommerce Activity
  *
  * Public/Visitor activity sensor class file.
  *
- * @since 3.3
+ * @since 1.2
  * @package Wsal
  */
 
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * System Activity sensor.
+ * Public/Visitor WooCommerce Sensor.
  *
  * @package Wsal
  */
