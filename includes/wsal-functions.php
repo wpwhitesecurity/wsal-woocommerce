@@ -11,13 +11,13 @@ add_filter( 'wsal_ignored_custom_post_types', 'wsal_woocommerce_extension_add_cu
 add_filter( 'wsal_load_public_sensors', 'wsal_woocommerce_extension_load_public_sensors' );
 add_filter( 'wsal_togglealerts_sub_category_events', 'wsal_woocommerce_extension_togglealerts_sub_category_events' );
 add_filter( 'wsal_togglealerts_sub_category_titles', 'wsal_woocommerce_extension_togglealerts_sub_category_titles', 10, 2 );
-add_action( 'wsal_togglealerts_append_content_to_toggle', 'append_content_to_toggle' );
-add_action( 'wsal_togglealerts_process_save_settings', 'togglealerts_process_save_settings', 10, 1 );
+add_action( 'wsal_togglealerts_append_content_to_toggle', 'wsal_woocommerce_extension_append_content_to_toggle' );
+add_action( 'wsal_togglealerts_process_save_settings', 'wsal_woocommerce_extension_togglealerts_process_save_settings', 10, 1 );
 
 // Special events.
-add_action( 'woocommerce_download_product', 'detect_file_download', 10, 6 );
+add_action( 'woocommerce_download_product', 'wsal_woocommerce_extension_detect_file_download', 10, 6 );
 
-function togglealerts_process_save_settings( $post_data ) {
+function wsal_woocommerce_extension_togglealerts_process_save_settings( $post_data ) {
   $wsal = WpSecurityAuditLog::GetInstance();
   if ( isset( $post_data['wc_all_stock_changes'] ) && ! empty( $post_data['wc_all_stock_changes'] ) ) {
     $wsal->SetGlobalBooleanSetting( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
@@ -35,7 +35,7 @@ function togglealerts_process_save_settings( $post_data ) {
  * @param  string $download_get_download_id Download ID.
  * @param  string $download_get_order_id    Order ID.
  */
-function detect_file_download( $download_get_user_email, $download_get_order_key, $download_get_product_id, $download_get_user_id, $download_get_download_id, $download_get_order_id ) {
+function wsal_woocommerce_extension_detect_file_download( $download_get_user_email, $download_get_order_key, $download_get_product_id, $download_get_user_id, $download_get_download_id, $download_get_order_id ) {
   $product       = wc_get_product( $download_get_product_id );
   $product_title = $product->get_title();
 
@@ -58,7 +58,7 @@ function detect_file_download( $download_get_user_email, $download_get_order_key
 /**
  * Append some extra content below an event in the ToggleAlerts view.
  */
-function append_content_to_toggle( $alert_id ) {
+function wsal_woocommerce_extension_append_content_to_toggle( $alert_id ) {
 
   if ( 9035 === $alert_id ) {
     $settings               = WpSecurityAuditLog::GetInstance()->settings();
