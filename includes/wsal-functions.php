@@ -342,7 +342,7 @@ function wsal_woocommerce_extension_get_editor_link( $post ) {
  /**
  * Add sub cateogry titles to ToggleView page in WSAL.
  */
-function wsal_woocommerce_extension_togglealerts_sub_category_titles( $title, $alert_id ) {
+function wsal_woocommerce_extension_togglealerts_sub_category_titles( $title = '', $alert_id = '' ) {
   if ( 9105 === $alert_id ) {
 		$title = esc_html__( 'Product stock changes:', 'wsal-woocommerce' );
 	}
@@ -366,3 +366,24 @@ function wsal_woocommerce_extension_togglealerts_sub_category_events( $sub_categ
 	$sub_category_events = array_merge( $sub_category_events, $new_events );
 	return $sub_category_events;
 }
+
+/**
+ * In some cases depending on the version of WSAL, the input checkboxes are disabled as
+ * WSAL things is_woocommerce_active is false. This ensures that cannot happen and the user is
+ * always able to check/uncheck WC events as normal regardless of WSAL version.
+ */
+function wsal_woocommerce_extension_togglealerts_js_code() {
+  global $current_screen;
+  // Only dequeue on our admin pages.
+  if ( isset( $current_screen->base ) && strpos( $current_screen->base, 'wsal-togglealerts' ) !== false ) {
+    ?>
+        <script type="text/javascript">
+        jQuery(document).ready(function(){
+          jQuery( '#tab-woocommerce [type="checkbox"]' ).removeAttr( 'disabled' );
+        });
+        </script>
+    <?php
+  }
+}
+
+add_action( 'admin_footer', 'wsal_woocommerce_extension_togglealerts_js_code' );
