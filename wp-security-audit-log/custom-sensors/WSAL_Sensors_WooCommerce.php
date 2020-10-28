@@ -3327,12 +3327,29 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$event_data['product_name']   = $data['post_title'];
 		$event_data['ID']             = $data['post_ID'];
 
+		if ( intval( $oldpost['_download_limit'][0] ) < 0 ) {
+			$oldpost['_download_limit'][0] = __( 'Unlimited', 'wsal-woocommerce' );
+		}
+
+		if ( intval( $oldpost['_download_expiry'][0] ) < 0 ) {
+			$oldpost['_download_expiry'][0] = __( 'Never', 'wsal-woocommerce' );
+		}
+
+		if ( ! $data['_download_limit'] ) {
+			$data['_download_limit'] = __( 'Unlimited', 'wsal-woocommerce' );
+		}
+
+		if ( ! $data['_download_expiry'] ) {
+			$data['_download_expiry'] =  __( 'Never', 'wsal-woocommerce' );
+		}
+
 		// Event 9097 (Modified the download limit of the product).
 		if ( $oldpost['_download_limit'][0] !== $data['_download_limit'] ) {
 			$event_id                     = 9097;
 			$event_data['previous_value'] = $oldpost['_download_limit'][0];
 			$event_data['new_value']      = $data['_download_limit'];
 			$this->plugin->alerts->Trigger( $event_id, $event_data );
+
 			$alert_needed = true;
 		}
 
@@ -3342,6 +3359,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$event_data['previous_value'] = $oldpost['_download_expiry'][0];
 			$event_data['new_value']      = $data['_download_expiry'];
 			$this->plugin->alerts->Trigger( $event_id, $event_data );
+
 			$alert_needed = true;
 		}
 
