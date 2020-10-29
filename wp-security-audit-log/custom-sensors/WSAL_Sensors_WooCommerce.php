@@ -4201,6 +4201,22 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			// Check for stock quantity changes.
 			$this->CheckStockQuantityChange( $old_product_post, $old_product->get_stock_quantity(), $product->get_stock_quantity() );
 		}
+
+		if ( isset( $_REQUEST['action'] ) && ( 'woocommerce_feature_product' === $_REQUEST['action'] ) && check_admin_referer( 'woocommerce-feature-product' ) ) {
+			$product_id       = $product->get_id();
+			$product_post     = get_post( $product_id );
+			$editor_link = $this->GetEditorLink( $product_post );
+			$this->plugin->alerts->Trigger(
+				9043,
+				array(
+					'PostID'             => esc_attr( $product->get_id() ),
+					'ProductTitle'       => sanitize_text_field( $product_post->post_title ),
+					'ProductStatus'      => sanitize_text_field( $product_post->post_status ),
+					'EventType'          => $product->get_featured() ? 'enabled' : 'disabled',
+					$editor_link['name'] => $editor_link['value'],
+				)
+			);
+		}
 	}
 
 	/**
