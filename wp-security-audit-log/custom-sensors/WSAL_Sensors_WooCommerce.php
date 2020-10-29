@@ -985,7 +985,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		}
 
 		$editor_link = $this->GetEditorLink( $oldpost );
-		$this->plugin->alerts->Trigger(
+		$this->plugin->alerts->TriggerIf(
 			9010,
 			array(
 				'PostID'             => esc_attr( $oldpost->ID ),
@@ -993,10 +993,20 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 				'ProductUrl'         => get_post_permalink( $oldpost->ID ),
 				$editor_link['name'] => $editor_link['value'],
-			)
+			),
+			array( $this, 'do_not_detect_variation_changes_as_product_modified' )
 		);
 	}
 
+	/**
+	 * Ensure 9010 does not fire for variable product changes.
+	 */
+	public function do_not_detect_variation_changes_as_product_modified( WSAL_AlertManager $manager ) {
+		if ( $manager->WillOrHasTriggered( 9016 ) || $manager->WillOrHasTriggered( 9017 ) ) {
+			return false;
+		}
+		return true;
+	}
 	/**
 	 * Moved to Trash 9012, 9037.
 	 *
@@ -2974,7 +2984,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			if ( ! $post ) {
 				return;
 			}
-			$this->check_variations_change( $post );
+			// Grab posted data so we have something to process.
+			$data = wp_unslash( $_POST );
+			$this->check_variations_change( $post, $data );
 		} elseif ( in_array( $action, $wc_order_actions, true ) ) {
 			// Check nonce.
 			check_ajax_referer( 'order-item', 'security' );
