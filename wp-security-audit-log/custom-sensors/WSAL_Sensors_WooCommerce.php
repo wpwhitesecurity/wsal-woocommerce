@@ -2714,6 +2714,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		if ( $manager->WillOrHasTriggered( 9036 ) ) {
 			return false;
 		}
+		if ( $manager->WillOrHasTriggered( 9038 ) ) {
+			return false;
+		}
 		return true;
 	}
 
