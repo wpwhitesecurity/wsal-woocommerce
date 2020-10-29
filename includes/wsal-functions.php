@@ -347,13 +347,13 @@ function wsal_woocommerce_extension_togglealerts_sub_category_titles( $title = '
 		$title = esc_html__( 'Product stock changes:', 'wsal-woocommerce' );
 	}
   if ( 9007 === $alert_id ) {
-    $title = esc_html__( 'Product Admin:', 'wsal-woocommerce' );
+    $title = esc_html__( 'Product admin:', 'wsal-woocommerce' );
   }
   if ( 9015 === $alert_id ) {
-    $title = esc_html__( 'Product Stock Changes:', 'wsal-woocommerce' );
+    $title = esc_html__( 'Product changes:', 'wsal-woocommerce' );
   }
   if ( 9047 === $alert_id ) {
-    $title = esc_html__( 'Product Attributes:', 'wsal-woocommerce' );
+    $title = esc_html__( 'Product attributes:', 'wsal-woocommerce' );
   }
 	return $title;
 }
