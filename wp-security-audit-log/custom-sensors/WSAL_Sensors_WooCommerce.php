@@ -535,7 +535,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @return int
 	 */
 	protected function CheckPermalinkChange( $old_link, $new_link, $post ) {
-		if ( ! empty( $old_cats ) && $old_link && $new_link && ( $old_link !== $new_link ) ) {
+		if ( ! empty( $old_link ) && $old_link && $new_link && ( $old_link !== $new_link ) ) {
 			$editor_link = $this->GetEditorLink( $post );
 			$this->plugin->alerts->Trigger(
 				9006,
@@ -985,7 +985,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		}
 
 		$editor_link = $this->GetEditorLink( $oldpost );
-		$this->plugin->alerts->Trigger(
+		$this->plugin->alerts->TriggerIf(
 			9010,
 			array(
 				'PostID'             => esc_attr( $oldpost->ID ),
@@ -993,10 +993,20 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 				'ProductUrl'         => get_post_permalink( $oldpost->ID ),
 				$editor_link['name'] => $editor_link['value'],
-			)
+			),
+			array( $this, 'do_not_detect_variation_changes_as_product_modified' )
 		);
 	}
 
+	/**
+	 * Ensure 9010 does not fire for variable product changes.
+	 */
+	public function do_not_detect_variation_changes_as_product_modified( WSAL_AlertManager $manager ) {
+		if ( $manager->WillOrHasTriggered( 9016 ) || $manager->WillOrHasTriggered( 9017 ) ) {
+			return false;
+		}
+		return true;
+	}
 	/**
 	 * Moved to Trash 9012, 9037.
 	 *
@@ -2974,7 +2984,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			if ( ! $post ) {
 				return;
 			}
-			$this->check_variations_change( $post );
+			// Grab posted data so we have something to process.
+			$data = wp_unslash( $_POST );
+			$this->check_variations_change( $post, $data );
 		} elseif ( in_array( $action, $wc_order_actions, true ) ) {
 			// Check nonce.
 			check_ajax_referer( 'order-item', 'security' );
@@ -3029,10 +3041,10 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$old_attributes = array();
 		}
 
-		$attribute_names      = isset( $data['attribute_names'] ) ? array_map( 'sanitize_text_field', wp_unslash( $data['attribute_names'] ) ) : false;
-		$attribute_position   = isset( $data['attribute_position'] ) ? array_map( 'sanitize_text_field', wp_unslash( $data['attribute_position'] ) ) : false;
-		$attribute_visibility = isset( $data['attribute_visibility'] ) ? array_map( 'sanitize_text_field', wp_unslash( $data['attribute_visibility'] ) ) : false;
-		$attribute_values     = isset( $data['attribute_values'] ) ? array_map( 'sanitize_text_field', wp_unslash( $data['attribute_values'] ) ) : false;
+		$attribute_names      = isset( $data['attribute_names'] ) && ! empty( $data['attribute_names'] ) ? array_map( 'sanitize_text_field', wp_unslash( $data['attribute_names'] ) ) : false;
+		$attribute_position   = isset( $data['attribute_position'] ) && ! empty( $data['attribute_position'] ) ? array_map( 'sanitize_text_field', wp_unslash( $data['attribute_position'] ) ) : false;
+		$attribute_visibility = isset( $data['attribute_visibility'] ) && ! empty( $data['attribute_visibility'] ) ? array_map( 'sanitize_text_field', wp_unslash( $data['attribute_visibility'] ) ) : false;
+		$attribute_values     = isset( $data['attribute_values'] ) && ! empty( $data['attribute_values'] ) ? array_map( 'sanitize_text_field', wp_unslash( $data['attribute_values'] ) ) : false;
 
 		if ( ! empty( $attribute_names ) && ! empty( $attribute_values ) ) {
 			$new_attributes = array();
@@ -3249,6 +3261,10 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			// @codingStandardsIgnoreEnd
 		}
 
+		if ( ! isset( $data['_thumbnail_id'] ) ) {
+			return 0;
+		}
+
 		// Setup our variables.
 		$thumb_id                = get_post_thumbnail_id( $oldpost->ID );
 		$old_attachment_metadata = $this->_old_attachment_metadata;
@@ -3312,6 +3328,10 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			// @codingStandardsIgnoreStart
 			$data = array_map( 'sanitize_text_field', wp_unslash( $_POST ) );
 			// @codingStandardsIgnoreEnd
+		}
+
+		if ( ! isset( $data['_download_expiry'] ) || ! isset( $data['_download_limit'] ) ) {
+			return 0;
 		}
 
 		$event_id     = false;
