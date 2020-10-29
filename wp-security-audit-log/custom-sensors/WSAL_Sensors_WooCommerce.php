@@ -3224,7 +3224,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					}
 
 					// Visibility change.
-					if ( ! empty( $old_name ) && ! empty( $new_attr['name'] ) && $old_visible !== $new_visible && ! $result ) {
+					if ( ! empty( $oldpost ) && ! empty( $new_attr['name'] ) && $old_visible !== $new_visible && ! $result ) {
 						$this->plugin->alerts->Trigger(
 							9051,
 							array(
