@@ -3261,6 +3261,10 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			// @codingStandardsIgnoreEnd
 		}
 
+		if ( ! isset( $data['_thumbnail_id'] ) ) {
+			return 0;
+		}
+
 		// Setup our variables.
 		$thumb_id                = get_post_thumbnail_id( $oldpost->ID );
 		$old_attachment_metadata = $this->_old_attachment_metadata;
@@ -3324,6 +3328,10 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			// @codingStandardsIgnoreStart
 			$data = array_map( 'sanitize_text_field', wp_unslash( $_POST ) );
 			// @codingStandardsIgnoreEnd
+		}
+
+		if ( ! isset( $data['_download_expiry'] ) || ! isset( $data['_download_limit'] ) ) {
+			return 0;
 		}
 
 		$event_id     = false;
