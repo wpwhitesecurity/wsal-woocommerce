@@ -535,7 +535,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @return int
 	 */
 	protected function CheckPermalinkChange( $old_link, $new_link, $post ) {
-		if ( ! empty( $old_cats ) && $old_link && $new_link && ( $old_link !== $new_link ) ) {
+		if ( ! empty( $old_link ) && $old_link && $new_link && ( $old_link !== $new_link ) ) {
 			$editor_link = $this->GetEditorLink( $post );
 			$this->plugin->alerts->Trigger(
 				9006,
