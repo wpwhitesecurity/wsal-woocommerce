@@ -3850,8 +3850,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				$event_id = 9065;
 			} elseif ( 'date_expires' === $meta_key ) {
 				// Set coupon expiry date data.
-				$coupon_data['OldDate'] = isset( $old_meta_obj->val ) ? date( get_option( 'date_format' ), $old_meta_obj->val ) : false;
-				$coupon_data['NewDate'] = date( get_option( 'date_format' ), $meta_value );
+				$coupon_data['OldDate'] = isset( $old_meta_obj->val ) && ! empty( $old_meta_obj->val ) ? date( get_option( 'date_format' ), $old_meta_obj->val ) : __( 'Does not expire', 'wsal-woocommerce' );
+				$coupon_data['NewDate'] = ! empty( $meta_value ) ? date( get_option( 'date_format' ), $meta_value ) :  __( 'Does not expire', 'wsal-woocommerce' );
 
 				// Set event id.
 				$event_id = 9066;
