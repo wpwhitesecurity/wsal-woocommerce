@@ -6,7 +6,7 @@ License URI: https://www.gnu.org/licenses/gpl.html
 Tags: activity log for WooCommerce, WP Activity Log extension, activity logs
 Requires at least: 3.6
 Tested up to: 5.5
-Stable tag: 1.1
+Stable tag: 1.2
 Requires PHP: 5.6
 
 Keep a detailed log of your team's changes in the WooCommerce store, products, orders & more.
@@ -75,6 +75,28 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 1. Changes in WooCommerce, products and more reported in the WordPress activity log.
 
 == Changelog ==
+
+= 1.2 (2020-11-02) =
+
+* **New features & coverage**
+	* Logging / monitoring of software downloads.
+	* Logs for changes in software dowload expiry and limit settings.
+	
+* **New event IDs**
+	* 9095: User added / removed product image
+	* 9096: user modified product image
+	* 9097: User modified the download limit of a product
+	* 9098: User modified the download expire setting of a product
+	* 9099: User / visitor downloaded the software product
+	
+* **Improvements**
+	* Replaced old code with new standard template code for all [WP Activity Log extensions](https://wpactivitylog.com/extensions/) (more stable and efficient code).
+	* Moved most of the front-end from the [WP Activity Log](https://wpactivitylog.com/) plugin.
+	* Front-end sensors settings moved in the plugin's list of event IDs.
+	
+* **Bug fixes**
+	* Event ID 9040 (edited orders detail) was reported when an order is placed.
+	* First change in coupon's usage restriction was not being reported.
 
 = 1.1 (2020-08-14) =
 
