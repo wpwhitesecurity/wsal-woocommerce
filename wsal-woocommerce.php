@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: WP Activity Log Extension for WooCommerce
+ * Plugin Name: WP Activity Log for WooCommerce
  * Plugin URI: https://wpactivitylog.com/extensions/
  * Description: A WP Activity Log plugin extension for WooCommerce
  * Text Domain: wsal-woocommerce
  * Author: WP White Security
  * Author URI: http://www.wpwhitesecurity.com/
- * Version: 1.1
+ * Version: 1.2
  * License: GPL2
  * Network: true
  *
