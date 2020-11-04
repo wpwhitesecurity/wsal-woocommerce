@@ -78,6 +78,8 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 
 = 1.2 (2020-11-02) =
 
+Release notes: [Logs of software downloads & more reliable code](https://wpactivitylog.com/woocommerce-extension-1-2/)
+
 * **New features & coverage**
 	* Logging / monitoring of software downloads.
 	* Logs for changes in software dowload expiry and limit settings.
