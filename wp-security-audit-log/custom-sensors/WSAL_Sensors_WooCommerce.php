@@ -2912,6 +2912,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		if ( isset( $data['attribute_public'] ) && isset( $this->old_attr_data->has_archives ) && $data['attribute_public'] !== (int) $this->old_attr_data->has_archives ) {
 			$attr_event              = $this->get_attribute_event_data( $id, $data );
 			$attr_event['EventType'] = 1 === $data['attribute_public'] ? 'enabled' : 'disabled';
+			$attr_event['Slug']      = $old_slug;
 			$this->plugin->alerts->Trigger( 9062, $attr_event );
 		}
 	}
