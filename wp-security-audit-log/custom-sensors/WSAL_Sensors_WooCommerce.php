@@ -3282,6 +3282,10 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$editor_link['name'] => $editor_link['value']
 		);
 
+		$event_data['PostID']        = $oldpost->ID;
+		$event_data['ProductTitle']  = sanitize_text_field( $oldpost->post_title );
+		$event_data['ProductStatus'] = sanitize_text_field( $oldpost->post_status );
+
 		// Featued image added.
 		if ( empty( $old_attachment_metadata ) && ! empty( $attachment_metadata ) ) {
 			$event_data['EventType'] = 'added';
