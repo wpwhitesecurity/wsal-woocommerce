@@ -2912,6 +2912,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		if ( isset( $data['attribute_public'] ) && isset( $this->old_attr_data->has_archives ) && $data['attribute_public'] !== (int) $this->old_attr_data->has_archives ) {
 			$attr_event              = $this->get_attribute_event_data( $id, $data );
 			$attr_event['EventType'] = 1 === $data['attribute_public'] ? 'enabled' : 'disabled';
+			$attr_event['Slug']      = $old_slug;
 			$this->plugin->alerts->Trigger( 9062, $attr_event );
 		}
 	}
@@ -3282,6 +3283,10 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$editor_link['name'] => $editor_link['value']
 		);
 
+		$event_data['PostID']        = $oldpost->ID;
+		$event_data['ProductTitle']  = sanitize_text_field( $oldpost->post_title );
+		$event_data['ProductStatus'] = sanitize_text_field( $oldpost->post_status );
+
 		// Featued image added.
 		if ( empty( $old_attachment_metadata ) && ! empty( $attachment_metadata ) ) {
 			$event_data['EventType'] = 'added';
@@ -3349,6 +3354,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$event_data['new_value']      = $data['_download_expiry'];
 		$event_data['product_name']   = $data['post_title'];
 		$event_data['ID']             = $data['post_ID'];
+		$event_data['ProductStatus']   = $data['post_status'];
 
 		if ( intval( $oldpost['_download_limit'][0] ) < 0 ) {
 			$oldpost['_download_limit'][0] = __( 'Unlimited', 'wsal-woocommerce' );
