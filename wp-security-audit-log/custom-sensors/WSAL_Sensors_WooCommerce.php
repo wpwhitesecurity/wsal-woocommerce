@@ -3354,7 +3354,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$event_data['new_value']      = $data['_download_expiry'];
 		$event_data['product_name']   = $data['post_title'];
 		$event_data['ID']             = $data['post_ID'];
-		$event_data['ProductStatu']   = $data['post_status'];
+		$event_data['ProductStatus']   = $data['post_status'];
 
 		if ( intval( $oldpost['_download_limit'][0] ) < 0 ) {
 			$oldpost['_download_limit'][0] = __( 'Unlimited', 'wsal-woocommerce' );
