@@ -4000,8 +4000,22 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						$old_address_array[ $user_meta->key ] = $user_meta->value;
 					}
 
-					$new_address = implode( ', ', array_filter( $new_address_array ) );
-					$old_address = implode( ', ', array_filter( $old_address_array ) );
+					$new_address_array = array_filter( $new_address_array );
+					$old_address_array = array_filter( $old_address_array  );
+
+					// Combine name fields to avoid weird comma.
+					if ( isset( $new_address_array['billing_first_name'] ) && isset( $new_address_array['billing_last_name'] ) ) {
+						$new_address_array['billing_first_name'] = $new_address_array['billing_first_name'] . ' ' . $new_address_array['billing_last_name'];
+						unset( $new_address_array['billing_last_name'] );
+					}
+					if ( isset( $old_address_array['billing_first_name'] ) && isset( $old_address_array['billing_last_name'] ) ) {
+						$old_address_array['billing_first_name'] = $old_address_array['billing_first_name'] . ' ' . $old_address_array['billing_last_name'];
+						unset( $old_address_array['billing_last_name'] );
+					}
+
+					// Turn them into a nice string
+					$new_address = implode( ', ', $new_address_array );
+					$old_address = implode( ', ', $old_address_array );
 
 					if ( $event_id ) {
 						$user = get_user_by( 'ID', $user_id );
@@ -4040,16 +4054,27 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						$old_address_array[ $field ] = $field_value;
 					}
 
-					$new_address = implode( ', ', array_filter( $new_address_array ) );
-					$old_address = implode( ', ', array_filter( $old_address_array ) );
-
 					// Replace old values we already have stored.
 					foreach ( $this->wc_user_meta as $user_meta ) {
 						$old_address_array[ $user_meta->key ] = $user_meta->value;
 					}
 
-					$new_address = implode( ', ', array_filter( $new_address_array ) );
-					$old_address = implode( ', ', array_filter( $old_address_array ) );
+					$new_address_array = array_filter( $new_address_array );
+					$old_address_array = array_filter( $old_address_array );
+
+					// Combine name fields to avoid weird comma.
+					if ( isset( $new_address_array['shipping_first_name'] ) && isset( $new_address_array['shipping_last_name'] ) ) {
+						$new_address_array['shipping_first_name'] = $new_address_array['shipping_first_name'] . ' ' . $new_address_array['shipping_last_name'];
+						unset( $new_address_array['shipping_last_name'] );
+					}
+					if ( isset( $old_address_array['shipping_first_name'] ) && isset( $old_address_array['shipping_last_name'] ) ) {
+						$old_address_array['shipping_first_name'] = $old_address_array['shipping_first_name'] . ' ' . $old_address_array['shipping_last_name'];
+						unset( $old_address_array['shipping_last_name'] );
+					}
+
+					// Turn them into a nice string.
+					$new_address = implode( ', ', $new_address_array );
+					$old_address = implode( ', ', $old_address_array );
 
 					if ( $event_id ) {
 						$user = get_user_by( 'ID', $user_id );
