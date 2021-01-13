@@ -3987,15 +3987,21 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 					// We will fill this is as needed below.
 					$new_address_array = [];
+					$old_address_array = [];
 
 					foreach ( $billing_address_fields as $field ) {
-						$field_value = get_user_meta( $user_id, $field, true );
-						if ( ! empty( $field_value ) ) {
-							$new_address_array[ $field ] = $field_value;
-						}
+						$field_value                 = get_user_meta( $user_id, $field, true );
+						$new_address_array[ $field ] = ( $meta_key === $field ) ? $meta_value : $field_value;
+						$old_address_array[ $field ] = $field_value;
 					}
 
-					$new_address = preg_replace( '/,/', '',  implode( ', ', $new_address_array ), 1 );
+					// Replace old values we already have stored.
+					foreach ( $this->wc_user_meta as $user_meta ) {
+						$old_address_array[ $user_meta->key ] = $user_meta->value;
+					}
+
+					$new_address = implode( ', ', array_filter( $new_address_array ) );
+					$old_address = implode( ', ', array_filter( $old_address_array ) );
 
 					if ( $event_id ) {
 						$user = get_user_by( 'ID', $user_id );
@@ -4008,6 +4014,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								array(
 									'TargetUsername' => $user ? $user->user_login : false,
 									'NewValue'       => sanitize_text_field( $new_address ),
+									'OldValue'       => sanitize_text_field( $old_address ),
 									'EditUserLink'   => add_query_arg( 'user_id', $user_id, admin_url( 'user-edit.php' ) ),
 									'Roles'          => is_array( $user->roles ) ? implode( ', ', $user->roles ) : $user->roles,
 								),
@@ -4028,13 +4035,21 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					$new_address_array = [];
 
 					foreach ( $shipping_address_fields as $field ) {
-					  $field_value = get_user_meta( $user_id, $field, true );
-					  if ( ! empty( $field_value ) ) {
-					    $new_address_array[ $field ] = $field_value;
-					  }
+						$field_value                 = get_user_meta( $user_id, $field, true );
+						$new_address_array[ $field ] = ( $meta_key === $field ) ? $meta_value : $field_value;
+						$old_address_array[ $field ] = $field_value;
 					}
 
-					$new_address = preg_replace( '/,/', '',  implode( ', ', $new_address_array ), 1 );
+					$new_address = implode( ', ', array_filter( $new_address_array ) );
+					$old_address = implode( ', ', array_filter( $old_address_array ) );
+
+					// Replace old values we already have stored.
+					foreach ( $this->wc_user_meta as $user_meta ) {
+						$old_address_array[ $user_meta->key ] = $user_meta->value;
+					}
+
+					$new_address = implode( ', ', array_filter( $new_address_array ) );
+					$old_address = implode( ', ', array_filter( $old_address_array ) );
 
 					if ( $event_id ) {
 						$user = get_user_by( 'ID', $user_id );
@@ -4046,6 +4061,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								array(
 									'TargetUsername' => $user ? $user->user_login : false,
 									'NewValue'       => sanitize_text_field( $new_address ),
+									'OldValue'       => sanitize_text_field( $old_address ),
 									'EditUserLink'   => add_query_arg( 'user_id', $user_id, admin_url( 'user-edit.php' ) ),
 									'Roles'          => is_array( $user->roles ) ? implode( ', ', $user->roles ) : $user->roles,
 								),

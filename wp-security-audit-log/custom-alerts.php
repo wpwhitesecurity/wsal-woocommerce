@@ -138,8 +138,8 @@ $custom_alerts = array(
 		),
 
 		__( 'User Profile', 'wsal-woocommerce' ) => array(
-			array( 9083, WSAL_INFORMATIONAL, __( 'User changed the billing address details', 'wsal-woocommerce' ), __( 'The <strong>billing address</strong> details of the user %TargetUsername% / Own <strong>billing address</strong> %TargetUsername% %LineBreak% Role: %Roles% %LineBreak% New Billing address: %NewValue% %LineBreak% %EditUserLink%', 'wsal-woocommerce' ), 'user', 'modified' ),
-			array( 9084, WSAL_INFORMATIONAL, __( 'User changed the shipping address details', 'wsal-woocommerce' ), __( 'The <strong>shipping address</strong> details of the user %TargetUsername% / Own <strong>shipping address<strong> %LineBreak% Role: %Roles% %LineBreak% New Shipping address: %NewValue% %LineBreak% %EditUserLink%', 'wsal-woocommerce' ), 'user', 'modified' ),
+			array( 9083, WSAL_INFORMATIONAL, __( 'User changed the billing address details', 'wsal-woocommerce' ), __( 'The <strong>billing address</strong> details of the user %TargetUsername% / Own <strong>billing address</strong> %TargetUsername% %LineBreak% Role: %Roles% %LineBreak% Previous Billing address: %OldValue% %LineBreak% New Billing address: %NewValue% %LineBreak% %EditUserLink%', 'wsal-woocommerce' ), 'user', 'modified' ),
+			array( 9084, WSAL_INFORMATIONAL, __( 'User changed the shipping address details', 'wsal-woocommerce' ), __( 'The <strong>shipping address</strong> details of the user %TargetUsername% / Own <strong>shipping address</strong> %LineBreak% Role: %Roles% %LineBreak% Previous Shipping address: %OldValue% %LineBreak% New Shipping address: %NewValue% %LineBreak% %EditUserLink%', 'wsal-woocommerce' ), 'user', 'modified' ),
 		),
 	),
 );
