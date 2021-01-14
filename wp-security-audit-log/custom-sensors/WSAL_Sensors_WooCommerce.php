@@ -140,10 +140,10 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	private $request_data = array();
 
 	/**
-	 * Count changed meta fields.
+	 * Count changed meta fields. Set to 1 as thats the minumum number of fields that can be changed.
 	 */
-	private $updated_field_count          = 0;
-	private $updated_shipping_field_count = 0;
+	private $updated_field_count          = 1;
+	private $updated_shipping_field_count = 1;
 
 	/**
 	 * Listening to events using WP hooks.
@@ -3973,74 +3973,62 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			return;
 		}
 
-		// Check meta creation event.
-		if ( ! isset( $this->wc_user_meta[ $meta_id ] ) ) {
-			$this->wc_user_meta[ $meta_id ] = (object) array( 'value' => false );
-		}
+		$current_value = get_user_meta( $user_id, $this->wc_user_meta[ $meta_id ]->key, true );
 
-		if ( isset( $this->wc_user_meta[ $meta_id ] ) ) {
-			if ( $meta_value && $this->wc_user_meta[ $meta_id ]->value !== $meta_value ) {
+		if ( isset( $this->wc_user_meta[ $meta_id ] ) && $current_value !== $this->wc_user_meta[ $meta_id ]->value ) {
+			if ( $this->wc_user_meta[ $meta_id ]->value !== $meta_value ) {
 				// Event id.
 				$event_id = false;
 
 				if ( false !== strpos( $meta_key, 'billing_' ) ) {
 					$event_id = 9083;
-					if ( $meta_key === 'billing_first_name' ) {
-						$new_address = $meta_value . ' ' . get_user_meta( $user_id, 'billing_last_name', true ) . ', ' . get_user_meta( $user_id, 'billing_company', true ) . ', ' . get_user_meta( $user_id, 'billing_country', true ) . ', ' . get_user_meta( $user_id, 'billing_address_1', true ) . ', ' . get_user_meta( $user_id, 'billing_address_2', true ) . ', ' . get_user_meta( $user_id, 'billing_city', true ) . ' ' . get_user_meta( $user_id, 'billing_state', true ) . ', ' . get_user_meta( $user_id, 'billing_postcode', true ) . ', ' . get_user_meta( $user_id, 'billing_phone', true ) . ', ' . get_user_meta( $user_id, 'billing_email', true );
+
+					$billing_address_fields = [ 'billing_first_name', 'billing_last_name', 'billing_company', 'billing_country', 'billing_address_1', 'billing_address_2', 'billing_city', 'billing_state', 'billing_postcode', 'billing_phone' ];
+
+					// We will fill this is as needed below.
+					$new_address_array = [];
+					$old_address_array = [];
+
+					foreach ( $billing_address_fields as $field ) {
+						$field_value                 = get_user_meta( $user_id, $field, true );
+						$new_address_array[ $field ] = ( $meta_key === $field ) ? $meta_value : $field_value;
+						$old_address_array[ $field ] = $field_value;
 					}
 
-					if ( $meta_key === 'billing_last_name' ) {
-						$new_address = get_user_meta( $user_id, 'billing_first_name', true ) . ' ' . $meta_value . ', ' . get_user_meta( $user_id, 'billing_company', true ) . ', ' . get_user_meta( $user_id, 'billing_country', true ) . ', ' . get_user_meta( $user_id, 'billing_address_1', true ) . ', ' . get_user_meta( $user_id, 'billing_address_2', true ) . ', ' . get_user_meta( $user_id, 'billing_city', true ) . ' ' . get_user_meta( $user_id, 'billing_state', true ) . ',  ' . get_user_meta( $user_id, 'billing_postcode', true ) . ', ' . get_user_meta( $user_id, 'billing_phone', true ) . ', ' . get_user_meta( $user_id, 'billing_email', true );
+					// Replace old values we already have stored.
+					foreach ( $this->wc_user_meta as $user_meta ) {
+						$old_address_array[ $user_meta->key ] = $user_meta->value;
 					}
 
-					if ( $meta_key === 'billing_company' ) {
-						$new_address = get_user_meta( $user_id, 'billing_first_name', true ) . ' ' . get_user_meta( $user_id, 'billing_last_name', true ) . ', ' . $meta_value . ', ' . get_user_meta( $user_id, 'billing_country', true ) . ', ' . get_user_meta( $user_id, 'billing_address_1', true ) . ', ' . get_user_meta( $user_id, 'billing_address_2', true ) . ', ' . get_user_meta( $user_id, 'billing_city', true ) . ', ' . get_user_meta( $user_id, 'billing_state', true ) . ', ' . get_user_meta( $user_id, 'billing_postcode', true ) . ', ' . get_user_meta( $user_id, 'billing_phone', true ) . ', ' . get_user_meta( $user_id, 'billing_email', true );
+					$new_address_array = array_filter( $new_address_array );
+					$old_address_array = array_filter( $old_address_array  );
+
+					// Combine name fields to avoid weird comma.
+					if ( isset( $new_address_array['billing_first_name'] ) && isset( $new_address_array['billing_last_name'] ) ) {
+						$new_address_array['billing_first_name'] = $new_address_array['billing_first_name'] . ' ' . $new_address_array['billing_last_name'];
+						unset( $new_address_array['billing_last_name'] );
+					}
+					if ( isset( $old_address_array['billing_first_name'] ) && isset( $old_address_array['billing_last_name'] ) ) {
+						$old_address_array['billing_first_name'] = $old_address_array['billing_first_name'] . ' ' . $old_address_array['billing_last_name'];
+						unset( $old_address_array['billing_last_name'] );
 					}
 
-					if ( $meta_key === 'billing_country' ) {
-						$new_address = get_user_meta( $user_id, 'billing_first_name', true ) . ' ' . get_user_meta( $user_id, 'billing_last_name', true ) . ', ' . get_user_meta( $user_id, 'billing_company', true ) . ', ' . $meta_value . ', ' . get_user_meta( $user_id, 'billing_address_1', true ) . ', ' . get_user_meta( $user_id, 'billing_address_2', true ) . ', ' . get_user_meta( $user_id, 'billing_city', true ) . ', ' . get_user_meta( $user_id, 'billing_state', true ) . ', ' . get_user_meta( $user_id, 'billing_postcode', true ) . ', ' . get_user_meta( $user_id, 'billing_phone', true ) . ', ' . get_user_meta( $user_id, 'billing_email', true );
-					}
-
-					if ( $meta_key === 'billing_address_1' ) {
-						$new_address = get_user_meta( $user_id, 'billing_first_name', true ) . ' ' . get_user_meta( $user_id, 'billing_last_name', true ) . ', ' . get_user_meta( $user_id, 'billing_company', true ) . ', ' . get_user_meta( $user_id, 'billing_country', true ) . ', ' . $meta_value . ', ' . get_user_meta( $user_id, 'billing_address_2', true ) . ', ' . get_user_meta( $user_id, 'billing_city', true ) . ' ' . get_user_meta( $user_id, 'billing_state', true ) . ', ' . get_user_meta( $user_id, 'billing_postcode', true ) . ', ' . get_user_meta( $user_id, 'billing_phone', true ) . ', ' . get_user_meta( $user_id, 'billing_email', true );
-					}
-
-					if ( $meta_key === 'billing_address_2' ) {
-						$new_address = get_user_meta( $user_id, 'billing_first_name', true ) . ' ' . get_user_meta( $user_id, 'billing_last_name', true ) . ', ' . get_user_meta( $user_id, 'billing_company', true ) . ', ' . get_user_meta( $user_id, 'billing_country', true ) . ', ' . get_user_meta( $user_id, 'billing_address_1', true ) . ', ' . $meta_value . ', ' . get_user_meta( $user_id, 'billing_city', true ) . ', ' . get_user_meta( $user_id, 'billing_state', true ) . ', ' . get_user_meta( $user_id, 'billing_postcode', true ) . ', ' . get_user_meta( $user_id, 'billing_phone', true ) . ', ' . get_user_meta( $user_id, 'billing_email', true );
-					}
-
-					if ( $meta_key === 'billing_city' ) {
-						$new_address = get_user_meta( $user_id, 'billing_first_name', true ) . ' ' . get_user_meta( $user_id, 'billing_last_name', true ) . ' ' . get_user_meta( $user_id, 'billing_company', true ) . ' ' . get_user_meta( $user_id, 'billing_country', true ) . ' ' . get_user_meta( $user_id, 'billing_address_1', true ) . ' ' . get_user_meta( $user_id, 'billing_address_2', true ) . ' ' . $meta_value . ' ' . get_user_meta( $user_id, 'billing_state', true ) . '  ' . get_user_meta( $user_id, 'billing_postcode', true ) . ' ' . get_user_meta( $user_id, 'billing_phone', true ) . ' ' . get_user_meta( $user_id, 'billing_email', true );
-					}
-
-					if ( $meta_key === 'billing_state' ) {
-						$new_address = get_user_meta( $user_id, 'billing_first_name', true ) . ' ' . get_user_meta( $user_id, 'billing_last_name', true ) . ', ' . get_user_meta( $user_id, 'billing_state', true ) . ', ' . get_user_meta( $user_id, 'billing_country', true ) . ', ' . get_user_meta( $user_id, 'billing_address_1', true ) . ', ' . get_user_meta( $user_id, 'billing_address_2', true ) . ', ' . get_user_meta( $user_id, 'billing_city', true ) . ', ' . $meta_value . ', ' . get_user_meta( $user_id, 'billing_postcode', true ) . ', ' . get_user_meta( $user_id, 'billing_phone', true ) . ', ' . get_user_meta( $user_id, 'billing_email', true );
-					}
-
-					if ( $meta_key === 'billing_postcode' ) {
-						$new_address = get_user_meta( $user_id, 'billing_first_name', true ) . ' ' . get_user_meta( $user_id, 'billing_last_name', true ) . ', ' . get_user_meta( $user_id, 'billing_company', true ) . ', ' . get_user_meta( $user_id, 'billing_country', true ) . ', ' . get_user_meta( $user_id, 'billing_address_1', true ) . ', ' . get_user_meta( $user_id, 'billing_address_2', true ) . ', ' . get_user_meta( $user_id, 'billing_city', true ) . ', ' . get_user_meta( $user_id, 'billing_state', true ) . ', ' . $meta_value . ', ' . get_user_meta( $user_id, 'billing_phone', true ) . ', ' . get_user_meta( $user_id, 'billing_email', true );
-					}
-
-					if ( $meta_key === 'billing_phone' ) {
-						$new_address = get_user_meta( $user_id, 'billing_first_name', true ) . ' ' . get_user_meta( $user_id, 'billing_last_name', true ) . ', ' . get_user_meta( $user_id, 'billing_company', true ) . ', ' . get_user_meta( $user_id, 'billing_country', true ) . ', ' . get_user_meta( $user_id, 'billing_address_1', true ) . ', ' . get_user_meta( $user_id, 'billing_address_2', true ) . ', ' . get_user_meta( $user_id, 'billing_city', true ) . ', ' . get_user_meta( $user_id, 'billing_state', true ) . ',  ' . get_user_meta( $user_id, 'billing_postcode', true ) . ', ' . $meta_value . ', ' . get_user_meta( $user_id, 'billing_email', true );
-					}
-
-					if ( $meta_key === 'billing_email' ) {
-						$new_address = get_user_meta( $user_id, 'billing_first_name', true ) . ' ' . get_user_meta( $user_id, 'billing_last_name', true ) . ', ' . get_user_meta( $user_id, 'billing_company', true ) . ', ' . get_user_meta( $user_id, 'billing_country', true ) . ', ' . get_user_meta( $user_id, 'billing_address_1', true ) . ', ' . get_user_meta( $user_id, 'billing_address_2', true ) . ', ' . get_user_meta( $user_id, 'billing_city', true ) . ', ' . get_user_meta( $user_id, 'billing_state', true ) . ', ' . get_user_meta( $user_id, 'billing_postcode', true ) . ', ' . get_user_meta( $user_id, 'billing_phone', true ) . ', ' . $meta_value;
-					}
-
-					$new_address = str_replace( ' ,', '', $new_address );
+					// Turn them into a nice string
+					$new_address = implode( ', ', $new_address_array );
+					$old_address = implode( ', ', $old_address_array );
 
 					if ( $event_id ) {
 						$user = get_user_by( 'ID', $user_id );
 						if ( $event_id === 9083 ) {
+
 							// Add 1 to our changed fields counter
 							$this->updated_field_count++;
 							$this->plugin->alerts->TriggerIf(
 								$event_id,
 								array(
 									'TargetUsername' => $user ? $user->user_login : false,
-									'NewValue'       => $new_address,
+									'NewValue'       => sanitize_text_field( $new_address ),
+									'OldValue'       => sanitize_text_field( $old_address ),
 									'EditUserLink'   => add_query_arg( 'user_id', $user_id, admin_url( 'user-edit.php' ) ),
 									'Roles'          => is_array( $user->roles ) ? implode( ', ', $user->roles ) : $user->roles,
 								),
@@ -4051,46 +4039,42 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							);
 						}
 					}
-				} elseif ( false !== strpos( $meta_key, 'shipping_' ) ) {
+				}
+				elseif ( false !== strpos( $meta_key, 'shipping_' ) ) {
 					$event_id = 9084;
-					if ( $meta_key === 'shipping_first_name' ) {
-						$new_address = $meta_value . ' ' . get_user_meta( $user_id, 'shipping_last_name', true ) . ', ' . get_user_meta( $user_id, 'shipping_company', true ) . ', ' . get_user_meta( $user_id, 'shipping_country', true ) . ', ' . get_user_meta( $user_id, 'shipping_address_1', true ) . ', ' . get_user_meta( $user_id, 'shipping_address_2', true ) . ', ' . get_user_meta( $user_id, 'shipping_city', true ) . ' ' . get_user_meta( $user_id, 'shipping_state', true ) . ', ' . get_user_meta( $user_id, 'shipping_postcode', true );
+
+					$shipping_address_fields = [ 'shipping_first_name', 'shipping_last_name', 'shipping_company', 'shipping_country', 'shipping_address_1', 'shipping_address_2', 'shipping_city', 'shipping_state', 'shipping_postcode', 'shipping_phone' ];
+
+					// We will fill this is as needed below.
+					$new_address_array = [];
+
+					foreach ( $shipping_address_fields as $field ) {
+						$field_value                 = get_user_meta( $user_id, $field, true );
+						$new_address_array[ $field ] = ( $meta_key === $field ) ? $meta_value : $field_value;
+						$old_address_array[ $field ] = $field_value;
 					}
 
-					if ( $meta_key === 'shipping_last_name' ) {
-						$new_address = get_user_meta( $user_id, 'shipping_first_name', true ) . ' ' . $meta_value . ', ' . get_user_meta( $user_id, 'shipping_company', true ) . ', ' . get_user_meta( $user_id, 'shipping_country', true ) . ', ' . get_user_meta( $user_id, 'shipping_address_1', true ) . ', ' . get_user_meta( $user_id, 'shipping_address_2', true ) . ', ' . get_user_meta( $user_id, 'shipping_city', true ) . ' ' . get_user_meta( $user_id, 'shipping_state', true ) . ',  ' . get_user_meta( $user_id, 'shipping_postcode', true );
+					// Replace old values we already have stored.
+					foreach ( $this->wc_user_meta as $user_meta ) {
+						$old_address_array[ $user_meta->key ] = $user_meta->value;
 					}
 
-					if ( $meta_key === 'shipping_company' ) {
-						$new_address = get_user_meta( $user_id, 'shipping_first_name', true ) . ' ' . get_user_meta( $user_id, 'shipping_last_name', true ) . ', ' . $meta_value . ', ' . get_user_meta( $user_id, 'shipping_country', true ) . ', ' . get_user_meta( $user_id, 'shipping_address_1', true ) . ', ' . get_user_meta( $user_id, 'shipping_address_2', true ) . ', ' . get_user_meta( $user_id, 'shipping_city', true ) . ', ' . get_user_meta( $user_id, 'shipping_state', true ) . ', ' . get_user_meta( $user_id, 'shipping_postcode', true );
+					$new_address_array = array_filter( $new_address_array );
+					$old_address_array = array_filter( $old_address_array );
+
+					// Combine name fields to avoid weird comma.
+					if ( isset( $new_address_array['shipping_first_name'] ) && isset( $new_address_array['shipping_last_name'] ) ) {
+						$new_address_array['shipping_first_name'] = $new_address_array['shipping_first_name'] . ' ' . $new_address_array['shipping_last_name'];
+						unset( $new_address_array['shipping_last_name'] );
+					}
+					if ( isset( $old_address_array['shipping_first_name'] ) && isset( $old_address_array['shipping_last_name'] ) ) {
+						$old_address_array['shipping_first_name'] = $old_address_array['shipping_first_name'] . ' ' . $old_address_array['shipping_last_name'];
+						unset( $old_address_array['shipping_last_name'] );
 					}
 
-					if ( $meta_key === 'shipping_country' ) {
-						$new_address = get_user_meta( $user_id, 'shipping_first_name', true ) . ' ' . get_user_meta( $user_id, 'shipping_last_name', true ) . ', ' . get_user_meta( $user_id, 'shipping_company', true ) . ', ' . $meta_value . ', ' . get_user_meta( $user_id, 'shipping_address_1', true ) . ', ' . get_user_meta( $user_id, 'shipping_address_2', true ) . ', ' . get_user_meta( $user_id, 'shipping_city', true ) . ', ' . get_user_meta( $user_id, 'shipping_state', true ) . ', ' . get_user_meta( $user_id, 'shipping_postcode', true );
-					}
-
-					if ( $meta_key === 'shipping_address_1' ) {
-						$new_address = get_user_meta( $user_id, 'shipping_first_name', true ) . ' ' . get_user_meta( $user_id, 'shipping_last_name', true ) . ', ' . get_user_meta( $user_id, 'shipping_company', true ) . ', ' . get_user_meta( $user_id, 'shipping_country', true ) . ', ' . $meta_value . ', ' . get_user_meta( $user_id, 'shipping_address_2', true ) . ', ' . get_user_meta( $user_id, 'shipping_city', true ) . ' ' . get_user_meta( $user_id, 'shipping_state', true ) . ', ' . get_user_meta( $user_id, 'shipping_postcode', true );
-					}
-
-					if ( $meta_key === 'shipping_address_2' ) {
-						$new_address = get_user_meta( $user_id, 'shipping_first_name', true ) . ' ' . get_user_meta( $user_id, 'shipping_last_name', true ) . ', ' . get_user_meta( $user_id, 'shipping_company', true ) . ', ' . get_user_meta( $user_id, 'shipping_country', true ) . ', ' . get_user_meta( $user_id, 'shipping_address_1', true ) . ', ' . $meta_value . ', ' . get_user_meta( $user_id, 'shipping_city', true ) . ', ' . get_user_meta( $user_id, 'shipping_state', true ) . ', ' . get_user_meta( $user_id, 'shipping_postcode', true );
-					}
-
-					if ( $meta_key === 'shipping_city' ) {
-						$new_address = get_user_meta( $user_id, 'shipping_first_name', true ) . ' ' . get_user_meta( $user_id, 'shipping_last_name', true ) . ' ' . get_user_meta( $user_id, 'shipping_company', true ) . ' ' . get_user_meta( $user_id, 'shipping_country', true ) . ' ' . get_user_meta( $user_id, 'shipping_address_1', true ) . ' ' . get_user_meta( $user_id, 'shipping_address_2', true ) . ' ' . $meta_value . ' ' . get_user_meta( $user_id, 'shipping_state', true ) . '  ' . get_user_meta( $user_id, 'shipping_postcode', true );
-					}
-
-					if ( $meta_key === 'shipping_state' ) {
-						$new_address = get_user_meta( $user_id, 'shipping_first_name', true ) . ' ' . get_user_meta( $user_id, 'shipping_last_name', true ) . ', ' . get_user_meta( $user_id, 'shipping_state', true ) . ', ' . get_user_meta( $user_id, 'shipping_country', true ) . ', ' . get_user_meta( $user_id, 'shipping_address_1', true ) . ', ' . get_user_meta( $user_id, 'shipping_address_2', true ) . ', ' . get_user_meta( $user_id, 'shipping_city', true ) . ', ' . $meta_value . ', ' . get_user_meta( $user_id, 'shipping_postcode', true );
-					}
-
-					if ( $meta_key === 'shipping_postcode' ) {
-						$new_address = get_user_meta( $user_id, 'shipping_first_name', true ) . ' ' . get_user_meta( $user_id, 'shipping_last_name', true ) . ', ' . get_user_meta( $user_id, 'shipping_company', true ) . ', ' . get_user_meta( $user_id, 'shipping_country', true ) . ', ' . get_user_meta( $user_id, 'shipping_address_1', true ) . ', ' . get_user_meta( $user_id, 'shipping_address_2', true ) . ', ' . get_user_meta( $user_id, 'shipping_city', true ) . ', ' . get_user_meta( $user_id, 'shipping_state', true ) . ', ' . $meta_value;
-					}
-
-					// Strip address of, ', ,' in case a field is missing something.
-					$new_address = str_replace( ' ,', '', $new_address );
+					// Turn them into a nice string.
+					$new_address = implode( ', ', $new_address_array );
+					$old_address = implode( ', ', $old_address_array );
 
 					if ( $event_id ) {
 						$user = get_user_by( 'ID', $user_id );
@@ -4102,6 +4086,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								array(
 									'TargetUsername' => $user ? $user->user_login : false,
 									'NewValue'       => sanitize_text_field( $new_address ),
+									'OldValue'       => sanitize_text_field( $old_address ),
 									'EditUserLink'   => add_query_arg( 'user_id', $user_id, admin_url( 'user-edit.php' ) ),
 									'Roles'          => is_array( $user->roles ) ? implode( ', ', $user->roles ) : $user->roles,
 								),
