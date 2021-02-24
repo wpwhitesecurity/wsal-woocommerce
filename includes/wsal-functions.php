@@ -4,7 +4,6 @@
  * Add our filters.
  */
 add_filter( 'wsal_event_type_data', 'wsal_woocommerce_extension_add_custom_event_type', 10, 2 );
-add_filter( 'wsal_link_filter', 'wsal_woocommerce_extension_add_custom_meta_format_value', 10, 2 );
 add_filter( 'wsal_meta_formatter_custom_formatter', 'wsal_woocommerce_extension_add_custom_meta_format', 10, 2 );
 add_filter( 'wsal_event_objects', 'wsal_woocommerce_extension_add_custom_event_objects' );
 add_filter( 'wsal_ignored_custom_post_types', 'wsal_woocommerce_extension_add_custom_ignored_cpt' );
@@ -223,38 +222,6 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $name ) {
 
 	return $value;
 }
-
-/**
- * Adds new meta formatting for our plugion
- *
- * @method wsal_woocommerce_extension_add_custom_meta_format_value
- * @since  1.0.0
- */
- function wsal_woocommerce_extension_add_custom_meta_format_value( $value, $name ) {
- 	$check_value = (string) $value;
-	if ( '%ProductTagLink%' === $name ) {
- 		if ( 'NULL' !== $check_value ) {
- 			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View tag', 'wsal-woocommerce' ) . '</a>';
- 		} else {
- 			return '';
- 		}
- 	}
-	if ( '%EditorLinkProduct%' === $name ) {
-		if ( 'NULL' !== $check_value ) {
-			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View product in editor', 'wsal-woocommerce' ) . '</a>';
-		} else {
-			return '';
-		}
-	}
-	if ( '%EditorLinkCoupon%' === $name ) {
-		if ( 'NULL' !== $check_value ) {
-			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View coupon in editor', 'wsal-woocommerce' ) . '</a>';
-		} else {
-			return '';
-		}
-	}
- 	return $value;
- }
 
  function wsal_woocommerce_extension_load_public_sensors( $value ) {
 	$value[] = 'WooCommerce_Public';
