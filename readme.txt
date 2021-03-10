@@ -5,7 +5,7 @@ License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.html
 Tags: activity log for WooCommerce, WP Activity Log extension, activity logs
 Requires at least: 3.6
-Tested up to: 5.6
+Tested up to: 5.7
 Stable tag: 1.2
 Requires PHP: 5.6
 
