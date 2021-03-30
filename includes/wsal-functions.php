@@ -177,14 +177,6 @@ function wsal_woocommerce_extension_add_custom_ignored_cpt( $post_types ) {
 function wsal_woocommerce_extension_add_custom_meta_format( $value, $name ) {
 	$check_value = (string) $value;
 
-	if ( '%EditorLinkProduct%' === $name ) {
-		if ( 'NULL' !== $check_value ) {
-			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View product in editor', 'wsal-woocommerce' ) . '</a>';
-		} else {
-			return '';
-		}
-	}
-
 	if ( '%StockOrderID%' === $name ) {
 		if ( 'NULL' !== $check_value ) {
 			$order     = get_post( $value );
@@ -192,14 +184,6 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $name ) {
 			$editor_title = wsal_woocommerce_extension_get_order_title( $new_order );
 			$editor_link  = wsal_woocommerce_extension_get_editor_link( $order );
 			return '<br>' . __( 'Order name:', 'wsal-woocommerce' ) . ' <a target="_blank" href="' . esc_url( $editor_link['value'] ) . '">' . $editor_title . '</a>';
-		} else {
-			return '';
-		}
-	}
-
-	if ( '%EditorLinkCoupon%' === $name ) {
-		if ( 'NULL' !== $check_value ) {
-			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View coupon in editor', 'wsal-woocommerce' ) . '</a>';
 		} else {
 			return '';
 		}
