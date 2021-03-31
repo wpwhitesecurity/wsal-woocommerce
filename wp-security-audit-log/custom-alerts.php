@@ -7,7 +7,7 @@ $custom_alerts = [
                 9000,
                 WSAL_LOW,
                 __( 'User created a new product', 'wsal-woocommerce' ),
-                __( 'Created new product called', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Created new product called %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -22,7 +22,7 @@ $custom_alerts = [
                 9001,
                 WSAL_MEDIUM,
                 __( 'User published a product', 'wsal-woocommerce' ),
-                __( 'Published the product called', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Published the product called %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -37,7 +37,7 @@ $custom_alerts = [
                 9003,
                 WSAL_LOW,
                 __( 'User changed the category of a product', 'wsal-woocommerce' ),
-                __( 'Changed the category of the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the category of the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -54,7 +54,7 @@ $custom_alerts = [
                 9004,
                 WSAL_INFORMATIONAL,
                 __( 'User modified the short description of a product', 'wsal-woocommerce' ),
-                __( 'Changed the short description of the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the short description of the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -69,7 +69,7 @@ $custom_alerts = [
                 9005,
                 WSAL_LOW,
                 __( 'User modified the text of a product', 'wsal-woocommerce' ),
-                __( 'Changed the text of the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the text of the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -84,7 +84,7 @@ $custom_alerts = [
                 9006,
                 WSAL_LOW,
                 __( 'User changed the URL of a product', 'wsal-woocommerce' ),
-                __( 'Changed the URL of the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the URL of the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -101,7 +101,7 @@ $custom_alerts = [
                 9007,
                 WSAL_MEDIUM,
                 __( 'User changed the Product Data of a product', 'wsal-woocommerce' ),
-                __( 'Changed the type of the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the type of the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -118,7 +118,7 @@ $custom_alerts = [
                 9008,
                 WSAL_INFORMATIONAL,
                 __( 'User changed the date of a product', 'wsal-woocommerce' ),
-                __( 'Changed the date of the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the date of the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -135,7 +135,7 @@ $custom_alerts = [
                 9009,
                 WSAL_MEDIUM,
                 __( 'User changed the visibility of a product', 'wsal-woocommerce' ),
-                __( 'Changed the visibility of the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the visibility of the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -152,7 +152,7 @@ $custom_alerts = [
                 9010,
                 WSAL_MEDIUM,
                 __( 'User modified the product', 'wsal-woocommerce' ),
-                __( 'Modified the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Modified the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -190,7 +190,7 @@ $custom_alerts = [
                 9013,
                 WSAL_MEDIUM,
                 __( 'User permanently deleted a product', 'wsal-woocommerce' ),
-                __( 'Permanently deleted the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Permanently deleted the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                 ],
@@ -217,7 +217,7 @@ $custom_alerts = [
                 9015,
                 WSAL_MEDIUM,
                 __( 'User changed status of a product', 'wsal-woocommerce' ),
-                __( 'Changed the status of the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the status of the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Previous status', 'wsal-woocommerce' ) => '%OldStatus%',
@@ -298,7 +298,7 @@ $custom_alerts = [
                 9017,
                 WSAL_MEDIUM,
                 __( 'User changed the SKU of a product', 'wsal-woocommerce' ),
-                __( 'Changed the SKU of the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the SKU of the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -315,7 +315,7 @@ $custom_alerts = [
                 9018,
                 WSAL_LOW,
                 __( 'User changed the stock status of a product', 'wsal-woocommerce' ),
-                __( 'Changed the stock status of the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the stock status of the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -349,7 +349,7 @@ $custom_alerts = [
                 9021,
                 WSAL_INFORMATIONAL,
                 __( 'User changed the weight of a product', 'wsal-woocommerce' ),
-                __( 'Changed the weight of the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the weight of the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -383,7 +383,7 @@ $custom_alerts = [
                 9023,
                 WSAL_MEDIUM,
                 __( 'User added the Downloadable File to a product', 'wsal-woocommerce' ),
-                __( 'Added a downloadable file to the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Added a downloadable file to the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -400,7 +400,7 @@ $custom_alerts = [
                 9024,
                 WSAL_MEDIUM,
                 __( 'User Removed the Downloadable File from a product', 'wsal-woocommerce' ),
-                __( 'Removed the downloadable file from the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Removed the downloadable file from the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -417,7 +417,7 @@ $custom_alerts = [
                 9025,
                 WSAL_INFORMATIONAL,
                 __( 'User changed the name of a Downloadable File in a product', 'wsal-woocommerce' ),
-                __( 'Changed the name of the downloadable file to the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the name of the downloadable file to the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -434,7 +434,7 @@ $custom_alerts = [
                 9026,
                 WSAL_MEDIUM,
                 __( 'User changed the URL of the Downloadable File in a product', 'wsal-woocommerce' ),
-                __( 'Changed the URL of the downloadable file to the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the URL of the downloadable file to the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -452,7 +452,7 @@ $custom_alerts = [
                 9042,
                 WSAL_INFORMATIONAL,
                 __( 'User changed the catalog visibility of a product', 'wsal-woocommerce' ),
-                __( 'Changed the product visibility of the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the product visibility of the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -469,7 +469,7 @@ $custom_alerts = [
                 9043,
                 WSAL_INFORMATIONAL,
                 __( 'User changed the setting Featured Product of a product', 'wsal-woocommerce' ),
-                __( 'The setting Featured Product for the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'The setting Featured Product for the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -484,7 +484,7 @@ $custom_alerts = [
                 9044,
                 WSAL_INFORMATIONAL,
                 __( 'User changed the Allow Backorders setting of a product', 'wsal-woocommerce' ),
-                __( 'Changed the Allow Backorders setting for the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the Allow Backorders setting for the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -501,7 +501,7 @@ $custom_alerts = [
                 9045,
                 WSAL_MEDIUM,
                 __( 'User added/removed products to upsell of a product', 'wsal-woocommerce' ),
-                __( 'Products to Upsell in the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Products to Upsell in the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -517,7 +517,7 @@ $custom_alerts = [
                 9046,
                 WSAL_MEDIUM,
                 __( 'User added/removed products to cross-sells of a product', 'wsal-woocommerce' ),
-                __( 'Product to Cross-sell in the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Product to Cross-sell in the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -534,7 +534,7 @@ $custom_alerts = [
                 9095,
                 WSAL_LOW,
                 __( 'Added or deleted a product image', 'wp-security-audit-log' ),
-                __( 'A product image to the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'A product image to the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -551,7 +551,7 @@ $custom_alerts = [
                 9096,
                 WSAL_LOW,
                 __( 'Modified a product image', 'wp-security-audit-log' ),
-                __( 'The product image of the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'The product image of the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -570,7 +570,7 @@ $custom_alerts = [
                 9097,
                 WSAL_LOW,
                 __( 'Modified the download limit of the product', 'wp-security-audit-log' ),
-                __( 'The download limit of the product', 'wsal-woocommerce' ) => '%product_name%',
+                __( 'The download limit of the product %product_name%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%ID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -587,7 +587,7 @@ $custom_alerts = [
                 9098,
                 WSAL_LOW,
                 __( 'Modified the download expiry setting of the product', 'wp-security-audit-log' ),
-                __( 'The download expiry setting of the product', 'wsal-woocommerce' ) => '%product_name%',
+                __( 'The download expiry setting of the product %product_name%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%ID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -604,7 +604,7 @@ $custom_alerts = [
                 9099,
                 WSAL_LOW,
                 __( 'A product was downloaded', 'wp-security-audit-log' ),
-                __( 'Downloaded the product', 'wsal-woocommerce' ) => '%product_name%',
+                __( 'Downloaded the product %product_name%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%ID%',
                     __( 'User email', 'wsal-woocommerce' ) => '%email_address%',
@@ -653,7 +653,7 @@ $custom_alerts = [
                 9019,
                 WSAL_LOW,
                 __( 'User changed the stock quantity', 'wsal-woocommerce' ),
-                __( 'Changed the stock quantity of the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the stock quantity of the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -671,7 +671,7 @@ $custom_alerts = [
                 9047,
                 WSAL_LOW,
                 __( 'Added a new attribute of a product', 'wsal-woocommerce' ),
-                __( 'A new attribute to the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'A new attribute to the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -688,7 +688,7 @@ $custom_alerts = [
                 9048,
                 WSAL_LOW,
                 __( 'Modified the value of an attribute of a product', 'wsal-woocommerce' ),
-                __( 'Modified the value of an attribute in the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Modified the value of an attribute in the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -706,7 +706,7 @@ $custom_alerts = [
                 9049,
                 WSAL_LOW,
                 __( 'Changed the name of an attribute of a product', 'wsal-woocommerce' ),
-                __( 'Changed the name of an attribute in the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the name of an attribute in the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -723,7 +723,7 @@ $custom_alerts = [
                 9050,
                 WSAL_LOW,
                 __( 'Deleted an attribute of a product', 'wsal-woocommerce' ),
-                __( 'An attribute from the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'An attribute from the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -740,7 +740,7 @@ $custom_alerts = [
                 9051,
                 WSAL_LOW,
                 __( 'Set the attribute visibility of a product', 'wsal-woocommerce' ),
-                __( 'Changed the visibility of an attribute in the product', 'wsal-woocommerce' ) => '%ProductTitle%',
+                __( 'Changed the visibility of an attribute in the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -1077,12 +1077,12 @@ $custom_alerts = [
                 9002,
                 WSAL_INFORMATIONAL,
                 __( 'User created a new product category', 'wsal-woocommerce' ),
-                __( 'A new product category called', 'wsal-woocommerce' ) => '%CategoryName%',
+                __( 'A new product category called %CategoryName%', 'wsal-woocommerce' ),
                 [
                     __( 'Category slug', 'wsal-woocommerce' ) => '%Slug%',
                 ],
                 [
-                    __( 'View category', 'wp-security-audit-log' ) => '%ProductCatLink%', ,
+                    __( 'View category', 'wp-security-audit-log' ) => '%ProductCatLink%',
                 ],
                 'woocommerce-category',
                 'created',
@@ -1091,9 +1091,8 @@ $custom_alerts = [
                 9052,
                 WSAL_MEDIUM,
                 __( 'User deleted a product category', 'wsal-woocommerce' ),
-                __( 'User deleted a product category', 'wsal-woocommerce' ),
+				__( 'The product category called %CategoryName%', 'wsal-woocommerce' ),
                 [
-                    __( 'The product category called', 'wsal-woocommerce' ) => '%CategoryName%',
                     __( 'Category slug', 'wsal-woocommerce' ) => '%CategorySlug%',
                 ],
                 [],
@@ -1104,13 +1103,13 @@ $custom_alerts = [
                 9053,
                 WSAL_INFORMATIONAL,
                 __( 'User changed the slug of a product category', 'wsal-woocommerce' ),
-                __( 'The slug of the product category called', 'wsal-woocommerce' ) => '%CategoryName%',
+                __( 'The slug of the product category called %CategoryName%', 'wsal-woocommerce' ),
                 [
                     __( 'Previous category slug', 'wsal-woocommerce' ) => '%OldSlug%',
                     __( 'New category slug', 'wsal-woocommerce' ) => '%NewSlug%',
                 ],
                 [
-                    __( 'View category', 'wp-security-audit-log' ) => '%ProductCatLink%', ,
+                    __( 'View category', 'wp-security-audit-log' ) => '%ProductCatLink%',
                 ],
                 'woocommerce-category',
                 'modified',
@@ -1119,14 +1118,14 @@ $custom_alerts = [
                 9054,
                 WSAL_MEDIUM,
                 __( 'User changed the parent category of a product category', 'wsal-woocommerce' ),
-                __( 'The parent of the product category', 'wsal-woocommerce' ) => '%CategoryName%',
+                __( 'The parent of the product category %CategoryName%', 'wsal-woocommerce' ),
                 [
                     __( 'Category slug', 'wsal-woocommerce' ) => '%CategorySlug%',
                     __( 'Previous parent', 'wsal-woocommerce' ) => '%OldParentCat%',
                     __( 'New parent', 'wsal-woocommerce' ) => '%NewParentCat%',
                 ],
                 [
-                    __( 'View category', 'wp-security-audit-log' ) => '%ProductCatLink%', ,
+                    __( 'View category', 'wp-security-audit-log' ) => '%ProductCatLink%',
                 ],
                 'woocommerce-category',
                 'modified',
@@ -1135,14 +1134,14 @@ $custom_alerts = [
                 9055,
                 WSAL_INFORMATIONAL,
                 __( 'User changed the display type of a product category', 'wsal-woocommerce' ),
-                __( 'The display type of the product category', 'wsal-woocommerce' ) => '%CategoryName%',
+                __( 'The display type of the product category %CategoryName%', 'wsal-woocommerce' ),
                 [
                     __( 'Category slug', 'wsal-woocommerce' ) => '%CategorySlug%',
                     __( 'Previous display type', 'wsal-woocommerce' ) => '%OldDisplayType%',
                     __( 'New display type', 'wsal-woocommerce' ) => '%NewDisplayType%',
                 ],
                 [
-                    __( 'View category', 'wp-security-audit-log' ) => '%ProductCatLink%', ,
+                    __( 'View category', 'wp-security-audit-log' ) => '%ProductCatLink%',
                 ],
                 'woocommerce-category',
                 'modified',
@@ -1158,7 +1157,7 @@ $custom_alerts = [
                     __( 'Category slug', 'wsal-woocommerce' ) => '%CategorySlug%',
                 ],
                 [
-                    __( 'View category', 'wp-security-audit-log' ) => '%ProductCatLink%', ,
+                    __( 'View category', 'wp-security-audit-log' ) => '%ProductCatLink%',
                 ],
                 'woocommerce-category',
                 'renamed',
@@ -1214,7 +1213,7 @@ $custom_alerts = [
                 9104,
                 WSAL_INFORMATIONAL,
                 __( 'User changed product tag slug', 'wsal-woocommerce' ),
-                __( 'Changed the slug of the tag', 'wsal-woocommerce' ) => '%TagName%',
+                __( 'Changed the slug of the tag %TagName%', 'wsal-woocommerce' ),
                 [
                     __( 'Previous slug', 'wsal-woocommerce' ) => '%OldSlug%',
                     __( 'New slug', 'wsal-woocommerce' ) => '%NewSlug%',
@@ -1232,7 +1231,7 @@ $custom_alerts = [
                 9057,
                 WSAL_MEDIUM,
                 __( 'User created a new attribute', 'wsal-woocommerce' ),
-                __( 'A new attribute in WooCommerce called', 'wsal-woocommerce' ) => '%AttributeName%',
+                __( 'A new attribute in WooCommerce called %AttributeName%', 'wsal-woocommerce' ),
                 [
                     __( 'Attribute slug', 'wsal-woocommerce' ) => '%AttributeSlug%',
                 ],
@@ -1244,7 +1243,7 @@ $custom_alerts = [
                 9058,
                 WSAL_LOW,
                 __( 'User deleted an attribute', 'wsal-woocommerce' ),
-                __( 'The WooCommerce attribute', 'wsal-woocommerce' ) => '%AttributeName%',
+                __( 'The WooCommerce attribute %AttributeName%', 'wsal-woocommerce' ),
                 [
                     __( 'Attribute slug', 'wsal-woocommerce' ) => '%AttributeSlug%',
                 ],
@@ -1256,7 +1255,7 @@ $custom_alerts = [
                 9059,
                 WSAL_LOW,
                 __( 'User changed the slug of an attribute', 'wsal-woocommerce' ),
-                __( 'The slug of the WooCommerce attribute', 'wsal-woocommerce' ) => '%AttributeName%',
+                __( 'The slug of the WooCommerce attribute %AttributeName%', 'wsal-woocommerce' ),
                 [
                     __( 'Previous slug', 'wsal-woocommerce' ) => '%OldSlug%',
                     __( 'New slug', 'wsal-woocommerce' ) => '%NewSlug%',
@@ -1269,7 +1268,7 @@ $custom_alerts = [
                 9060,
                 WSAL_LOW,
                 __( 'User changed the name of an attribute', 'wsal-woocommerce' ),
-                __( 'The name of the WooCommerce attribute', 'wsal-woocommerce' ) => '%AttributeName%',
+                __( 'The name of the WooCommerce attribute %AttributeName%', 'wsal-woocommerce' ),
                 [
                     __( 'Attribute slug', 'wsal-woocommerce' ) => '%AttributeSlug%',
                     __( 'Previous name', 'wsal-woocommerce' ) => '%OldName%',
@@ -1326,7 +1325,7 @@ $custom_alerts = [
                 9064,
                 WSAL_LOW,
                 __( 'User changed the discount type of a coupon', 'wsal-woocommerce' ),
-                __( 'The Discount Type in coupon', 'wsal-woocommerce' ) => '%CouponName%',
+                __( 'The Discount Type in coupon %CouponName%', 'wsal-woocommerce' ),
                 [
                     __( 'Previous discount type', 'wsal-woocommerce' ) => '%OldDiscountType%',
                     __( 'New discount type', 'wsal-woocommerce' ) => '%NewDiscountType%',
@@ -1341,7 +1340,7 @@ $custom_alerts = [
                 9065,
                 WSAL_LOW,
                 __( 'User changed the coupon amount of a coupon', 'wsal-woocommerce' ),
-                __( 'The Coupon amount in coupon', 'wsal-woocommerce' ) => '%CouponName%',
+                __( 'The Coupon amount in coupon %CouponName%', 'wsal-woocommerce' ),
                 [
                     __( 'Previous amount', 'wsal-woocommerce' ) => '%OldAmount%',
                     __( 'New amount', 'wsal-woocommerce' ) => '%NewAmount%',
@@ -1356,7 +1355,7 @@ $custom_alerts = [
                 9066,
                 WSAL_LOW,
                 __( 'User changed the coupon expire date of a coupon', 'wsal-woocommerce' ),
-                __( 'The expire date of the coupon', 'wsal-woocommerce' ) => '%CouponName%',
+                __( 'The expire date of the coupon %CouponName%', 'wsal-woocommerce' ),
                 [
                     __( 'Previous date', 'wsal-woocommerce' ) => '%OldDate%',
                     __( 'New date', 'wsal-woocommerce' ) => '%NewDate%',
@@ -1402,7 +1401,7 @@ $custom_alerts = [
                 9069,
                 WSAL_INFORMATIONAL,
                 __( 'User changed the description of a coupon', 'wsal-woocommerce' ),
-                __( 'The description of the coupon', 'wsal-woocommerce' ) => '%CouponName%',
+                __( 'The description of the coupon %CouponName%', 'wsal-woocommerce' ),
                 [
                     __( 'Previous description', 'wsal-woocommerce' ) => '%OldDescription%',
                     __( 'New description', 'wsal-woocommerce' ) => '%NewDescription%',
@@ -1417,7 +1416,7 @@ $custom_alerts = [
                 9070,
                 E_WARNING,
                 __( 'User changed the status of a coupon', 'wsal-woocommerce' ),
-                __( 'Changed the status of WooCommerce coupon', 'wsal-woocommerce' ) => '%CouponName%',
+                __( 'Changed the status of WooCommerce coupon %CouponName%', 'wsal-woocommerce' ),
                 [
                     __( 'Old status', 'wsal-woocommerce' ) => '%OldStatus%',
                     __( 'New status', 'wsal-woocommerce' ) => '%NewStatus%',
