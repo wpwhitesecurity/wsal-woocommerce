@@ -167,9 +167,11 @@ $custom_alerts = [
                 9011,
                 E_NOTICE,
                 __( 'User modified the draft product', 'wsal-woocommerce' ),
-                __( 'Modified the draft product %ProductTitle%. View the product: %EditorLinkProduct%.', 'wsal-woocommerce' ),
+                __( 'Modified the draft product %ProductTitle%', 'wsal-woocommerce' ),
                 [],
-                [],
+                [
+	                __( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%'
+                ],
                 'woocommerce-product',
                 '',
             ],
@@ -621,7 +623,8 @@ $custom_alerts = [
                 __( 'The stock quantity of the product %ProductTitle% was changed due to a purchase.', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-                    __( 'User name', 'wsal-woocommerce' )  => '%Username% %StockOrderID%',
+                    __( 'User name', 'wsal-woocommerce' )  => '%Username%',
+	                __( 'Order name', 'wsal-woocommerce' ) => '%StockOrderID%',
                     __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
                     __( 'Previous quantity', 'wsal-woocommerce' ) => '%OldValue%',
                     __( 'New quantity', 'wsal-woocommerce' ) => '%NewValue%',
@@ -969,7 +972,7 @@ $custom_alerts = [
                 9094,
                 WSAL_HIGH,
                 __( 'User modified the terms and conditions page', 'wsal-woocommerce' ),
-                __( 'Changed the store\'s <strongTerms and conditions page</strong', 'wsal-woocommerce' ),
+                __( 'Changed the store\'s <strong>Terms and conditions page</strong>', 'wsal-woocommerce' ),
                 [
                     __( 'Previous page', 'wsal-woocommerce' ) => '%old%',
                     __( 'New page', 'wsal-woocommerce' ) => '%new%',
@@ -1452,7 +1455,7 @@ $custom_alerts = [
                     __( 'Order name', 'wsal-woocommerce' ) => '%OrderTitle%',
                 ],
                 [
-                    __( 'User profile page', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
+                    __( 'View order', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
                 ],
                 'woocommerce-order',
                 'created',
@@ -1464,7 +1467,7 @@ $custom_alerts = [
                 __( 'Marked an order %OrderTitle% as %OrderStatus%', 'wsal-woocommerce' ),
                 [],
                 [
-                    __( 'User profile page', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
+                    __( 'View order', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
                 ],
                 'woocommerce-order',
                 'modified',
@@ -1476,7 +1479,7 @@ $custom_alerts = [
                 __( 'Moved the order %OrderTitle% to trash', 'wsal-woocommerce' ),
                 [],
                 [
-                    __( 'User profile page', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
+                    __( 'View order', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
                 ],
                 'woocommerce-order',
                 'deleted',
@@ -1488,7 +1491,7 @@ $custom_alerts = [
                 __( 'The order %OrderTitle% out of the trash', 'wsal-woocommerce' ),
                 [],
                 [
-                    __( 'User profile page', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
+                    __( 'View order', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
                 ],
                 'woocommerce-order',
                 'restored',
@@ -1497,10 +1500,8 @@ $custom_alerts = [
                 9039,
                 WSAL_LOW,
                 __( 'User permanently deleted a WooCommerce order', 'wsal-woocommerce' ),
-                __( 'User permanently deleted a WooCommerce order', 'wsal-woocommerce' ),
-                [
-                    __( 'Permanently deleted the order', 'wsal-woocommerce' ) => '%OrderTitle%',
-                ],
+                __( 'Permanently deleted the order %OrderTitle%', 'wsal-woocommerce' ),
+                [],
                 [],
                 'woocommerce-order',
                 'deleted',
@@ -1509,12 +1510,10 @@ $custom_alerts = [
                 9040,
                 WSAL_MEDIUM,
                 __( 'User edited a WooCommerce order', 'wsal-woocommerce' ),
-                __( 'User edited a WooCommerce order', 'wsal-woocommerce' ),
+                __( 'The details in order %OrderTitle%', 'wsal-woocommerce' ),
+                [],
                 [
-                    __( 'The details in order', 'wsal-woocommerce' ) => '%OrderTitle%',
-                ],
-                [
-                    __( 'User profile page', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
+                    __( 'View order', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
                 ],
                 'woocommerce-order',
                 'modified',
@@ -1523,12 +1522,10 @@ $custom_alerts = [
                 9041,
                 WSAL_HIGH,
                 __( 'User refunded a WooCommerce order', 'wsal-woocommerce' ),
-                __( 'User refunded a WooCommerce order', 'wsal-woocommerce' ),
+                __( 'Refunded the order %OrderTitle%', 'wsal-woocommerce' ),
+                [],
                 [
-                    __( 'Refunded the order', 'wsal-woocommerce' ) => '%OrderTitle%',
-                ],
-                [
-                    __( 'User profile page', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
+                    __( 'View order', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
                 ],
                 'woocommerce-order',
                 'modified',
@@ -1547,7 +1544,7 @@ $custom_alerts = [
                     __( 'New Billing address', 'wsal-woocommerce' ) => '%NewValue%',
                 ],
                 [
-                    __( 'User profile page', 'wp-security-audit-log' ) => '%EditUserLink%',
+                    __( 'User profile page', 'wsal-woocommerce' ) => '%EditUserLink%',
                 ],
                 'user',
                 'modified',
@@ -1563,7 +1560,7 @@ $custom_alerts = [
                     __( 'New Shipping address', 'wsal-woocommerce' ) => '%NewValue%',
                 ],
                 [
-                    __( 'User profile page', 'wp-security-audit-log' ) => '%EditUserLink%',
+                    __( 'User profile page', 'wsal-woocommerce' ) => '%EditUserLink%',
                 ],
                 'user',
                 'modified',
