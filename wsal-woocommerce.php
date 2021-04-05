@@ -10,6 +10,9 @@
  * License: GPL2
  * Network: true
  *
+ * WC requires at least: 4.8
+ * WC tested up to: 5.2.0
+ *
  * @package Wsal
  * @subpackage Wsal Custom Events Loader
  */
