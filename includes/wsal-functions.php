@@ -12,6 +12,7 @@ add_filter( 'wsal_togglealerts_sub_category_events', 'wsal_woocommerce_extension
 add_filter( 'wsal_togglealerts_sub_category_titles', 'wsal_woocommerce_extension_togglealerts_sub_category_titles', 10, 2 );
 add_action( 'wsal_togglealerts_append_content_to_toggle', 'wsal_woocommerce_extension_append_content_to_toggle' );
 add_action( 'wsal_togglealerts_process_save_settings', 'wsal_woocommerce_extension_togglealerts_process_save_settings', 10, 1 );
+add_filter( 'wsal_togglealerts_obsolete_events', 'wsal_woocommerce_extension_togglealerts_obsolete_events' );
 
 // Special events.
 add_action( 'woocommerce_download_product', 'wsal_woocommerce_extension_detect_file_download', 10, 6 );
@@ -354,3 +355,12 @@ function wsal_woocommerce_extension_togglealerts_js_code() {
 }
 
 add_action( 'admin_footer', 'wsal_woocommerce_extension_togglealerts_js_code' );
+
+/**
+ * Add obsolete events to the togglealerts view.
+ */
+function wsal_woocommerce_extension_togglealerts_obsolete_events( $obsolete_events ) {
+	$new_events      = [ 9011, 9070, 9075 ];
+	$obsolete_events = array_merge( $obsolete_events, $new_events );
+	return $obsolete_events;
+}
