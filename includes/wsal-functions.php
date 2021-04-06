@@ -352,6 +352,15 @@ function wsal_woocommerce_extension_togglealerts_js_code() {
         </script>
     <?php
   }
+  if ( isset( $_REQUEST['page'] ) && 'wsal-togglealerts' === $_REQUEST['page'] ) {
+    ?>
+    <style type="text/css">
+      #tab-payment-gateways tr:nth-of-type(2), #tab-products tr:nth-of-type(12), #tab-coupons tr:nth-of-type(8) {
+        display: none;
+      }
+    </style>
+    <?php
+  }
 }
 
 add_action( 'admin_footer', 'wsal_woocommerce_extension_togglealerts_js_code' );
