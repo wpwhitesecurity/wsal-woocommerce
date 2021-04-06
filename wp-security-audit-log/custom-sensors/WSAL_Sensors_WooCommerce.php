@@ -1859,7 +1859,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								$country_codes = __( 'None', 'wsal-woocommerce' );
 							}
 							$this->plugin->alerts->Trigger(
-								9086,
+								9087,
 								array(
 									'old' => rtrim( $old_country_codes, ', ' ),
 									'new' => rtrim( $country_codes, ', ' ),
@@ -1893,7 +1893,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								$country_codes = __( 'None', 'wsal-woocommerce' );
 							}
 							$this->plugin->alerts->Trigger(
-								9087,
+								9086,
 								array(
 									'old' => rtrim( $old_country_codes, ', ' ),
 									'new' => rtrim( $country_codes, ', ' ),
