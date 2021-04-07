@@ -106,9 +106,9 @@ function wsal_woocommerce_extension_append_content_to_toggle( $alert_id ) {
 /**
  * Adds new custom event objects for our plugin
  *
- * @method wsal_gravityforms_add_custom_event_type
+ * @method wsal_woocommerce_extension_add_custom_event_type
  * @since  1.0.0
- * @param  array $tyes An array of default types.
+ * @param  array $types An array of default types.
  * @return array
  */
 function wsal_woocommerce_extension_add_custom_event_type( $types ) {
@@ -157,7 +157,7 @@ function wsal_woocommerce_extension_add_custom_event_objects( $objects ) {
 function wsal_woocommerce_extension_add_custom_ignored_cpt( $post_types ) {
 	$new_post_types = array(
 		'product',             // WooCommerce Product CPT.
-		'shop_coupon',         // WooCommerse Coupon CPT.
+		'shop_coupon',         // WooCommerce Coupon CPT.
 		'shop_order',          // WooCommerce Order CPT.
 		'shop_order_refund',   // WooCommerce Order Refund CPT.
 		'product_variation',   // WooCommerce Product Variation CPT.
@@ -176,46 +176,14 @@ function wsal_woocommerce_extension_add_custom_ignored_cpt( $post_types ) {
  * @since  1.0.0
  */
 function wsal_woocommerce_extension_add_custom_meta_format( $value, $name ) {
-	$check_value = (string) $value;
-
-	if ( '%EditorLinkProduct%' === $name ) {
-		if ( 'NULL' !== $check_value ) {
-			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View product in editor', 'wsal-woocommerce' ) . '</a>';
-		} else {
-			return '';
-		}
-	}
-
 	if ( '%StockOrderID%' === $name ) {
+		$check_value = (string) $value;
 		if ( 'NULL' !== $check_value ) {
 			$order     = get_post( $value );
 			$new_order = new WC_Order( $value );
 			$editor_title = wsal_woocommerce_extension_get_order_title( $new_order );
 			$editor_link  = wsal_woocommerce_extension_get_editor_link( $order );
-			return '<br>' . __( 'Order name:', 'wsal-woocommerce' ) . ' <a target="_blank" href="' . esc_url( $editor_link['value'] ) . '">' . $editor_title . '</a>';
-		} else {
-			return '';
-		}
-	}
-
-	if ( '%EditorLinkCoupon%' === $name ) {
-		if ( 'NULL' !== $check_value ) {
-			return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View coupon in editor', 'wsal-woocommerce' ) . '</a>';
-		} else {
-			return '';
-		}
-	}
-
-	if ( '%OldCouponUsageMetaValue%' === $name ) {
-		if ( 'NULL' !== $check_value ) {
-			return 'Previous usage restriction: <strong>' . $check_value . '</strong><br>';
-		} else {
-			return '';
-		}
-	}
-	if ( '%NewCouponUsageMetaValue%' === $name ) {
-		if ( 'NULL' !== $check_value ) {
-			return 'New usage restriction: <strong>' . $check_value . '</strong><br>';
+			return $editor_link['value'];
 		} else {
 			return '';
 		}
