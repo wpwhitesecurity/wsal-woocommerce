@@ -1859,7 +1859,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								$country_codes = __( 'None', 'wsal-woocommerce' );
 							}
 							$this->plugin->alerts->Trigger(
-								9086,
+								9087,
 								array(
 									'old' => rtrim( $old_country_codes, ', ' ),
 									'new' => rtrim( $country_codes, ', ' ),
@@ -1893,7 +1893,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								$country_codes = __( 'None', 'wsal-woocommerce' );
 							}
 							$this->plugin->alerts->Trigger(
-								9087,
+								9086,
 								array(
 									'old' => rtrim( $old_country_codes, ', ' ),
 									'new' => rtrim( $country_codes, ', ' ),
@@ -1904,6 +1904,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 					if ( $option === 'woocommerce_ship_to_countries' && $value !== 'NULL' ) {
 						if ( $old_value !== $value ) {
+							$value = ('' === $value)? 'Ship to all countries you sell to' : $value;
+							$old_value = ('' === $old_value)? 'Ship to all countries you sell to' : $old_value;
+
 							$this->plugin->alerts->Trigger(
 								9088,
 								array(
@@ -1950,6 +1953,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 					if ( $option === 'woocommerce_default_customer_address' ) {
 						if ( $old_value !== $value ) {
+							$value = ('' === $value)? 'No default location' : $value;
+							$old_value = ('' === $old_value)? 'No default location' : $old_value;
+
 							$this->plugin->alerts->Trigger(
 								9090,
 								array(

@@ -10,6 +10,9 @@
  * License: GPL2
  * Network: true
  *
+ * WC requires at least: 4.8
+ * WC tested up to: 5.2.0
+ *
  * @package Wsal
  * @subpackage Wsal Custom Events Loader
  */
@@ -35,22 +38,12 @@
 	REQUIRED. Here we include and fire up the main core class. This will be needed regardless so be sure to leave line 37-39 in tact.
 */
 require_once plugin_dir_path( __FILE__ ) . 'core/class-extension-core.php';
-$core_settings = array(
-	'text_domain'        => 'wsal-woocommerce',
-	'custom_alert_path'  => trailingslashit( dirname( __FILE__ ) ) . 'wp-security-audit-log',
-	'custom_sensor_path' => trailingslashit( trailingslashit( dirname( __FILE__ ) ) . 'wp-security-audit-log' . DIRECTORY_SEPARATOR . 'custom-sensors' ),
-);
-$wsal_extension = new WPWhiteSecurity\ActivityLog\Extensions\Common\Core( $core_settings );
+$wsal_extension = new WPWhiteSecurity\ActivityLog\Extensions\Common\Core( __FILE__, 'wsal-woocommerce' );
 
 // Used by event 9099.
 if ( ! defined( 'WSAL_CLASS_PREFIX' ) ) {
 	define( 'WSAL_CLASS_PREFIX', 'WSAL_' );
 }
-
-/*
-	Ensure custom events are always avaiable.
- */
-add_filter( 'wsal_custom_alerts_dirs', array( $wsal_extension, 'add_custom_events_path' ) );
 
 // Include extension specific functions.
 require_once plugin_dir_path( __FILE__ ) . 'includes/wsal-functions.php';
