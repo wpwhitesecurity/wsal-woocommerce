@@ -1178,7 +1178,7 @@ $custom_alerts = [
                     __( 'Slug', 'wsal-woocommerce' )     => '%Slug%',
                 ],
                 [
-                    '%ProductTagLink%',
+                    __( 'View product tag', 'wp-security-audit-log' ) => '%ProductTagLink%',
                 ],
                 'woocommerce-tag',
                 'created',
@@ -1207,7 +1207,7 @@ $custom_alerts = [
                     __( 'Slug', 'wsal-woocommerce' )     => '%Slug%',
                 ],
                 [
-                    '%ProductTagLink%',
+                    __( 'View product tag', 'wp-security-audit-log' ) => '%ProductTagLink%',
                 ],
                 'woocommerce-tag',
                 'renamed',
@@ -1222,7 +1222,7 @@ $custom_alerts = [
                     __( 'New slug', 'wsal-woocommerce' ) => '%NewSlug%',
                 ],
                 [
-                    '%ProductTagLink%',
+                    __( 'View product tag', 'wp-security-audit-log' ) => '%ProductTagLink%',
                 ],
                 'woocommerce-tag',
                 'modified',
