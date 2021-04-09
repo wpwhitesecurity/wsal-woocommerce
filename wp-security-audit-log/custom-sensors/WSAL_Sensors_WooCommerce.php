@@ -402,14 +402,14 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				array(
 					'CategoryName'   => sanitize_text_field( $term->name ),
 					'Slug'           => sanitize_text_field( $term->slug ),
-					'ProductCatLink' => $this->get_taxonomy_edit_link( $term_id, 'product_tag' ),
+					'ProductCatLink' => $this->get_taxonomy_edit_link( $term_id ),
 				)
 			);
 		}
 	}
 
 	/**
-	 * Trigger events 9002
+	 * Trigger events 9001
 	 *
 	 * @param int|WP_Term $term_id - Term ID.
 	 */
