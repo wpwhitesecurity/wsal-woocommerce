@@ -535,7 +535,7 @@ $custom_alerts = [
             [
                 9095,
                 WSAL_LOW,
-                __( 'Added or deleted a product image', 'wp-security-audit-log' ),
+                __( 'Added or deleted a product image', 'wsal-woocommerce' ),
                 __( 'A product image to the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
@@ -552,7 +552,7 @@ $custom_alerts = [
             [
                 9096,
                 WSAL_LOW,
-                __( 'Modified a product image', 'wp-security-audit-log' ),
+                __( 'Modified a product image', 'wsal-woocommerce' ),
                 __( 'The product image of the product %ProductTitle%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
@@ -571,7 +571,7 @@ $custom_alerts = [
             [
                 9097,
                 WSAL_LOW,
-                __( 'Modified the download limit of the product', 'wp-security-audit-log' ),
+                __( 'Modified the download limit of the product', 'wsal-woocommerce' ),
                 __( 'The download limit of the product %product_name%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%ID%',
@@ -588,7 +588,7 @@ $custom_alerts = [
             [
                 9098,
                 WSAL_LOW,
-                __( 'Modified the download expiry setting of the product', 'wp-security-audit-log' ),
+                __( 'Modified the download expiry setting of the product', 'wsal-woocommerce' ),
                 __( 'The download expiry setting of the product %product_name%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%ID%',
@@ -605,7 +605,7 @@ $custom_alerts = [
             [
                 9099,
                 WSAL_LOW,
-                __( 'A product was downloaded', 'wp-security-audit-log' ),
+                __( 'A product was downloaded', 'wsal-woocommerce' ),
                 __( 'Downloaded the product %product_name%', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%ID%',
@@ -1085,7 +1085,7 @@ $custom_alerts = [
                     __( 'Category slug', 'wsal-woocommerce' ) => '%Slug%',
                 ],
                 [
-                    __( 'View category', 'wp-security-audit-log' ) => '%ProductCatLink%',
+                    __( 'View category', 'wsal-woocommerce' ) => '%ProductCatLink%',
                 ],
                 'woocommerce-category',
                 'created',
@@ -1112,7 +1112,7 @@ $custom_alerts = [
                     __( 'New category slug', 'wsal-woocommerce' ) => '%NewSlug%',
                 ],
                 [
-                    __( 'View category', 'wp-security-audit-log' ) => '%ProductCatLink%',
+                    __( 'View category', 'wsal-woocommerce' ) => '%ProductCatLink%',
                 ],
                 'woocommerce-category',
                 'modified',
@@ -1128,7 +1128,7 @@ $custom_alerts = [
                     __( 'New parent', 'wsal-woocommerce' ) => '%NewParentCat%',
                 ],
                 [
-                    __( 'View category', 'wp-security-audit-log' ) => '%ProductCatLink%',
+                    __( 'View category', 'wsal-woocommerce' ) => '%ProductCatLink%',
                 ],
                 'woocommerce-category',
                 'modified',
@@ -1144,7 +1144,7 @@ $custom_alerts = [
                     __( 'New display type', 'wsal-woocommerce' ) => '%NewDisplayType%',
                 ],
                 [
-                    __( 'View category', 'wp-security-audit-log' ) => '%ProductCatLink%',
+                    __( 'View category', 'wsal-woocommerce' ) => '%ProductCatLink%',
                 ],
                 'woocommerce-category',
                 'modified',
@@ -1160,7 +1160,7 @@ $custom_alerts = [
                     __( 'Category slug', 'wsal-woocommerce' ) => '%CategorySlug%',
                 ],
                 [
-                    __( 'View category', 'wp-security-audit-log' ) => '%ProductCatLink%',
+                    __( 'View category', 'wsal-woocommerce' ) => '%ProductCatLink%',
                 ],
                 'woocommerce-category',
                 'renamed',
@@ -1178,7 +1178,7 @@ $custom_alerts = [
                     __( 'Slug', 'wsal-woocommerce' )     => '%Slug%',
                 ],
                 [
-                    __( 'View product tag', 'wp-security-audit-log' ) => '%ProductTagLink%',
+                    __( 'View product tag', 'wsal-woocommerce' ) => '%ProductTagLink%',
                 ],
                 'woocommerce-tag',
                 'created',
@@ -1207,7 +1207,7 @@ $custom_alerts = [
                     __( 'Slug', 'wsal-woocommerce' )     => '%Slug%',
                 ],
                 [
-                    __( 'View product tag', 'wp-security-audit-log' ) => '%ProductTagLink%',
+                    __( 'View product tag', 'wsal-woocommerce' ) => '%ProductTagLink%',
                 ],
                 'woocommerce-tag',
                 'renamed',
@@ -1222,7 +1222,7 @@ $custom_alerts = [
                     __( 'New slug', 'wsal-woocommerce' ) => '%NewSlug%',
                 ],
                 [
-                    __( 'View product tag', 'wp-security-audit-log' ) => '%ProductTagLink%',
+                    __( 'View product tag', 'wsal-woocommerce' ) => '%ProductTagLink%',
                 ],
                 'woocommerce-tag',
                 'modified',
@@ -1455,7 +1455,7 @@ $custom_alerts = [
                     __( 'Order name', 'wsal-woocommerce' ) => '%OrderTitle%',
                 ],
                 [
-                    __( 'View order', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
+                    __( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
                 ],
                 'woocommerce-order',
                 'created',
@@ -1467,7 +1467,7 @@ $custom_alerts = [
                 __( 'Marked an order %OrderTitle% as %OrderStatus%', 'wsal-woocommerce' ),
                 [],
                 [
-                    __( 'View order', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
+                    __( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
                 ],
                 'woocommerce-order',
                 'modified',
@@ -1479,7 +1479,7 @@ $custom_alerts = [
                 __( 'Moved the order %OrderTitle% to trash', 'wsal-woocommerce' ),
                 [],
                 [
-                    __( 'View order', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
+                    __( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
                 ],
                 'woocommerce-order',
                 'deleted',
@@ -1491,7 +1491,7 @@ $custom_alerts = [
                 __( 'The order %OrderTitle% out of the trash', 'wsal-woocommerce' ),
                 [],
                 [
-                    __( 'View order', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
+                    __( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
                 ],
                 'woocommerce-order',
                 'restored',
@@ -1513,7 +1513,7 @@ $custom_alerts = [
                 __( 'The details in order %OrderTitle%', 'wsal-woocommerce' ),
                 [],
                 [
-                    __( 'View order', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
+                    __( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
                 ],
                 'woocommerce-order',
                 'modified',
@@ -1525,7 +1525,7 @@ $custom_alerts = [
                 __( 'Refunded the order %OrderTitle%', 'wsal-woocommerce' ),
                 [],
                 [
-                    __( 'View order', 'wp-security-audit-log' ) => '%EditorLinkOrder%',
+                    __( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
                 ],
                 'woocommerce-order',
                 'modified',
