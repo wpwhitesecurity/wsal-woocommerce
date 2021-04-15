@@ -5,8 +5,8 @@ License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.html
 Tags: activity log for WooCommerce, WP Activity Log extension, activity logs
 Requires at least: 4.5
-Tested up to: 5.6
-Stable tag: 1.2
+Tested up to: 5.7.1
+Stable tag: 1.2.1
 Requires PHP: 5.6
 
 Keep a detailed log of your team's changes in the WooCommerce store, products, orders & more.
@@ -75,6 +75,20 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 1. Changes in WooCommerce, products and more reported in the WordPress activity log.
 
 == Changelog ==
+
+= 1.2.1 (2021-04-21) =
+
+Release notes: [Major update of all the activity log extensions](https://wpactivitylog.com/major-core-update-extensions/)
+
+* **Improvement**
+	* Events now use the latest event format used in [WP Activity Log](https://wpactivitylog.com).
+	* Updated the core to the latest improved core (better performance and more efficient).
+	* Extension can now be activated only at network level.
+	* Extension name added to plugin's admin notices.
+	
+* **Bug fixes**
+	* Fixed issue with event IDs 9086 and 9087 and the coverage of the Selling location(s) setting in WooCommerce.
+	* Fixed broken backward compatability issue.
 
 = 1.2 (2020-11-02) =
 
