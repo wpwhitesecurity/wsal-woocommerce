@@ -3240,6 +3240,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							array(
 								'AttributeName'       => sanitize_text_field( $new_attr['name'] ),
 								'AttributeVisiblilty' => 1 === $new_visible ? __( 'Visible', 'wsal-woocommerce' ) : __( 'Non-Visible', 'wsal-woocommerce' ),
+								'OldAttributeVisiblilty' => 1 === $old_visible ? __( 'Visible', 'wsal-woocommerce' ) : __( 'Non-Visible', 'wsal-woocommerce' ),
 								'ProductID'           => esc_attr( $oldpost->ID ),
 								'ProductTitle'        => sanitize_text_field( $oldpost->post_title ),
 								'ProductStatus'       => sanitize_text_field( $oldpost->post_status ),
