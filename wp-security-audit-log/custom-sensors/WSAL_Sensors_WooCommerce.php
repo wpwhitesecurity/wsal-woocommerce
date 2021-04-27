@@ -402,14 +402,14 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				array(
 					'CategoryName'   => sanitize_text_field( $term->name ),
 					'Slug'           => sanitize_text_field( $term->slug ),
-					'ProductCatLink' => $this->get_taxonomy_edit_link( $term_id, 'product_tag' ),
+					'ProductCatLink' => $this->get_taxonomy_edit_link( $term_id ),
 				)
 			);
 		}
 	}
 
 	/**
-	 * Trigger events 9002
+	 * Trigger events 9001
 	 *
 	 * @param int|WP_Term $term_id - Term ID.
 	 */
@@ -3240,6 +3240,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							array(
 								'AttributeName'       => sanitize_text_field( $new_attr['name'] ),
 								'AttributeVisiblilty' => 1 === $new_visible ? __( 'Visible', 'wsal-woocommerce' ) : __( 'Non-Visible', 'wsal-woocommerce' ),
+								'OldAttributeVisiblilty' => 1 === $old_visible ? __( 'Visible', 'wsal-woocommerce' ) : __( 'Non-Visible', 'wsal-woocommerce' ),
 								'ProductID'           => esc_attr( $oldpost->ID ),
 								'ProductTitle'        => sanitize_text_field( $oldpost->post_title ),
 								'ProductStatus'       => sanitize_text_field( $oldpost->post_status ),
@@ -3357,16 +3358,16 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$editor_link['name']        => $editor_link['value'],
 		);
 
-		$event_data['new_value']      = $data['_download_expiry'];
-		$event_data['product_name']   = $data['post_title'];
-		$event_data['ID']             = $data['post_ID'];
-		$event_data['ProductStatus']   = $data['post_status'];
+		$event_data['new_value']     = $data['_download_expiry'];
+		$event_data['product_name']  = $data['post_title'];
+		$event_data['ID']            = $data['post_ID'];
+		$event_data['ProductStatus'] = $data['post_status'];
 
-		if ( intval( $oldpost['_download_limit'][0] ) < 0 ) {
+		if ( isset( $oldpost['_download_limit'] ) && intval( $oldpost['_download_limit'][0] ) < 0 ) {
 			$oldpost['_download_limit'][0] = __( 'Unlimited', 'wsal-woocommerce' );
 		}
 
-		if ( intval( $oldpost['_download_expiry'][0] ) < 0 ) {
+		if ( isset( $oldpost['_download_expire'] ) && intval( $oldpost['_download_expiry'][0] ) < 0 ) {
 			$oldpost['_download_expiry'][0] = __( 'Never', 'wsal-woocommerce' );
 		}
 
@@ -3379,7 +3380,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		}
 
 		// Event 9097 (Modified the download limit of the product).
-		if ( $oldpost['_download_limit'][0] !== $data['_download_limit'] ) {
+		if ( isset( $oldpost['_download_limit'] ) && $oldpost['_download_limit'][0] !== $data['_download_limit'] ) {
 			$event_id                     = 9097;
 			$event_data['previous_value'] = $oldpost['_download_limit'][0];
 			$event_data['new_value']      = $data['_download_limit'];
@@ -3389,7 +3390,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		}
 
 		// Event 9098 (Modified the download expires of the product).
-		if ( $oldpost['_download_expiry'][0] !== $data['_download_expiry'] ) {
+		if ( isset( $oldpost['_download_expiry'] ) && $oldpost['_download_expiry'][0] !== $data['_download_expiry'] ) {
 			$event_id                     = 9098;
 			$event_data['previous_value'] = $oldpost['_download_expiry'][0];
 			$event_data['new_value']      = $data['_download_expiry'];
