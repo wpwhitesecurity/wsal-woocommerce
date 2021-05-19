@@ -4,7 +4,7 @@
  * Add our filters.
  */
 add_filter( 'wsal_event_type_data', 'wsal_woocommerce_extension_add_custom_event_type', 10, 2 );
-add_filter( 'wsal_format_custom_meta', 'wsal_woocommerce_extension_add_custom_meta_format', 10, 2 );
+add_filter( 'wsal_format_custom_meta', 'wsal_woocommerce_extension_add_custom_meta_format', 10, 4 );
 add_filter( 'wsal_event_objects', 'wsal_woocommerce_extension_add_custom_event_objects' );
 add_filter( 'wsal_ignored_custom_post_types', 'wsal_woocommerce_extension_add_custom_ignored_cpt' );
 add_filter( 'wsal_load_public_sensors', 'wsal_woocommerce_extension_load_public_sensors' );
@@ -175,8 +175,8 @@ function wsal_woocommerce_extension_add_custom_ignored_cpt( $post_types ) {
  * @method wsal_woocommerce_extension_add_custom_meta_format
  * @since  1.0.0
  */
-function wsal_woocommerce_extension_add_custom_meta_format( $value, $name ) {
-	if ( '%StockOrderID%' === $name ) {
+function wsal_woocommerce_extension_add_custom_meta_format( $value, $expression, $alert_formatter, $occurrence_id ) {
+	if ( '%StockOrderID%' === $expression ) {
 		$check_value = (string) $value;
 		if ( 'NULL' !== $check_value ) {
 			$order     = get_post( $value );
