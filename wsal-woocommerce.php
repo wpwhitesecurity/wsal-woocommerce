@@ -6,7 +6,7 @@
  * Text Domain: wsal-woocommerce
  * Author: WP White Security
  * Author URI: http://www.wpwhitesecurity.com/
- * Version: 1.2.1
+ * Version: 1.2.2
  * License: GPL2
  * Network: true
  *
