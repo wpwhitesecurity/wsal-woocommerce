@@ -173,6 +173,12 @@ function wsal_woocommerce_extension_add_custom_ignored_cpt( $post_types ) {
  * Adds new meta formatting for our plugion
  *
  * @method wsal_woocommerce_extension_add_custom_meta_format
+ *
+ * @param string $value Meta value.
+ * @param string $expression Meta expression including the surrounding percentage chars.
+ * @param WSAL_AlertFormatter $alert_formatter Alert formatter class.
+ * @param int|null $occurrence_id Occurrence ID. Only present if the event was already written to the database. Default null.
+ * 
  * @since  1.0.0
  */
 function wsal_woocommerce_extension_add_custom_meta_format( $value, $expression, $alert_formatter, $occurrence_id ) {
