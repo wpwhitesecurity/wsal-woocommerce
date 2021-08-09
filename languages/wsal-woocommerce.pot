@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the WP Activity Log for WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Activity Log for WooCommerce 1.2.1\n"
+"Project-Id-Version: WP Activity Log for WooCommerce 1.2.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wsal-woocommerce\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-04-27T10:39:31+01:00\n"
+"POT-Creation-Date: 2021-08-09T17:36:54+01:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: wsal-woocommerce\n"
@@ -70,19 +70,19 @@ msgstr ""
 msgid "WooCommerce Order"
 msgstr ""
 
-#: includes/wsal-functions.php:283
+#: includes/wsal-functions.php:291
 msgid "Product stock changes:"
 msgstr ""
 
-#: includes/wsal-functions.php:286
+#: includes/wsal-functions.php:294
 msgid "Product admin:"
 msgstr ""
 
-#: includes/wsal-functions.php:289
+#: includes/wsal-functions.php:297
 msgid "Product changes:"
 msgstr ""
 
-#: includes/wsal-functions.php:292
+#: includes/wsal-functions.php:300
 msgid "Product attributes:"
 msgstr ""
 
@@ -1450,6 +1450,11 @@ msgstr ""
 msgid "New Shipping address"
 msgstr ""
 
+#: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:454
+#: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:455
+msgid "no categories"
+msgstr ""
+
 #: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:634
 #: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:642
 msgid "Password Protected"
@@ -1465,6 +1470,32 @@ msgstr ""
 msgid "Private"
 msgstr ""
 
+#: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1722
+#: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1728
+msgid "Customer shipping address"
+msgstr ""
+
+#: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1724
+msgid "Customer billing address"
+msgstr ""
+
+#: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1726
+msgid "Shop base address"
+msgstr ""
+
+#: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1748
+#: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1756
+msgid "Shipping tax class based on cart items"
+msgstr ""
+
+#: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1752
+msgid "Zero rate"
+msgstr ""
+
+#: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1754
+msgid "Standard"
+msgstr ""
+
 #: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1850
 #: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1884
 #: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1933
@@ -1475,6 +1506,16 @@ msgstr ""
 #: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1893
 #: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1942
 msgid "None"
+msgstr ""
+
+#: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1907
+#: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1908
+msgid "Ship to all countries you sell to"
+msgstr ""
+
+#: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1956
+#: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:1957
+msgid "No default location"
 msgstr ""
 
 #: wp-security-audit-log/custom-sensors/WSAL_Sensors_WooCommerce.php:2223

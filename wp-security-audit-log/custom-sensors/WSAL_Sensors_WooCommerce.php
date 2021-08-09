@@ -451,8 +451,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					'ProductTitle'       => sanitize_text_field( $newpost->post_title ),
 					'ProductStatus'      => sanitize_text_field( $newpost->post_status ),
 					'PostID'             => esc_attr( $newpost->ID ),
-					'OldCategories'      => $old_cats ? sanitize_text_field( $old_cats ) : 'no categories',
-					'NewCategories'      => $new_cats ? sanitize_text_field( $new_cats ) : 'no categories',
+					'OldCategories'      => $old_cats ? sanitize_text_field( $old_cats ) : __( 'no categories', 'wsal-woocommerce' ),
+					'NewCategories'      => $new_cats ? sanitize_text_field( $new_cats ) : __( 'no categories', 'wsal-woocommerce' ),
 					$editor_link['name'] => $editor_link['value'],
 				)
 			);
@@ -1719,13 +1719,13 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						if ( $old_tax_base !== $new_tax_base ) {
 							$setting = '';
 							if ( 'shipping' === $new_tax_base ) {
-								$setting = 'Customer shipping address';
+								$setting = __( 'Customer shipping address', 'wsal-woocommerce' );
 							} elseif ( 'billing' === $new_tax_base ) {
-								$setting = 'Customer billing address';
+								$setting = __( 'Customer billing address', 'wsal-woocommerce' );
 							} elseif ( 'base' === $new_tax_base ) {
-								$setting = 'Shop base address';
+								$setting = __( 'Shop base address', 'wsal-woocommerce' );
 							} else {
-								$setting = 'Customer shipping address';
+								$setting = __( 'Customer shipping address', 'wsal-woocommerce' );
 							}
 							$this->plugin->alerts->Trigger(
 								9079,
@@ -1745,15 +1745,15 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						if ( $old_tax_class !== $new_tax_class ) {
 							$setting = '';
 							if ( 'inherit' === $new_tax_class ) {
-								$setting = 'Shipping tax class based on cart items';
+								$setting = __( 'Shipping tax class based on cart items', 'wsal-woocommerce' );
 							} elseif ( 'reduced-rate' === $new_tax_class ) {
-								$setting = 'Reduced rate';
+								$setting = __( 'Reduced rate' );
 							} elseif ( 'zero-rate' === $new_tax_class ) {
-								$setting = 'Zero rate';
+								$setting = __( 'Zero rate', 'wsal-woocommerce' );
 							} elseif ( empty( $new_tax_class ) ) {
-								$setting = 'Standard';
+								$setting = __( 'Standard', 'wsal-woocommerce' );
 							} else {
-								$setting = 'Shipping tax class based on cart items';
+								$setting = __( 'Shipping tax class based on cart items', 'wsal-woocommerce' );
 							}
 							$this->plugin->alerts->Trigger(
 								9080,
@@ -1904,8 +1904,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 					if ( $option === 'woocommerce_ship_to_countries' && $value !== 'NULL' ) {
 						if ( $old_value !== $value ) {
-							$value = ('' === $value)? 'Ship to all countries you sell to' : $value;
-							$old_value = ('' === $old_value)? 'Ship to all countries you sell to' : $old_value;
+							$value = ('' === $value)? __( 'Ship to all countries you sell to', 'wsal-woocommerce' ) : $value;
+							$old_value = ('' === $old_value)? __( 'Ship to all countries you sell to', 'wsal-woocommerce' ) : $old_value;
 
 							$this->plugin->alerts->Trigger(
 								9088,
@@ -1953,8 +1953,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 					if ( $option === 'woocommerce_default_customer_address' ) {
 						if ( $old_value !== $value ) {
-							$value = ('' === $value)? 'No default location' : $value;
-							$old_value = ('' === $old_value)? 'No default location' : $old_value;
+							$value = ('' === $value)? __( 'No default location', 'wsal-woocommerce' ) : $value;
+							$old_value = ('' === $old_value)? __( 'No default location', 'wsal-woocommerce' ) : $old_value;
 
 							$this->plugin->alerts->Trigger(
 								9090,
