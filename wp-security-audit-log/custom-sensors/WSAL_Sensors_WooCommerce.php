@@ -3391,8 +3391,15 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 		// Event 9098 (Modified the download expires of the product).
 		if ( isset( $oldpost['_download_expiry'] ) && $oldpost['_download_expiry'][0] !== $data['_download_expiry'] ) {
+
+			// The empty value for this is stored as -1, so double check we actually have a change to report.
+			$old_value = ( $oldpost['_download_expiry'][0] == "-1" ) ? 'Never' : $oldpost['_download_expiry'][0];
+			if ( $old_value ==  $data['_download_expiry'] ) {
+				return false;
+			}
+			
 			$event_id                     = 9098;
-			$event_data['previous_value'] = $oldpost['_download_expiry'][0];
+			$event_data['previous_value'] = $old_value;
 			$event_data['new_value']      = $data['_download_expiry'];
 			$this->plugin->alerts->Trigger( $event_id, $event_data );
 
