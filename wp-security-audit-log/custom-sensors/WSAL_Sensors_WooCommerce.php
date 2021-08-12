@@ -4141,13 +4141,19 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$editor_link    = $this->GetEditorLink( $post );
 			$old_stock      = get_post_meta( $object_id, '_stock', true );
 			$product_status = get_post_meta( $object_id, '_stock_status', true );
+
+			$new_stock = ( empty( $meta_value ) ) ? 0 : $meta_value;
+			$old_stock = ( ! empty( $old_stock ) ) ? $old_stock : 0;
+
+	 
+
 			$this->plugin->alerts->TriggerIf(
 				9106,
 				array(
 					'PostID'             => $post->ID,
 					'ProductTitle'       => $post->post_title,
 					'ProductStatus'      => ! $product_status ? $post->post_status : $product_status,
-					'OldValue'           => ! empty( $old_stock ) ? $old_stock : 0,
+					'OldValue'           => $old_stock,
 					'NewValue'           => $meta_value,
 					$editor_link['name'] => $editor_link['value'],
 				),
@@ -4303,6 +4309,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 	public function must_not_edit_or_order( WSAL_AlertManager $manager ) {
 		if ( $manager->WillOrHasTriggered( 9019 ) ) {
+			return false;
+		}
+		if ( $manager->WillOrHasTriggered( 9018 ) ) {
 			return false;
 		}
 		if ( $manager->WillOrHasTriggered( 9105 ) ) {

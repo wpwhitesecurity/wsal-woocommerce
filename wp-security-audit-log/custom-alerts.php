@@ -308,11 +308,11 @@ $custom_alerts = [
                 9018,
                 WSAL_LOW,
                 __( 'User changed the stock status of a product', 'wsal-woocommerce' ),
-                __( 'Changed the stock status of the product %ProductTitle% to %ProductStatus%.', 'wsal-woocommerce' ),
+                __( 'Changed the stock status of the product %ProductTitle% to %NewStatus%.', 'wsal-woocommerce' ),
                 [
                     __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+                    __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
                     __( 'Previous stock status', 'wsal-woocommerce' ) => '%OldStatus%',
-                    __( 'New stock status', 'wsal-woocommerce' ) => '%NewStatus%',
                 ],
                 [
                     __( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
