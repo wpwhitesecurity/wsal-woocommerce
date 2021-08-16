@@ -1707,6 +1707,64 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							);
 						}
 					}
+
+					if ( $option === "woocommerce_review_rating_verification_label" ) {
+						$old_unit = $old_value;
+						$new_unit = sanitize_text_field( wp_unslash( $value ) );
+						if ( $old_unit !== $new_unit ) {
+							$event_type = ( 'yes' == $value ) ? 'enabled' : 'disabled';
+							$this->plugin->alerts->Trigger(
+								9107,
+								[
+									'EventType' => $event_type
+								]
+							);
+						}
+					}
+
+					if ( $option === "woocommerce_review_rating_verification_required" ) {
+						$old_unit = $old_value;
+						$new_unit = sanitize_text_field( wp_unslash( $value ) );
+						if ( $old_unit !== $new_unit ) {
+							$event_type = ( 'yes' == $value ) ? 'enabled' : 'disabled';
+							$this->plugin->alerts->Trigger(
+								9108,
+								[
+									'EventType' => $event_type
+								]
+							);
+						}
+					}
+
+					if ( $option === "woocommerce_enable_review_rating" ) {
+						$old_unit = $old_value;
+						$new_unit = sanitize_text_field( wp_unslash( $value ) );
+						if ( $old_unit !== $new_unit ) {
+							$event_type = ( 'yes' == $value ) ? 'enabled' : 'disabled';
+							$this->plugin->alerts->Trigger(
+								9109,
+								[
+									'EventType' => $event_type
+								]
+							);
+						}
+					}
+
+
+					if ( $option === "woocommerce_review_rating_required" ) {
+						$old_unit = $old_value;
+						$new_unit = sanitize_text_field( wp_unslash( $value ) );
+						if ( $old_unit !== $new_unit ) {
+							$event_type = ( 'yes' == $value ) ? 'enabled' : 'disabled';
+							$this->plugin->alerts->Trigger(
+								9110,
+								[
+									'EventType' => $event_type
+								]
+							);
+						}
+					}
+					
 				} elseif ( isset( $_GET['tab'] ) && 'account' === sanitize_text_field( wp_unslash( $_GET['tab'] ) ) ) {
 					// Guest Checkout event.
 					if ( $option === 'woocommerce_enable_guest_checkout' ) {
