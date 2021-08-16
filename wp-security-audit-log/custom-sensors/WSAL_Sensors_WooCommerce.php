@@ -1692,6 +1692,21 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							);
 						}
 					}
+
+					// Check dimension unit event.
+					if ( $option === 'woocommerce_enable_reviews' ) {
+						$old_unit = $old_value;
+						$new_unit = sanitize_text_field( wp_unslash( $value ) );
+						if ( $old_unit !== $new_unit ) {
+							$event_type = ( 'yes' == $value ) ? 'enabled' : 'disabled';
+							$this->plugin->alerts->Trigger(
+								9100,
+								[
+									'EventType' => $event_type
+								]
+							);
+						}
+					}
 				} elseif ( isset( $_GET['tab'] ) && 'account' === sanitize_text_field( wp_unslash( $_GET['tab'] ) ) ) {
 					// Guest Checkout event.
 					if ( $option === 'woocommerce_enable_guest_checkout' ) {

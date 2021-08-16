@@ -942,6 +942,16 @@ $custom_alerts = [
                 'woocommerce-store',
                 'modified',
             ],
+            [
+                9100,
+                WSAL_MEDIUM,
+                __( 'Changed the status of the Enable reviews setting in the store', 'wsal-woocommerce' ),
+                __( 'Changed the status of the Enable reviews setting in the store.', 'wsal-woocommerce' ),
+                [],
+                [],
+                'woocommerce-store',
+                'modified',
+            ],
         ],
 
         __( 'Payment Gateways', 'wsal-woocommerce' ) => [
