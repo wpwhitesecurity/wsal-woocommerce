@@ -3492,6 +3492,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$status = $post['tax_status'];
 
 		if ( $status !== $old_status ) {
+			$editor_link = $this->GetEditorLink( $product );
 			$this->plugin->alerts->Trigger(
 				9113,
 				array(
@@ -3510,6 +3511,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$class = ( empty( $post['tax_class'] ) ) ? 'standard' : $post['tax_class'];
 
 		if ( $class !== $old_class ) {
+			$editor_link = $this->GetEditorLink( $product );
 			$this->plugin->alerts->Trigger(
 				9114,
 				array(
