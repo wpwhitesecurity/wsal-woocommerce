@@ -294,6 +294,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					+ $this->check_attributes_change( $this->_old_post )
 					+ $this->check_image_change( $this->_old_post );
 					+ $this->check_download_limit_change( $this->_old_meta_data );
+					+ $this->check_tax_status_change( $this->_old_post, $this->_old_meta_data, $this->new_data );
 
 				if ( ! $changes ) {
 					// Change Permalink.
@@ -2358,6 +2359,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			'backorders'         => $product->get_backorders(),
 			'upsell_ids'         => $product->get_upsell_ids(),
 			'cross_sell_ids'     => $product->get_cross_sell_ids(),
+			'tax_status'         => $product->get_tax_status(),
+			'tax_class'          => $product->get_tax_class(),
 			'file_names'         => array(),
 			'file_urls'          => array(),
 		);
@@ -3480,6 +3483,46 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		}
 
 		return $alert_needed;
+	}
+
+	private function check_tax_status_change( $product, $oldpost, $post ) {
+
+		// Tax status.
+		$old_status = $oldpost['_tax_status'][0];
+		$status = $post['tax_status'];
+
+		if ( $status !== $old_status ) {
+			$this->plugin->alerts->Trigger(
+				9113,
+				array(
+					'PostID'             => $product->ID,
+					'ProductTitle'       => $product->post_title,
+					'ProductStatus'      => $product->post_status,
+					'old_tax_status'     => $old_status,
+					'new_tax_status'     => $status,
+					$editor_link['name'] => $editor_link['value'],
+				)
+			);
+		}
+
+		// Tax class
+		$old_class = ( empty( $oldpost['_tax_class'][0] ) ) ? 'standard' : $oldpost['_tax_class'][0];
+		$class = ( empty( $post['tax_class'] ) ) ? 'standard' : $post['tax_class'];
+
+		if ( $class !== $old_class ) {
+			$this->plugin->alerts->Trigger(
+				9114,
+				array(
+					'PostID'             => $product->ID,
+					'ProductTitle'       => $product->post_title,
+					'ProductStatus'      => $product->post_status,
+					'old_tax_class'      => $old_class,
+					'new_tax_class'      => $class,
+					$editor_link['name'] => $editor_link['value'],
+				)
+			);
+		}
+
 	}
 
 	/**
