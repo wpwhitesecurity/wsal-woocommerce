@@ -631,6 +631,39 @@ $custom_alerts = [
                 'modified',
             ],
             [
+                9113,
+                WSAL_MEDIUM,
+                __( 'The Tax status of a product has been modified', 'wsal-woocommerce' ),
+                __( 'Changed the Tax status of the product %ProductTitle% to %new_tax_status%.', 'wsal-woocommerce' ),
+                [
+                    __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+                    __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+                    __( 'Previous tax status', 'wsal-woocommerce' ) => '%old_tax_status%',
+                ],
+                [
+                    __( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+                ],
+                'woocommerce-product',
+                'modified',
+            ],
+            [
+                9114,
+                WSAL_MEDIUM,
+                __( 'The Tax class of a product has been modified', 'wsal-woocommerce' ),
+                __( 'Changed the Tax class of the product %ProductTitle% to %new_tax_class%.', 'wsal-woocommerce' ),
+                [
+                    __( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+                    __( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+                    __( 'Previous tax class', 'wsal-woocommerce' ) => '%old_tax_class%',
+                ],
+                [
+                    __( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+                ],
+                'woocommerce-product',
+                'modified',
+            ],
+
+            [
                 9019,
                 WSAL_LOW,
                 __( 'User changed the stock quantity', 'wsal-woocommerce' ),
