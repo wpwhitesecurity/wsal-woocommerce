@@ -2128,6 +2128,32 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							);
 						}
 					}
+
+					if ( strpos( $option, 'woocommerce_checkout' ) !== false  ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->Trigger(
+								9111,
+								array(
+									'endpoint_name' => str_replace( 'woocommerce_checkout_', '', str_replace( '_endpoint', '', $option ) ),
+									'old'           => $old_value,
+									'new_value'     => $value,
+								)
+							);
+						}
+					}
+
+					if ( strpos( $option, 'woocommerce_myaccount' ) !== false  ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->Trigger(
+								9112,
+								array(
+									'endpoint_name' => str_replace( 'woocommerce_myaccount_', '', str_replace( '_endpoint', '', $option ) ),
+									'old'           => $old_value,
+									'new_value'     => $value,
+								)
+							);
+						}
+					}
 				}
 			}
 		}

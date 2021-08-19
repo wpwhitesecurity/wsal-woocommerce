@@ -1025,6 +1025,30 @@ $custom_alerts = [
                 'woocommerce-store',
                 'modified',
             ],
+            [
+                9111,
+                WSAL_MEDIUM,
+                __( 'A Checkout endpoint has been modified', 'wsal-woocommerce' ),
+                __( 'Changed the Checkout endpoint %endpoint_name% to %new_value%.', 'wsal-woocommerce' ),
+                [
+                    __( 'Previous endpoint value', 'wsal-woocommerce' ) => '%old%',
+                ],
+                [],
+                'woocommerce-store',
+                'modified',
+            ],
+            [
+                9112,
+                WSAL_MEDIUM,
+                __( 'An Account endpoint has been modified', 'wsal-woocommerce' ),
+                __( 'Changed the Account endpoint %endpoint_name% to %new_value%.', 'wsal-woocommerce' ),
+                [
+                    __( 'Previous endpoint value', 'wsal-woocommerce' ) => '%old%',
+                ],
+                [],
+                'woocommerce-store',
+                'modified',
+            ],
         ],
 
         __( 'Payment Gateways', 'wsal-woocommerce' ) => [
