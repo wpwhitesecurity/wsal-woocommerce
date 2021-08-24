@@ -188,34 +188,25 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 	}
 
+	/**
+	 * Trigger 9082 when a shipping zone is created or modified.
+	 *
+	 * @param object $instance
+	 * @param object WC Data store
+	 * 
+	 * @return object
+	 */
 	public function detect_shipping_zone_change( $instance, $this_data_store ) {
-
-		if ( ! $instance->get_id() ) {
-			$zone_name = $instance->get_zone_name();
-			$this->plugin->alerts->Trigger(
-				9082,
-				array(
-					'EventType'        => 'created',
-					'ShippingZoneName' => sanitize_text_field( $zone_name ),
-				)
-			);
-
-			return $instance;
-		}
-
-		if ( $instance->get_id() ) {
-			$zone_name = $instance->get_zone_name();
-			$this->plugin->alerts->Trigger(
-				9082,
-				array(
-					'EventType'        => 'modified',
-					'ShippingZoneName' => sanitize_text_field( $zone_name ),
-				)
-			);
-
-			return $instance;
-		}
-
+		$zone_name = $instance->get_zone_name();
+		$this->plugin->alerts->Trigger(
+			9082,
+			array(
+				'EventType'        => $instance->get_id() ? 'modified' : 'created',
+				'ShippingZoneName' => sanitize_text_field( $zone_name ),
+			)
+		);
+	
+		return $instance;
 	}
 
 	/**
