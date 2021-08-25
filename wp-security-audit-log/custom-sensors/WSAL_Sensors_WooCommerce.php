@@ -192,7 +192,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * Trigger 9082 when a shipping zone is created or modified.
 	 *
 	 * @param object $instance
-	 * @param object WC Data store
+	 * @param WC_Shipping_Zone_Data_Store_Interface WC Data store
 	 * 
 	 * @return object
 	 */
