@@ -183,6 +183,30 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 		add_action( 'create_product_tag', array( $this, 'EventTagCreation' ), 10, 1 );
 		add_action( 'update_postmeta', array( $this, 'detect_stock_level_change' ), 10, 4 );
+
+		add_action( "woocommerce_before_shipping_zone_object_save", array( $this, 'detect_shipping_zone_change' ), 10, 2 ); 
+
+	}
+
+	/**
+	 * Trigger 9082 when a shipping zone is created or modified.
+	 *
+	 * @param WC_Shipping_Zone $instance
+	 * @param WC_Shipping_Zone_Data_Store_Interface WC Data store
+	 * 
+	 * @return object
+	 */
+	public function detect_shipping_zone_change( $instance, $this_data_store ) {
+		$zone_name = $instance->get_zone_name();
+		$this->plugin->alerts->Trigger(
+			9082,
+			array(
+				'EventType'        => $instance->get_id() ? 'modified' : 'created',
+				'ShippingZoneName' => sanitize_text_field( $zone_name ),
+			)
+		);
+	
+		return $instance;
 	}
 
 	/**
@@ -2260,33 +2284,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 		// Verify nonce for shipping zones events.
 		if ( isset( $_POST['wc_shipping_zones_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wc_shipping_zones_nonce'] ) ), 'wc_shipping_zones_nonce' ) ) {
-			if ( isset( $_POST['zone_id'] ) ) {
-				// Get zone details.
-				$zone_id = sanitize_text_field( wp_unslash( $_POST['zone_id'] ) );
-
-				if ( ! $zone_id && isset( $_POST['changes']['zone_name'] ) ) {
-					// Get zone details.
-					$zone_name = sanitize_text_field( wp_unslash( $_POST['changes']['zone_name'] ) );
-					$this->plugin->alerts->Trigger(
-						9082,
-						array(
-							'EventType'        => 'created',
-							'ShippingZoneName' => sanitize_text_field( $zone_name ),
-						)
-					);
-				} elseif ( ! empty( $_POST['changes'] ) ) {
-					$shipping_zone = new WC_Shipping_Zone( $zone_id );
-					$zone_name     = isset( $_POST['changes']['zone_name'] ) ? sanitize_text_field( wp_unslash( $_POST['changes']['zone_name'] ) ) : false;
-					$this->plugin->alerts->Trigger(
-						9082,
-						array(
-							'ShippingZoneID'   => esc_attr( $zone_id ),
-							'EventType'        => 'modified',
-							'ShippingZoneName' => $zone_name ? sanitize_text_field( $zone_name ) : sanitize_text_field( $shipping_zone->get_zone_name() ),
-						)
-					);
-				}
-			}
 
 			if ( isset( $_POST['changes'] ) && ! empty( $_POST['changes'] ) ) {
 				// @codingStandardsIgnoreLine
