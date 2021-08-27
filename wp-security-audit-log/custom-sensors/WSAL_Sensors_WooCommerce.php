@@ -2905,6 +2905,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link['name'] => $edit_link['value'],
 		);
 
+		// Dont fire if we know an item was added/removed recently.
 		if ( $this->was_triggered_recently( 9120 ) ) {
 			return;
 		}
