@@ -1573,6 +1573,18 @@ $custom_alerts = [
                 'woocommerce-order',
                 'modified',
             ],
+            [
+                9120,
+                WSAL_HIGH,
+                __( 'User added/removed a product from an order', 'wsal-woocommerce' ),
+                __( 'The product %ProductTitle% to/from the order %OrderTitle%.', 'wsal-woocommerce' ),
+                [],
+                [
+                    __( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+                ],
+                'woocommerce-order',
+                'added',
+            ],
         ],
 
         __( 'User Profile', 'wsal-woocommerce' )     => [
