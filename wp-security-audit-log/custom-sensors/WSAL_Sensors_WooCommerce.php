@@ -185,7 +185,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		add_action( 'update_postmeta', array( $this, 'detect_stock_level_change' ), 10, 4 );
 
 		add_action( "woocommerce_before_shipping_zone_object_save", array( $this, 'detect_shipping_zone_change' ), 10, 2 ); 
-
+		
+		add_action( 'woocommerce_new_order_item', array( $this, 'event_order_items_added' ), 10, 3 );
+		add_action( 'woocommerce_before_delete_order_item', array( $this, 'event_order_items_removed' ), 10, 1 );
 	}
 
 	/**
@@ -2788,6 +2790,56 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	}
 
 	/**
+	 * Report additional products being added to an order.
+	 *
+	 * @param int    $item_id
+	 * @param object $item
+	 * @param int    $order_id
+	 * @return void
+	 */
+	public function event_order_items_added( $item_id, $item, $order_id ) {
+
+		$product = $item->get_product();
+		$order         = wc_get_order( $order_id );
+		$order_post    = get_post( $order_id );
+		$edit_link     = $this->GetEditorLink( $order_post );
+		$event_data    = array(
+			'OrderID'          => esc_attr( $order_id ),
+			'OrderTitle'       => $this->get_order_title( $order ),
+			'ProductTitle'     => $product->get_name(),
+			'OrderStatus'      => $order_post->post_status,
+			'EventType'		   => 'added',
+			$edit_link['name'] => $edit_link['value'],
+		);
+		$this->plugin->alerts->Trigger( 9120, $event_data );
+	}
+
+	/**
+	 * Report additional products being removed from an an order.
+	 *
+	 * @param int $item_id
+	 * @return void
+	 */
+	public function event_order_items_removed( $item_id ) {
+		$order_id   = wc_get_order_id_by_order_item_id( $item_id );
+		$order      = wc_get_order( $order_id );
+		$item       = $order->get_items()[$item_id];
+        $product    = $item->get_product();
+
+		$order_post  = get_post( $order_id );
+		$edit_link   = $this->GetEditorLink( $order_post );
+		$event_data  = array(
+			'OrderID'          => esc_attr( $order_id ),
+			'OrderTitle'       => $this->get_order_title( $order ),
+			'ProductTitle'     => $product->get_name(),
+			'OrderStatus'      => $order_post->post_status,
+			'EventType'		   => 'removed',
+			$edit_link['name'] => $edit_link['value'],
+		);
+		$this->plugin->alerts->Trigger( 9120, $event_data );
+	}
+
+	/**
 	 * Checks if event 9041 has triggered or if it will
 	 * trigger.
 	 *
@@ -2822,6 +2874,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		if ( $manager->WillOrHasTriggered( 9038 ) ) {
 			return false;
 		}
+		if ( $manager->WillOrHasTriggered( 9120 ) ) {
+			return false;
+		}
 		return true;
 	}
 
@@ -2850,6 +2905,11 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link['name'] => $edit_link['value'],
 		);
 
+		// Dont fire if we know an item was added/removed recently.
+		if ( $this->was_triggered_recently( 9120 ) ) {
+			return;
+		}
+
 		// Log event.
 		$this->plugin->alerts->TriggerIf( 9040, $event_data, array( $this, 'must_not_contain_refund_or_modification' ) );
 
@@ -2874,14 +2934,15 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				$edit_link = $this->GetEditorLink( $order_post );
 
 				// Log event.
-				$this->plugin->alerts->Trigger(
+				$this->plugin->alerts->TriggerIf(
 					9040,
 					array(
 						'OrderID'          => esc_attr( $order_id ),
 						'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order_id ) ),
 						'OrderStatus'      => sanitize_text_field( $order_post->post_status ),
 						$edit_link['name'] => $edit_link['value'],
-					)
+					),
+					array( $this, 'must_not_contain_refund_or_modification' )
 				);
 			}
 		}
@@ -3113,14 +3174,15 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link = $this->GetEditorLink( $order );
 
 			// Log event.
-			$this->plugin->alerts->Trigger(
+			$this->plugin->alerts->TriggerIf(
 				9040,
 				array(
 					'OrderID'          => esc_attr( $order_id ),
 					'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order_id ) ),
 					'OrderStatus'      => isset( $order->post_status ) ? sanitize_text_field( $order->post_status ) : false,
 					$edit_link['name'] => $edit_link['value'],
-				)
+				),
+				array( $this, 'must_not_contain_refund_or_modification' )
 			);
 		}
 	}
