@@ -6,12 +6,12 @@
  * Text Domain: wsal-woocommerce
  * Author: WP White Security
  * Author URI: http://www.wpwhitesecurity.com/
- * Version: 1.2.2
+ * Version: 1.2.3
  * License: GPL2
  * Network: true
  *
  * WC requires at least: 4.8
- * WC tested up to: 5.2.1
+ * WC tested up to: 5.6.0
  *
  * @package Wsal
  * @subpackage Wsal Custom Events Loader
