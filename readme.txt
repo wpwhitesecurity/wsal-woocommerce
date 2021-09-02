@@ -5,9 +5,9 @@ License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.html
 Tags: activity log for WooCommerce, WP Activity Log extension, activity logs
 Requires at least: 4.5
-Tested up to: 5.7.2
-Stable tag: 1.2.2
-Requires PHP: 5.6
+Tested up to: 5.8
+Stable tag: 1.3.0
+Requires PHP: 7.0
 
 Keep a detailed log of your team's changes in the WooCommerce store, products, orders & more.
 
@@ -76,6 +76,30 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 
 == Changelog ==
 
+= 1.2.3 (2021-09-02) = 
+
+Release notes: [Activity log extensions for Yoast SEO, WooCommerce & WPForms get a maintenance update](https://wpactivitylog.com/extensions-september-2021-update/)
+
+* **New event IDs**
+	* 9100: User allowed / disallowed reviews on WooCommerce store (changed the status of the Allow reviews setting).
+	* 9107: User enabled/disabled the "Show verified owner label on reviews" setting in the WooCommerce store.
+	* 9108: User changed the status of the "Reviews can only be left by verified owners" setting in the WooCommerce store.
+	* 9109: User changed the status of the "Star rating on reviews" setting in the WooCommerce store.
+	* 9110: User changed the status of the Star ratings should be required setting in the store.
+	* 9111: Changed a Checkout endpoint on the WooCommerce store.
+	* 9112: Changed an Account endpoint on the WooCommerce store.
+	* 9113: The Tax status of a product was changed.
+	* 9114: The Tax class of a product was changed.
+	
+* **Improvement**
+	* Extension is now fully translatable.
+	* WooCommerce orders sensor now can detect and keep a log of products added to an existing order.
+	
+* **Bug fixes**
+	* Fixed: Plugin reports a number of incorrect events when the sale price of a product is changed.
+	* Fixed: Plugin reported product page status instead of stock state in event ID 9018.
+	* Fixed: Plugin reported wrong Event Type for event ID 9082 (WooCommerce shipping zone changes).
+	
 = 1.2.2 (2021-05-19) =
 
 * **Improvement**
