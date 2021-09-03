@@ -2797,10 +2797,10 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param int    $order_id
 	 * @return void
 	 */
-	public function event_order_items_added( $item_id, $item, $order_id ) {
-
-		$product = $item->get_product();
+	public function event_order_items_added( $item_id, $item, $order_id ) {		
 		$order         = wc_get_order( $order_id );
+		$item          = $order->get_items()[$item_id];
+        $product       = $item->get_product();
 		$order_post    = get_post( $order_id );
 		$edit_link     = $this->GetEditorLink( $order_post );
 		$event_data    = array(
