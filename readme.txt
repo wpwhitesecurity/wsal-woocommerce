@@ -76,6 +76,10 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 
 == Changelog ==
 
+= 1.2.4 (2021-09-03) = 
+
+Reversed the new feature "detection of when products are added to existing order" until some issues are addressed.
+
 = 1.2.3 (2021-09-02) = 
 
 Release notes: [Activity log extensions for Yoast SEO, WooCommerce & WPForms get a maintenance update](https://wpactivitylog.com/extensions-september-2021-update/)
