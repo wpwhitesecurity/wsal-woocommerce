@@ -4186,7 +4186,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param mixed   $meta_value - Meta value.
 	 */
 	public function wc_user_meta_updated( $meta_id, $user_id, $meta_key, $meta_value ) {
-		if ( ! $this->is_woocommerce_user_meta( $meta_key ) ) {
+		if ( ! $this->is_woocommerce_user_meta( $meta_key ) || ! isset( $this->wc_user_meta[ $meta_id ] ) ) {
 			return;
 		}
 
