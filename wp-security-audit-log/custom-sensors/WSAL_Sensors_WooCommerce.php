@@ -1137,7 +1137,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$product = get_queried_object();
 
 		// Check product post type.
-		if ( ! empty( $product ) && $product instanceof WP_Post && 'product' !== $product->post_type ) {
+		if ( ! empty( $product ) && $product instanceof WP_Post && 'product' !== $product->post_type || ! empty( $product ) && ! isset( $product->post_status ) ) {
 			return $product;
 		}
 
