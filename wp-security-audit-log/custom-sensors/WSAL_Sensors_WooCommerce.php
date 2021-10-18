@@ -186,8 +186,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 		add_action( "woocommerce_before_shipping_zone_object_save", array( $this, 'detect_shipping_zone_change' ), 10, 2 ); 
 		
-		add_action( 'woocommerce_new_order_item', array( $this, 'event_order_items_added' ), 10, 3 );
-		add_action( 'woocommerce_before_delete_order_item', array( $this, 'event_order_items_removed' ), 10, 1 );
+		// add_action( 'woocommerce_new_order_item', array( $this, 'event_order_items_added' ), 10, 3 );
+		// add_action( 'woocommerce_before_delete_order_item', array( $this, 'event_order_items_removed' ), 10, 1 );
 	}
 
 	/**
@@ -1137,7 +1137,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$product = get_queried_object();
 
 		// Check product post type.
-		if ( ! empty( $product ) && $product instanceof WP_Post && 'product' !== $product->post_type ) {
+		if ( ! empty( $product ) && $product instanceof WP_Post && 'product' !== $product->post_type || ! empty( $product ) && ! isset( $product->post_status ) ) {
 			return $product;
 		}
 
@@ -3572,6 +3572,10 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 	private function check_tax_status_change( $product, $oldpost, $post ) {
 
+		if ( ! isset( $oldpost['_tax_status'] ) ) {
+			return;
+		}
+
 		// Tax status.
 		$old_status = $oldpost['_tax_status'][0];
 		$status = $post['tax_status'];
@@ -4186,7 +4190,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param mixed   $meta_value - Meta value.
 	 */
 	public function wc_user_meta_updated( $meta_id, $user_id, $meta_key, $meta_value ) {
-		if ( ! $this->is_woocommerce_user_meta( $meta_key ) ) {
+		if ( ! $this->is_woocommerce_user_meta( $meta_key ) || ! isset( $this->wc_user_meta[ $meta_id ] ) ) {
 			return;
 		}
 
