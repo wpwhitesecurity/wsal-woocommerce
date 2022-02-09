@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignoreFile
 
 $custom_alerts = [
     __( 'WooCommerce', 'wsal-woocommerce' ) => [
