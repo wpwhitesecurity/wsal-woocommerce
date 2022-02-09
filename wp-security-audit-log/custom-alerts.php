@@ -1049,6 +1049,54 @@ $custom_alerts = [
                 'woocommerce-store',
                 'modified',
             ],
+            [
+                9115,
+                WSAL_MEDIUM,
+                __( 'The Currency position setting has been modified', 'wsal-woocommerce' ),
+                __( 'Changed the <strong>Currency position</strong> setting to %new_setting%.', 'wsal-woocommerce' ),
+                [
+                    __( 'Previous setting', 'wsal-woocommerce' ) => '%%old_setting%',
+                ],
+                [],
+                'woocommerce-store',
+                'modified',
+            ],
+            [
+                9116,
+                WSAL_MEDIUM,
+                __( 'The Thousand separator setting has been modified', 'wsal-woocommerce' ),
+                __( 'Changed the <strong>Thousand separator</strong> setting in the Currency options to %new_setting%.', 'wsal-woocommerce' ),
+                [
+                    __( 'Previous setting', 'wsal-woocommerce' ) => '%%old_setting%',
+                ],
+                [],
+                'woocommerce-store',
+                'modified',
+            ],
+            [
+                9117,
+                WSAL_MEDIUM,
+                __( 'The Decimal separator setting has been modified', 'wsal-woocommerce' ),
+                __( 'Changed the <strong>Decimal separator</strong> setting in the Currency options to %new_setting%.', 'wsal-woocommerce' ),
+                [
+                    __( 'Previous setting', 'wsal-woocommerce' ) => '%%old_setting%',
+                ],
+                [],
+                'woocommerce-store',
+                'modified',
+            ],
+            [
+                9118,
+                WSAL_MEDIUM,
+                __( 'The Number of decimals position setting has been modified', 'wsal-woocommerce' ),
+                __( 'Changed the <strong>Number of decimals</strong> setting in the Currency options to %new_setting%.', 'wsal-woocommerce' ),
+                [
+                    __( 'Previous setting', 'wsal-woocommerce' ) => '%%old_setting%',
+                ],
+                [],
+                'woocommerce-store',
+                'modified',
+            ],
         ],
 
         __( 'Payment Gateways', 'wsal-woocommerce' ) => [
