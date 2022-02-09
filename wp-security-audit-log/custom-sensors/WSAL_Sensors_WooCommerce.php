@@ -77,6 +77,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 */
 	private $old_attr_data;
 
+	private $old_location_data;
+	private $new_location_data;
+
 	/**
 	 * Coupon Meta Data Keys.
 	 *
@@ -1887,35 +1890,36 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 					if ( isset( $_POST['woocommerce_store_address'] ) && $option === 'woocommerce_store_address' || isset( $_POST['woocommerce_store_address_2'] ) && $option === 'woocommerce_store_address_2' || isset( $_POST['woocommerce_store_city'] ) && $option === 'woocommerce_store_city' || isset( $_POST['woocommerce_default_country'] ) && $option === 'woocommerce_default_country' || isset( $_POST['woocommerce_store_postcode'] ) && $option === 'woocommerce_store_postcode' ) {
 						// Default country event.
-						$old_location_array = array();
 						if ( $option === 'woocommerce_store_address' ) {
-							$old_location = $old_value . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $this->GetConfig( 'store_city' ) . ', ' . WC()->countries->countries[ strtok( $this->GetConfig( 'default_country' ), ':' ) ] . ', ' . $this->GetConfig( 'store_postcode' );
-							$new_location = sanitize_text_field( wp_unslash( $_POST['woocommerce_store_address'] ) ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $this->GetConfig( 'store_city' ) . ', ' . WC()->countries->countries[ strtok( $this->GetConfig( 'default_country' ), ':' ) ] . ', ' . $this->GetConfig( 'store_postcode' );
+							$this->old_location_data = $old_value . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $this->GetConfig( 'store_city' ) . ', ' . WC()->countries->countries[ strtok( $this->GetConfig( 'default_country' ), ':' ) ] . ', ' . $this->GetConfig( 'store_postcode' );
+							$this->new_location_data = sanitize_text_field( wp_unslash( $_POST['woocommerce_store_address'] ) ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $this->GetConfig( 'store_city' ) . ', ' . WC()->countries->countries[ strtok( $this->GetConfig( 'default_country' ), ':' ) ] . ', ' . $this->GetConfig( 'store_postcode' );
 						}
 						if ( $option === 'woocommerce_store_address_2' ) {
-							$old_location = $this->GetConfig( 'store_address' ) . ', ' . $old_value . ', ' . $this->GetConfig( 'store_city' ) . ', ' . WC()->countries->countries[ strtok( $this->GetConfig( 'default_country' ), ':' ) ] . ', ' . $this->GetConfig( 'store_postcode' );
-							$new_location = $this->GetConfig( 'store_address' ) . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_address'] ) ) . ', ' . $this->GetConfig( 'store_city' ) . ', ' . WC()->countries->countries[ strtok( $this->GetConfig( 'default_country' ), ':' ) ] . ', ' . $this->GetConfig( 'store_postcode' );
+							$this->old_location_data= $this->GetConfig( 'store_address' ) . ', ' . $old_value . ', ' . $this->GetConfig( 'store_city' ) . ', ' . WC()->countries->countries[ strtok( $this->GetConfig( 'default_country' ), ':' ) ] . ', ' . $this->GetConfig( 'store_postcode' );
+							$this->new_location_data  = $this->GetConfig( 'store_address' ) . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_address_2'] ) ) . ', ' . $this->GetConfig( 'store_city' ) . ', ' . WC()->countries->countries[ strtok( $this->GetConfig( 'default_country' ), ':' ) ] . ', ' . $this->GetConfig( 'store_postcode' );
 						}
 						if ( $option === 'woocommerce_store_city' ) {
-							$old_location = $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $old_value . ', ' . $this->GetConfig( 'default_country' ) . ', ' . $this->GetConfig( 'store_postcode' );
-							$new_location = $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_city'] ) ) . ', ' . WC()->countries->countries[ strtok( $this->GetConfig( 'default_country' ), ':' ) ] . ', ' . $this->GetConfig( 'store_postcode' );
+							$this->old_location_data = $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $old_value . ', ' . $this->GetConfig( 'default_country' ) . ', ' . $this->GetConfig( 'store_postcode' );
+							$this->new_location_data  = $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_city'] ) ) . ', ' . WC()->countries->countries[ strtok( $this->GetConfig( 'default_country' ), ':' ) ] . ', ' . $this->GetConfig( 'store_postcode' );
 						}
 						if ( $option === 'woocommerce_default_country' ) {
-							$old_location = $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $this->GetConfig( 'store_address' ) . ', ' . WC()->countries->countries[ strtok( $old_value, ':' ) ] . ', ' . $old_value;
-							$new_location = $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $this->GetConfig( 'store_address' ) . ', ' . WC()->countries->countries[ strtok( $_POST['woocommerce_default_country'], ':' ) ] . ', ' . $this->GetConfig( 'store_postcode' );
+							$$this->old_location_data = $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $this->GetConfig( 'store_address' ) . ', ' . WC()->countries->countries[ strtok( $old_value, ':' ) ] . ', ' . $old_value;
+							$this->new_location_data = $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $this->GetConfig( 'store_address' ) . ', ' . WC()->countries->countries[ strtok( $_POST['woocommerce_default_country'], ':' ) ] . ', ' . $this->GetConfig( 'store_postcode' );
 						}
 						if ( $option === 'woocommerce_store_postcode' ) {
-							$old_location = $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'default_country' ) . ', ' . $old_value;
-							$new_location = $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $this->GetConfig( 'store_address' ) . ', ' . WC()->countries->countries[ strtok( $this->GetConfig( 'default_country' ), ':' ) ] . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_postcode'] ) );
+							$this->old_location_data = $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'default_country' ) . ', ' . $old_value;
+							$this->new_location_data  = $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $this->GetConfig( 'store_address' ) . ', ' . WC()->countries->countries[ strtok( $this->GetConfig( 'default_country' ), ':' ) ] . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_postcode'] ) );
 						}
 
-						if ( $old_location !== $new_location ) {
+						if ( $this->old_location_data !== $this->new_location_data ) {
+							sleep(0.5);
+							$this->new_location_data = sanitize_text_field( wp_unslash( $_POST['woocommerce_store_address'] ) ) . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_address_2'] ) ) . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_city'] ) ) . ', ' . WC()->countries->countries[ strtok( $_POST['woocommerce_default_country'], ':' ) ] . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_postcode'] ) );
 							if ( ! $this->was_triggered_recently( 9029 ) ) {
 								$this->plugin->alerts->Trigger(
 									9029,
 									array(
-										'OldLocation' => sanitize_text_field( $old_location ),
-										'NewLocation' => sanitize_text_field( $new_location ),
+										'OldLocation' => sanitize_text_field( $this->old_location_data ),
+										'NewLocation' => sanitize_text_field( $this->new_location_data ),
 									)
 								);
 							}
