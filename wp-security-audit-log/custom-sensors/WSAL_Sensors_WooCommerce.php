@@ -1686,7 +1686,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 */
 	public function settings_updated( $option, $old_value, $value ) {
 
-		error_log( print_r( $option, true ) );
 		// Verify WooCommerce settings page nonce.
 		if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'woocommerce-settings' ) ) {
 			// Verify settings page via $_GET array.
@@ -2078,6 +2077,54 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						}
 					}
 
+					if ( $option === 'woocommerce_currency_pos' ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->Trigger(
+								9115,
+								array(
+									'old_setting' => $old_value,
+									'new_setting' => $value,
+								)
+							);
+						}
+					}
+
+					if ( $option === 'woocommerce_price_thousand_sep' ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->Trigger(
+								9116,
+								array(
+									'old_setting' => $old_value,
+									'new_setting' => $value,
+								)
+							);
+						}
+					}
+
+					if ( $option === 'woocommerce_price_decimal_sep' ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->Trigger(
+								9117,
+								array(
+									'old_setting' => $old_value,
+									'new_setting' => $value,
+								)
+							);
+						}
+					}
+
+					if ( $option === 'woocommerce_price_num_decimals' ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->Trigger(
+								9118,
+								array(
+									'old_setting' => $old_value,
+									'new_setting' => $value,
+								)
+							);
+						}
+					}
+
 					// Store current event.
 					if ( $option === 'woocommerce_currency' ) {
 						if ( isset( $_POST['woocommerce_currency'] ) ) {
@@ -2178,54 +2225,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 									'endpoint_name' => str_replace( 'woocommerce_myaccount_', '', str_replace( '_endpoint', '', $option ) ),
 									'old'           => $old_value,
 									'new_value'     => $value,
-								)
-							);
-						}
-					}
-
-					if ( $option === 'woocommerce_currency_pos' ) {
-						if ( $old_value !== $value ) {
-							$this->plugin->alerts->Trigger(
-								9115,
-								array(
-									'old' => $old_value,
-									'new' => $value,
-								)
-							);
-						}
-					}
-
-					if ( $option === 'woocommerce_price_thousand_sep' ) {
-						if ( $old_value !== $value ) {
-							$this->plugin->alerts->Trigger(
-								9116,
-								array(
-									'old' => $old_value,
-									'new' => $value,
-								)
-							);
-						}
-					}
-
-					if ( $option === 'woocommerce_price_decimal_sep' ) {
-						if ( $old_value !== $value ) {
-							$this->plugin->alerts->Trigger(
-								9117,
-								array(
-									'old' => $old_value,
-									'new' => $value,
-								)
-							);
-						}
-					}
-
-					if ( $option === 'woocommerce_price_num_decimals' ) {
-						if ( $old_value !== $value ) {
-							$this->plugin->alerts->Trigger(
-								9118,
-								array(
-									'old' => $old_value,
-									'new' => $value,
 								)
 							);
 						}
