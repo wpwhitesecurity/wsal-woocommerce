@@ -76,8 +76,23 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @var stdClass
 	 */
 	private $old_attr_data;
-
+    
+    /**
+	 * Old store location data.
+	 *
+	 * @since 1.4.0
+	 *
+	 * @var string
+	 */
 	private $old_location_data;
+
+    /**
+	 * Most recent store location data.
+	 *
+	 * @since 1.4.0
+	 *
+	 * @var string
+	 */
 	private $new_location_data;
 
 	/**
