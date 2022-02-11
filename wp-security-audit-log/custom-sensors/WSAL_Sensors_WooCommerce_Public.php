@@ -1,4 +1,5 @@
-<?php // phpcs:ignore
+<?php // phpcs:disable WordPress.Files.FileName.NotHyphenatedLowercase
+
 /**
  * Sensor: Public WooCommerce Activity
  *
