@@ -1685,6 +1685,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * Trigger events Settings: 9027, 9028, 9029, 9030, 9031, 9032, 9033
 	 */
 	public function settings_updated( $option, $old_value, $value ) {
+
 		// Verify WooCommerce settings page nonce.
 		if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'woocommerce-settings' ) ) {
 			// Verify settings page via $_GET array.
@@ -2073,6 +2074,54 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						if ( $old_calc_taxes !== $new_calc_taxes ) {
 							$status = 'yes' === $new_calc_taxes ? 'enabled' : 'disabled';
 							$this->plugin->alerts->Trigger( 9030, array( 'EventType' => $status ) );
+						}
+					}
+
+					if ( $option === 'woocommerce_currency_pos' ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->Trigger(
+								9115,
+								array(
+									'old_setting' => $old_value,
+									'new_setting' => $value,
+								)
+							);
+						}
+					}
+
+					if ( $option === 'woocommerce_price_thousand_sep' ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->Trigger(
+								9116,
+								array(
+									'old_setting' => $old_value,
+									'new_setting' => $value,
+								)
+							);
+						}
+					}
+
+					if ( $option === 'woocommerce_price_decimal_sep' ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->Trigger(
+								9117,
+								array(
+									'old_setting' => $old_value,
+									'new_setting' => $value,
+								)
+							);
+						}
+					}
+
+					if ( $option === 'woocommerce_price_num_decimals' ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->Trigger(
+								9118,
+								array(
+									'old_setting' => $old_value,
+									'new_setting' => $value,
+								)
+							);
 						}
 					}
 

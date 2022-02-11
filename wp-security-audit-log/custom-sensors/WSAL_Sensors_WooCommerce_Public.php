@@ -1,4 +1,5 @@
-<?php
+<?php // phpcs:disable WordPress.Files.FileName.NotHyphenatedLowercase
+
 /**
  * Sensor: Public WooCommerce Activity
  *
@@ -46,7 +47,7 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 	 */
 	public function HookEvents() {
 		$settings        = WpSecurityAuditLog::GetInstance()->settings();
-    $frontend_events = $settings::get_frontend_events();
+		$frontend_events = $settings::get_frontend_events();
 		if ( is_user_logged_in() || ! is_user_logged_in() && ( isset( $frontend_events['woocommerce'] ) && $frontend_events['woocommerce'] ) ) {
 			add_action( 'woocommerce_new_order', array( $this, 'event_new_order' ), 10, 1 );
 			add_filter( 'woocommerce_order_item_quantity', array( $this, 'set_old_stock' ), 10, 3 );
@@ -334,7 +335,7 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 			$query->addOrderBy( 'created_on', true );
 			$query->setLimit( 1 );
 			$last_occurence = $query->getAdapter()->Execute( $query );
-			if ( isset( $last_occurence[0] ) &&  9035 === $last_occurence[0]->alert_id ) {
+			if ( isset( $last_occurence[0] ) && 9035 === $last_occurence[0]->alert_id ) {
 				$latest_event = $this->plugin->alerts->get_latest_events();
 				$latest_event = isset( $latest_event[0] ) ? $latest_event[0] : false;
 				$event_meta   = $latest_event ? $latest_event->GetMetaArray() : false;
