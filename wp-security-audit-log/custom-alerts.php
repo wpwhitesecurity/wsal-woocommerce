@@ -1,4 +1,13 @@
 <?php
+/**
+ * Our list of events.
+ *
+ * @package wsal
+ * @subpackage wsal-woocommerce
+ */
+
+// phpcs:disable WordPress.WP.I18n.UnorderedPlaceholdersText 
+// phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
 
 $custom_alerts = array(
 	__( 'WooCommerce', 'wsal-woocommerce' ) => array(

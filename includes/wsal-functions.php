@@ -1,8 +1,11 @@
 <?php
-
 /**
- * Add our filters.
+ * Add our neccesary hooks and filters.
+ *
+ * @package wsal
+ * @subpackage wsal-woocmmerce
  */
+
 add_filter( 'wsal_event_type_data', 'wsal_woocommerce_extension_add_custom_event_type', 10, 2 );
 add_filter( 'wsal_format_custom_meta', 'wsal_woocommerce_extension_add_custom_meta_format', 10, 4 );
 add_filter( 'wsal_event_objects', 'wsal_woocommerce_extension_add_custom_event_objects' );
@@ -17,6 +20,12 @@ add_filter( 'wsal_togglealerts_obsolete_events', 'wsal_woocommerce_extension_tog
 // Special events.
 add_action( 'woocommerce_download_product', 'wsal_woocommerce_extension_detect_file_download', 10, 6 );
 
+/**
+ * Saves our added field when updating togglealerts.
+ *
+ * @param  array $post_data - POSTed data.
+ * @return void
+ */
 function wsal_woocommerce_extension_togglealerts_process_save_settings( $post_data ) {
 	$wsal = WpSecurityAuditLog::GetInstance();
 	if ( isset( $post_data['wc_all_stock_changes'] ) && ! empty( $post_data['wc_all_stock_changes'] ) ) {
@@ -57,6 +66,9 @@ function wsal_woocommerce_extension_detect_file_download( $download_get_user_ema
 
 /**
  * Append some extra content below an event in the ToggleAlerts view.
+ *
+ * @param  int $alert_id - Alert ID we might want to append to.
+ * @return void
  */
 function wsal_woocommerce_extension_append_content_to_toggle( $alert_id ) {
 
@@ -174,10 +186,10 @@ function wsal_woocommerce_extension_add_custom_ignored_cpt( $post_types ) {
  *
  * @method wsal_woocommerce_extension_add_custom_meta_format
  *
- * @param string $value Meta value.
- * @param string $expression Meta expression including the surrounding percentage chars.
+ * @param string              $value Meta value.
+ * @param string              $expression Meta expression including the surrounding percentage chars.
  * @param WSAL_AlertFormatter $alert_formatter Alert formatter class.
- * @param int|null $occurrence_id Occurrence ID. Only present if the event was already written to the database. Default null.
+ * @param int|null            $occurrence_id Occurrence ID. Only present if the event was already written to the database. Default null.
  *
  * @return string
  *
@@ -200,17 +212,23 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $expression,
 	return $value;
 }
 
+/**
+ * Added our plugin to allowed public sensors.
+ *
+ * @param  array $value - Currently allows sensors.
+ * @return array $value - Appended sensor list.
+ */
 function wsal_woocommerce_extension_load_public_sensors( $value ) {
 	$value[] = 'WooCommerce_Public';
 	return $value;
 }
 
 /**
-	* Get editor link.
-	*
-	* @param WP_Post $post        - Product post object.
-	* @return array  $editor_link - Name and value link.
-	*/
+ * Get editor link.
+ *
+ * @param WP_Post $post        - Product post object.
+ * @return array  $editor_link - Name and value link.
+ */
 function wsal_woocommerce_extension_get_editor_link( $post ) {
 	// Meta value key.
 	if ( 'shop_order' === $post->post_type ) {
@@ -261,6 +279,12 @@ function wsal_woocommerce_extension_get_editor_link( $post ) {
 	return $editor_link;
 }
 
+/**
+ * Get order title from an order.
+ *
+ * @param object $order - WX Order object.
+ * @return string - Order ID.
+ */
 function wsal_woocommerce_extension_get_order_title( $order ) {
 	if ( ! $order ) {
 		return false;
@@ -285,6 +309,10 @@ function wsal_woocommerce_extension_get_order_title( $order ) {
 
 /**
  * Add sub cateogry titles to ToggleView page in WSAL.
+ *
+ * @param string $title - Blank title.
+ * @param string $alert_id - Alert ID to give a title to.
+ * @return string - Our title.
  */
 function wsal_woocommerce_extension_togglealerts_sub_category_titles( $title = '', $alert_id = '' ) {
 	if ( 9105 === $alert_id ) {
@@ -304,6 +332,9 @@ function wsal_woocommerce_extension_togglealerts_sub_category_titles( $title = '
 
 /**
  * Add specific events so we can use them for category titles.
+ *
+ * @param array $sub_category_events - Current event which are sub categories.
+ * @return array $sub_category_events  - Appended list of events.
  */
 function wsal_woocommerce_extension_togglealerts_sub_category_events( $sub_category_events ) {
 	$new_events          = array( 9105, 9007, 9015, 9047 );
@@ -342,7 +373,10 @@ function wsal_woocommerce_extension_togglealerts_js_code() {
 add_action( 'admin_footer', 'wsal_woocommerce_extension_togglealerts_js_code' );
 
 /**
- * Add obsolete events to the togglealerts view.
+ * Add obsolete events to the togglealerts view..
+ *
+ * @param array $obsolete_events - Current obsolete events.
+ * @return array $obsolete_events  - Appended list of obsolete events.
  */
 function wsal_woocommerce_extension_togglealerts_obsolete_events( $obsolete_events ) {
 	$new_events      = array( 9011, 9070, 9075 );
