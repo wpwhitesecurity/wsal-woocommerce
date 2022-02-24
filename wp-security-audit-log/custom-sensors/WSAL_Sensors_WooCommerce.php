@@ -76,8 +76,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @var stdClass
 	 */
 	private $old_attr_data;
-    
-    /**
+
+	/**
 	 * Old store location data.
 	 *
 	 * @since 1.4.0
@@ -86,7 +86,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 */
 	private $old_location_data;
 
-    /**
+	/**
 	 * Most recent store location data.
 	 *
 	 * @since 1.4.0
@@ -202,8 +202,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		add_action( 'create_product_tag', array( $this, 'EventTagCreation' ), 10, 1 );
 		add_action( 'update_postmeta', array( $this, 'detect_stock_level_change' ), 10, 4 );
 
-		add_action( "woocommerce_before_shipping_zone_object_save", array( $this, 'detect_shipping_zone_change' ), 10, 2 ); 
-		
+		add_action( 'woocommerce_before_shipping_zone_object_save', array( $this, 'detect_shipping_zone_change' ), 10, 2 );
+
 		// add_action( 'woocommerce_new_order_item', array( $this, 'event_order_items_added' ), 10, 3 );
 		// add_action( 'woocommerce_before_delete_order_item', array( $this, 'event_order_items_removed' ), 10, 1 );
 	}
@@ -211,9 +211,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	/**
 	 * Trigger 9082 when a shipping zone is created or modified.
 	 *
-	 * @param WC_Shipping_Zone $instance
+	 * @param WC_Shipping_Zone                                    $instance
 	 * @param WC_Shipping_Zone_Data_Store_Interface WC Data store
-	 * 
+	 *
 	 * @return object
 	 */
 	public function detect_shipping_zone_change( $instance, $this_data_store ) {
@@ -225,7 +225,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'ShippingZoneName' => sanitize_text_field( $zone_name ),
 			)
 		);
-	
+
 		return $instance;
 	}
 
@@ -1698,7 +1698,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param string $option_name - Option Name.
 	 * @return string
 	 */
-
 	/**
 	 * Trigger events Settings: 9027, 9028, 9029, 9030, 9031, 9032, 9033
 	 */
@@ -2867,16 +2866,16 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 */
 	public function event_order_items_added( $item_id, $item, $order_id ) {
 
-		$product = $item->get_product();
-		$order         = wc_get_order( $order_id );
-		$order_post    = get_post( $order_id );
-		$edit_link     = $this->GetEditorLink( $order_post );
-		$event_data    = array(
+		$product    = $item->get_product();
+		$order      = wc_get_order( $order_id );
+		$order_post = get_post( $order_id );
+		$edit_link  = $this->GetEditorLink( $order_post );
+		$event_data = array(
 			'OrderID'          => esc_attr( $order_id ),
 			'OrderTitle'       => $this->get_order_title( $order ),
 			'ProductTitle'     => $product->get_name(),
 			'OrderStatus'      => $order_post->post_status,
-			'EventType'		   => 'added',
+			'EventType'        => 'added',
 			$edit_link['name'] => $edit_link['value'],
 		);
 		$this->plugin->alerts->Trigger( 9120, $event_data );
@@ -2889,19 +2888,19 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @return void
 	 */
 	public function event_order_items_removed( $item_id ) {
-		$order_id   = wc_get_order_id_by_order_item_id( $item_id );
-		$order      = wc_get_order( $order_id );
-		$item       = $order->get_items()[$item_id];
-        $product    = $item->get_product();
+		$order_id = wc_get_order_id_by_order_item_id( $item_id );
+		$order    = wc_get_order( $order_id );
+		$item     = $order->get_items()[ $item_id ];
+		$product  = $item->get_product();
 
-		$order_post  = get_post( $order_id );
-		$edit_link   = $this->GetEditorLink( $order_post );
-		$event_data  = array(
+		$order_post = get_post( $order_id );
+		$edit_link  = $this->GetEditorLink( $order_post );
+		$event_data = array(
 			'OrderID'          => esc_attr( $order_id ),
 			'OrderTitle'       => $this->get_order_title( $order ),
 			'ProductTitle'     => $product->get_name(),
 			'OrderStatus'      => $order_post->post_status,
-			'EventType'		   => 'removed',
+			'EventType'        => 'removed',
 			$edit_link['name'] => $edit_link['value'],
 		);
 		$this->plugin->alerts->Trigger( 9120, $event_data );
@@ -3467,13 +3466,13 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						$this->plugin->alerts->Trigger(
 							9051,
 							array(
-								'AttributeName'       => sanitize_text_field( $new_attr['name'] ),
-								'AttributeVisiblilty' => 1 === $new_visible ? __( 'Visible', 'wsal-woocommerce' ) : __( 'Non-Visible', 'wsal-woocommerce' ),
+								'AttributeName'          => sanitize_text_field( $new_attr['name'] ),
+								'AttributeVisiblilty'    => 1 === $new_visible ? __( 'Visible', 'wsal-woocommerce' ) : __( 'Non-Visible', 'wsal-woocommerce' ),
 								'OldAttributeVisiblilty' => 1 === $old_visible ? __( 'Visible', 'wsal-woocommerce' ) : __( 'Non-Visible', 'wsal-woocommerce' ),
-								'ProductID'           => esc_attr( $oldpost->ID ),
-								'ProductTitle'        => sanitize_text_field( $oldpost->post_title ),
-								'ProductStatus'       => sanitize_text_field( $oldpost->post_status ),
-								$editor_link['name']  => $editor_link['value'],
+								'ProductID'              => esc_attr( $oldpost->ID ),
+								'ProductTitle'           => sanitize_text_field( $oldpost->post_title ),
+								'ProductStatus'          => sanitize_text_field( $oldpost->post_status ),
+								$editor_link['name']     => $editor_link['value'],
 							)
 						);
 						$result = 1;
@@ -3515,8 +3514,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$alert_needed            = false;
 
 		// Push editor link into event data early.
-		$event_data              = array(
-			$editor_link['name'] => $editor_link['value']
+		$event_data = array(
+			$editor_link['name'] => $editor_link['value'],
 		);
 
 		$event_data['PostID']        = $oldpost->ID;
@@ -3528,7 +3527,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$event_data['EventType'] = 'added';
 			$event_data['name']      = basename( $attachment_metadata['file'] );
 			$event_data['path']      = $get_upload_dir['basedir'] . DIRECTORY_SEPARATOR . $attachment_metadata['file'];
-			$alert_needed = true;
+			$alert_needed            = true;
 		}
 
 		// Featued image removed.
@@ -3536,7 +3535,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$event_data['EventType'] = 'deleted';
 			$event_data['name']      = basename( $old_attachment_metadata['file'] );
 			$event_data['path']      = $get_upload_dir['basedir'] . DIRECTORY_SEPARATOR . $old_attachment_metadata['file'];
-			$alert_needed = true;
+			$alert_needed            = true;
 		}
 
 		// Featured image modified.
@@ -3547,7 +3546,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$event_data['old_path']  = $get_upload_dir['basedir'] . DIRECTORY_SEPARATOR . $old_attachment_metadata['file'];
 			$event_data['name']      = basename( $attachment_metadata['file'] );
 			$event_data['path']      = $get_upload_dir['basedir'] . DIRECTORY_SEPARATOR . $attachment_metadata['file'];
-			$alert_needed = true;
+			$alert_needed            = true;
 		}
 
 		// Its go time.
@@ -3584,7 +3583,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 		// Push editor link into event data early.
 		$event_data = array(
-			$editor_link['name']        => $editor_link['value'],
+			$editor_link['name'] => $editor_link['value'],
 		);
 
 		$event_data['new_value']     = $data['_download_expiry'];
@@ -3605,7 +3604,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		}
 
 		if ( ! $data['_download_expiry'] ) {
-			$data['_download_expiry'] =  __( 'Never', 'wsal-woocommerce' );
+			$data['_download_expiry'] = __( 'Never', 'wsal-woocommerce' );
 		}
 
 		// Event 9097 (Modified the download limit of the product).
@@ -3622,11 +3621,11 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		if ( isset( $oldpost['_download_expiry'] ) && $oldpost['_download_expiry'][0] !== $data['_download_expiry'] ) {
 
 			// The empty value for this is stored as -1, so double check we actually have a change to report.
-			$old_value = ( $oldpost['_download_expiry'][0] == "-1" ) ? 'Never' : $oldpost['_download_expiry'][0];
-			if ( $old_value ==  $data['_download_expiry'] ) {
+			$old_value = ( $oldpost['_download_expiry'][0] == '-1' ) ? 'Never' : $oldpost['_download_expiry'][0];
+			if ( $old_value == $data['_download_expiry'] ) {
 				return false;
 			}
-			
+
 			$event_id                     = 9098;
 			$event_data['previous_value'] = $old_value;
 			$event_data['new_value']      = $data['_download_expiry'];
@@ -3646,7 +3645,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 		// Tax status.
 		$old_status = $oldpost['_tax_status'][0];
-		$status = $post['tax_status'];
+		$status     = $post['tax_status'];
 
 		if ( $status !== $old_status ) {
 			$editor_link = $this->GetEditorLink( $product );
@@ -3665,7 +3664,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 		// Tax class
 		$old_class = ( empty( $oldpost['_tax_class'][0] ) ) ? 'standard' : $oldpost['_tax_class'][0];
-		$class = ( empty( $post['tax_class'] ) ) ? 'standard' : $post['tax_class'];
+		$class     = ( empty( $post['tax_class'] ) ) ? 'standard' : $post['tax_class'];
 
 		if ( $class !== $old_class ) {
 			$editor_link = $this->GetEditorLink( $product );
@@ -4149,7 +4148,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			} elseif ( 'date_expires' === $meta_key ) {
 				// Set coupon expiry date data.
 				$coupon_data['OldDate'] = isset( $old_meta_obj->val ) && ! empty( $old_meta_obj->val ) ? date( get_option( 'date_format' ), $old_meta_obj->val ) : __( 'Does not expire', 'wsal-woocommerce' );
-				$coupon_data['NewDate'] = ! empty( $meta_value ) ? date( get_option( 'date_format' ), $meta_value ) :  __( 'Does not expire', 'wsal-woocommerce' );
+				$coupon_data['NewDate'] = ! empty( $meta_value ) ? date( get_option( 'date_format' ), $meta_value ) : __( 'Does not expire', 'wsal-woocommerce' );
 
 				// Set event id.
 				$event_id = 9066;
@@ -4272,11 +4271,11 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				if ( false !== strpos( $meta_key, 'billing_' ) ) {
 					$event_id = 9083;
 
-					$billing_address_fields = [ 'billing_first_name', 'billing_last_name', 'billing_company', 'billing_country', 'billing_address_1', 'billing_address_2', 'billing_city', 'billing_state', 'billing_postcode', 'billing_phone' ];
+					$billing_address_fields = array( 'billing_first_name', 'billing_last_name', 'billing_company', 'billing_country', 'billing_address_1', 'billing_address_2', 'billing_city', 'billing_state', 'billing_postcode', 'billing_phone' );
 
 					// We will fill this is as needed below.
-					$new_address_array = [];
-					$old_address_array = [];
+					$new_address_array = array();
+					$old_address_array = array();
 
 					foreach ( $billing_address_fields as $field ) {
 						$field_value                 = get_user_meta( $user_id, $field, true );
@@ -4290,7 +4289,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					}
 
 					$new_address_array = array_filter( $new_address_array );
-					$old_address_array = array_filter( $old_address_array  );
+					$old_address_array = array_filter( $old_address_array );
 
 					// Combine name fields to avoid weird comma.
 					if ( isset( $new_address_array['billing_first_name'] ) && isset( $new_address_array['billing_last_name'] ) ) {
@@ -4328,14 +4327,13 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							);
 						}
 					}
-				}
-				elseif ( false !== strpos( $meta_key, 'shipping_' ) ) {
+				} elseif ( false !== strpos( $meta_key, 'shipping_' ) ) {
 					$event_id = 9084;
 
-					$shipping_address_fields = [ 'shipping_first_name', 'shipping_last_name', 'shipping_company', 'shipping_country', 'shipping_address_1', 'shipping_address_2', 'shipping_city', 'shipping_state', 'shipping_postcode', 'shipping_phone' ];
+					$shipping_address_fields = array( 'shipping_first_name', 'shipping_last_name', 'shipping_company', 'shipping_country', 'shipping_address_1', 'shipping_address_2', 'shipping_city', 'shipping_state', 'shipping_postcode', 'shipping_phone' );
 
 					// We will fill this is as needed below.
-					$new_address_array = [];
+					$new_address_array = array();
 
 					foreach ( $shipping_address_fields as $field ) {
 						$field_value                 = get_user_meta( $user_id, $field, true );
@@ -4420,8 +4418,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$new_stock = ( empty( $meta_value ) ) ? 0 : $meta_value;
 			$old_stock = ( ! empty( $old_stock ) ) ? $old_stock : 0;
 
-	 
-
 			$this->plugin->alerts->TriggerIf(
 				9106,
 				array(
@@ -4492,9 +4488,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		}
 
 		if ( isset( $_REQUEST['action'] ) && ( 'woocommerce_feature_product' === $_REQUEST['action'] ) && check_admin_referer( 'woocommerce-feature-product' ) ) {
-			$product_id       = $product->get_id();
-			$product_post     = get_post( $product_id );
-			$editor_link = $this->GetEditorLink( $product_post );
+			$product_id   = $product->get_id();
+			$product_post = get_post( $product_id );
+			$editor_link  = $this->GetEditorLink( $product_post );
 			$this->plugin->alerts->Trigger(
 				9043,
 				array(

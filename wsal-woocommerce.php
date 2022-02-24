@@ -47,3 +47,4 @@ if ( ! defined( 'WSAL_CLASS_PREFIX' ) ) {
 
 // Include extension specific functions.
 require_once plugin_dir_path( __FILE__ ) . 'includes/wsal-functions.php';
+

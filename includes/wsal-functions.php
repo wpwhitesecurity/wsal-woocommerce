@@ -6,6 +6,8 @@
  * @subpackage wsal-woocmmerce
  */
 
+// phpcs:disable WordPress.Security.NonceVerification.Recommended
+
 add_filter( 'wsal_event_type_data', 'wsal_woocommerce_extension_add_custom_event_type', 10, 2 );
 add_filter( 'wsal_format_custom_meta', 'wsal_woocommerce_extension_add_custom_meta_format', 10, 4 );
 add_filter( 'wsal_event_objects', 'wsal_woocommerce_extension_add_custom_event_objects' );

@@ -33,14 +33,14 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 	 *
 	 * @var int
 	 */
-	protected $_old_stock = null;
+	protected $old_stock = null;
 
 	/**
 	 * Old Product Stock Status.
 	 *
 	 * @var string
 	 */
-	protected $_old_stock_status = null;
+	protected $old_stock_status = null;
 
 	/**
 	 * Listening to events using WP hooks.
