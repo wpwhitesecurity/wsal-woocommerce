@@ -206,7 +206,36 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		
 		// add_action( 'woocommerce_new_order_item', array( $this, 'event_order_items_added' ), 10, 3 );
 		// add_action( 'woocommerce_before_delete_order_item', array( $this, 'event_order_items_removed' ), 10, 1 );
+
+        add_action( 'woocommerce_new_webhook', array( $this, 'webhook_added' ), 10, 2 );
+        add_action( 'woocommerce_webhook_deleted', array( $this, 'webhook_deleted' ), 10, 2 );
 	}
+
+    public function webhook_added( $webhook_id, $webhook ) {
+        $this->plugin->alerts->Trigger(
+			9121,
+			array(
+				'HookName'    => sanitize_text_field( $webhook->get_name() ),
+				'DeliveryURL' => sanitize_text_field( $webhook->get_delivery_url() ),
+				'Topic'       => sanitize_text_field( $webhook->get_topic() ),
+				'Status'      => sanitize_text_field( $webhook->get_status() ),
+			)
+		);
+        return $webhook_id;
+    }
+
+    public function webhook_deleted( $webhook_id, $webhook ) {
+        $this->plugin->alerts->Trigger(
+			91212,
+			array(
+				'HookName'    => sanitize_text_field( $webhook->get_name() ),
+				'DeliveryURL' => sanitize_text_field( $webhook->get_delivery_url() ),
+				'Topic'       => sanitize_text_field( $webhook->get_topic() ),
+				'Status'      => sanitize_text_field( $webhook->get_status() ),
+			)
+		);
+        return $webhook_id;
+    }
 
 	/**
 	 * Trigger 9082 when a shipping zone is created or modified.

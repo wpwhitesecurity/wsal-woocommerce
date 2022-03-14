@@ -663,6 +663,38 @@ $custom_alerts = array(
 				'modified',
 			),
 
+            array(
+				9121,
+				WSAL_HIGH,
+				__( 'User added a webhook', 'wsal-woocommerce' ),
+				__( 'The webhook %HookName% was added.', 'wsal-woocommerce' ),
+				array(
+					__( 'Topic', 'wsal-woocommerce' ) => '%Topic%',
+					__( 'Delivery URL', 'wsal-woocommerce' ) => '%DeliveryURL%',
+					__( 'Status', 'wsal-woocommerce' ) => '%Status%',
+                ),
+				array(
+					__( 'View details', 'wsal-woocommerce' ) => '%EditorLinkWebhook%',
+				),
+				'woocommerce-product',
+				'added',
+			),
+
+            array(
+				9122,
+				WSAL_HIGH,
+				__( 'User removed a webhook', 'wsal-woocommerce' ),
+				__( 'The webhook %HookName% was deleted.', 'wsal-woocommerce' ),
+				array(
+					__( 'Topic', 'wsal-woocommerce' ) => '%Topic%',
+					__( 'Delivery URL', 'wsal-woocommerce' ) => '%DeliveryURL%',
+					__( 'Status', 'wsal-woocommerce' ) => '%Status%',
+                ),
+				array(),
+				'woocommerce-product',
+				'deleted',
+			),
+
 			array(
 				9019,
 				WSAL_LOW,
