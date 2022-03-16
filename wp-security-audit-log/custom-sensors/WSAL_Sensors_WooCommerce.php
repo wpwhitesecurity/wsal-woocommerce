@@ -212,20 +212,25 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
         add_action( 'woocommerce_webhook_updated', array( $this, 'webhook_updated' ), 10 );
 	}
 
+    /**
+     * Trigger alert when new webhook is added.
+     *
+     * @param  int $webhook_id
+     * @param  object $webhook
+     * @return int $webhook_id
+     */
     public function webhook_added( $webhook_id, $webhook ) {
-        $editor_link = $this->create_webhook_editor_link( $webhook_id );
-        $this->plugin->alerts->Trigger(
-			9120,
-			array(
-				'HookName'          => sanitize_text_field( $webhook->get_name() ),
-				'DeliveryURL'       => sanitize_text_field( $webhook->get_delivery_url() ),
-				'Topic'             => sanitize_text_field( $webhook->get_topic() ),
-				'Status'            => sanitize_text_field( $webhook->get_status() ),
-				'EditorLinkWebhook' => $editor_link,
-			)
-		);
+        $this->webhook_updated( $webhook_id, true );
         return $webhook_id;
     }
+
+    /**
+     * Trigger alert when new webhook is deleted.
+     *
+     * @param  int $webhook_id
+     * @param  object $webhook
+     * @return int $webhook_id
+     */
 
     public function webhook_deleted( $webhook_id, $webhook ) {
         $this->plugin->alerts->Trigger(
@@ -240,13 +245,20 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
         return $webhook_id;
     }
 
-    public function webhook_updated( $webhook_id ) {
+    /**
+     * Trigger alert when new webhook is added/modified.
+     *
+     * @param  int $webhook_id
+     * @param  bool $was_created
+     * @return int $webhook_id
+     */
+    public function webhook_updated( $webhook_id, $was_created = false ) {
         $editor_link = $this->create_webhook_editor_link( $webhook_id );
         $webhook = wc_get_webhook( $webhook_id );
         $this->plugin->alerts->Trigger(
 			9120,
 			array(
-                'EventType'         => 'modified',
+                'EventType'         => ( $was_created ) ? 'added' : 'modified',
 				'HookName'          => sanitize_text_field( $webhook->get_name() ),
 				'DeliveryURL'       => sanitize_text_field( $webhook->get_delivery_url() ),
 				'Topic'             => sanitize_text_field( $webhook->get_topic() ),
