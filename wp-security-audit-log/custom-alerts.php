@@ -1,4 +1,10 @@
-<?php
+<?php // phpcs:disable WordPress.WP.I18n.MissingTranslatorsComment
+
+/**
+ * Our Custom alerts
+ *
+ * @package Wsal
+ */
 
 $custom_alerts = array(
 	__( 'WooCommerce', 'wsal-woocommerce' ) => array(
@@ -663,7 +669,7 @@ $custom_alerts = array(
 				'modified',
 			),
 
-            array(
+			array(
 				9119,
 				WSAL_HIGH,
 				__( 'User changed the low stock threshold of a product', 'wsal-woocommerce' ),
@@ -672,7 +678,7 @@ $custom_alerts = array(
 					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
 					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					__( 'Previous Low stock treshold value', 'wsal-woocommerce' ) => '%old_low_stock_amount%',
-                ),
+				),
 				array(
 					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
@@ -681,16 +687,16 @@ $custom_alerts = array(
 			),
 
 
-            array(
+			array(
 				9120,
 				WSAL_HIGH,
 				__( 'User added a webhook', 'wsal-woocommerce' ),
 				__( 'The webhook %HookName% was %EventType%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Topic', 'wsal-woocommerce' ) => '%Topic%',
+					__( 'Topic', 'wsal-woocommerce' )  => '%Topic%',
 					__( 'Delivery URL', 'wsal-woocommerce' ) => '%DeliveryURL%',
 					__( 'Status', 'wsal-woocommerce' ) => '%Status%',
-                ),
+				),
 				array(
 					__( 'View details', 'wsal-woocommerce' ) => '%EditorLinkWebhook%',
 				),
@@ -698,16 +704,16 @@ $custom_alerts = array(
 				'added',
 			),
 
-            array(
+			array(
 				9121,
 				WSAL_HIGH,
 				__( 'User removed a webhook', 'wsal-woocommerce' ),
 				__( 'The webhook %HookName% was deleted.', 'wsal-woocommerce' ),
 				array(
-					__( 'Topic', 'wsal-woocommerce' ) => '%Topic%',
+					__( 'Topic', 'wsal-woocommerce' )  => '%Topic%',
 					__( 'Delivery URL', 'wsal-woocommerce' ) => '%DeliveryURL%',
 					__( 'Status', 'wsal-woocommerce' ) => '%Status%',
-                ),
+				),
 				array(),
 				'woocommerce-product',
 				'deleted',
