@@ -3701,7 +3701,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 	private function check_tax_status_change( $product, $oldpost, $post ) {
 
-		if ( ! isset( $oldpost['_tax_status'] ) ) {
+		if ( ! isset( $oldpost['_tax_status'] ) || ! isset( $post['tax_status'] ) ) {
 			return;
 		}
 
