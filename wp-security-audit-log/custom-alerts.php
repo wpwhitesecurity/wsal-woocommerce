@@ -7,19 +7,19 @@
  */
 
 $custom_alerts = array(
-	__( 'WooCommerce', 'wsal-woocommerce' ) => array(
-		__( 'Products', 'wsal-woocommerce' )         => array(
+	esc_html__( 'WooCommerce', 'wsal-woocommerce' ) => array(
+		esc_html__( 'Products', 'wsal-woocommerce' )         => array(
 			array(
 				9000,
 				WSAL_LOW,
-				__( 'User created a new product', 'wsal-woocommerce' ),
-				__( 'Created a new product called %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User created a new product', 'wsal-woocommerce' ),
+				esc_html__( 'Created a new product called %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'created',
@@ -27,14 +27,14 @@ $custom_alerts = array(
 			array(
 				9001,
 				WSAL_MEDIUM,
-				__( 'User published a product', 'wsal-woocommerce' ),
-				__( 'Published the product called %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User published a product', 'wsal-woocommerce' ),
+				esc_html__( 'Published the product called %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'published',
@@ -42,15 +42,15 @@ $custom_alerts = array(
 			array(
 				9003,
 				WSAL_LOW,
-				__( 'User changed the category of a product', 'wsal-woocommerce' ),
-				__( 'Changed the category(ies) of the product %ProductTitle% to %NewCategories%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the category of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the category(ies) of the product %ProductTitle% to %NewCategories%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous categories', 'wsal-woocommerce' ) => '%OldCategories%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous categories', 'wsal-woocommerce' ) => '%OldCategories%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -58,14 +58,14 @@ $custom_alerts = array(
 			array(
 				9004,
 				WSAL_INFORMATIONAL,
-				__( 'User modified the short description of a product', 'wsal-woocommerce' ),
-				__( 'Changed the short description of the product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User modified the short description of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the short description of the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -73,14 +73,14 @@ $custom_alerts = array(
 			array(
 				9005,
 				WSAL_LOW,
-				__( 'User modified the text of a product', 'wsal-woocommerce' ),
-				__( 'Changed the text of the product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User modified the text of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the text of the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -88,16 +88,16 @@ $custom_alerts = array(
 			array(
 				9006,
 				WSAL_LOW,
-				__( 'User changed the URL of a product', 'wsal-woocommerce' ),
-				__( 'Changed the URL of the product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the URL of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the URL of the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous URL', 'wsal-woocommerce' ) => '%OldUrl%',
-					__( 'New URL', 'wsal-woocommerce' )    => '%NewUrl%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous URL', 'wsal-woocommerce' ) => '%OldUrl%',
+					esc_html__( 'New URL', 'wsal-woocommerce' )    => '%NewUrl%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -105,15 +105,15 @@ $custom_alerts = array(
 			array(
 				9007,
 				WSAL_MEDIUM,
-				__( 'User changed the Product Data of a product', 'wsal-woocommerce' ),
-				__( 'Changed the type of the product %ProductTitle% to %NewType%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the Product Data of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the type of the product %ProductTitle% to %NewType%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous type', 'wsal-woocommerce' ) => '%OldType%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous type', 'wsal-woocommerce' ) => '%OldType%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -121,15 +121,15 @@ $custom_alerts = array(
 			array(
 				9008,
 				WSAL_INFORMATIONAL,
-				__( 'User changed the date of a product', 'wsal-woocommerce' ),
-				__( 'Changed the date of the product %ProductTitle% to %NewDate%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the date of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the date of the product %ProductTitle% to %NewDate%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous date', 'wsal-woocommerce' ) => '%OldDate%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous date', 'wsal-woocommerce' ) => '%OldDate%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -137,15 +137,15 @@ $custom_alerts = array(
 			array(
 				9009,
 				WSAL_MEDIUM,
-				__( 'User changed the visibility of a product', 'wsal-woocommerce' ),
-				__( 'Changed the visibility of the product %ProductTitle% to %NewVisibility%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the visibility of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the visibility of the product %ProductTitle% to %NewVisibility%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous visibility', 'wsal-woocommerce' ) => '%OldVisibility%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous visibility', 'wsal-woocommerce' ) => '%OldVisibility%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -153,14 +153,14 @@ $custom_alerts = array(
 			array(
 				9010,
 				WSAL_MEDIUM,
-				__( 'User modified the product', 'wsal-woocommerce' ),
-				__( 'Modified the product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User modified the product', 'wsal-woocommerce' ),
+				esc_html__( 'Modified the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -168,11 +168,11 @@ $custom_alerts = array(
 			array(
 				9011,
 				E_NOTICE,
-				__( 'User modified the draft product', 'wsal-woocommerce' ),
-				__( 'Modified the draft product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User modified the draft product', 'wsal-woocommerce' ),
+				esc_html__( 'Modified the draft product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'',
@@ -180,11 +180,11 @@ $custom_alerts = array(
 			array(
 				9012,
 				WSAL_HIGH,
-				__( 'User moved a product to trash', 'wsal-woocommerce' ),
-				__( 'Moved the product %ProductTitle% to trash.', 'wsal-woocommerce' ),
+				esc_html__( 'User moved a product to trash', 'wsal-woocommerce' ),
+				esc_html__( 'Moved the product %ProductTitle% to trash.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(),
 				'woocommerce-product',
@@ -193,10 +193,10 @@ $custom_alerts = array(
 			array(
 				9013,
 				WSAL_MEDIUM,
-				__( 'User permanently deleted a product', 'wsal-woocommerce' ),
-				__( 'Permanently deleted the product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User permanently deleted a product', 'wsal-woocommerce' ),
+				esc_html__( 'Permanently deleted the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
 				),
 				array(),
 				'woocommerce-product',
@@ -205,14 +205,14 @@ $custom_alerts = array(
 			array(
 				9014,
 				WSAL_HIGH,
-				__( 'User restored a product from the trash', 'wsal-woocommerce' ),
-				__( 'Restored the product %ProductTitle% from trash.', 'wsal-woocommerce' ),
+				esc_html__( 'User restored a product from the trash', 'wsal-woocommerce' ),
+				esc_html__( 'Restored the product %ProductTitle% from trash.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'restored',
@@ -220,14 +220,14 @@ $custom_alerts = array(
 			array(
 				9015,
 				WSAL_MEDIUM,
-				__( 'User changed status of a product', 'wsal-woocommerce' ),
-				__( 'Changed the status of the product %ProductTitle% to %NewStatus%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed status of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the status of the product %ProductTitle% to %NewStatus%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Previous status', 'wsal-woocommerce' ) => '%OldStatus%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Previous status', 'wsal-woocommerce' ) => '%OldStatus%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -235,14 +235,14 @@ $custom_alerts = array(
 			array(
 				9072,
 				WSAL_INFORMATIONAL,
-				__( 'User opened a product in the editor', 'wsal-woocommerce' ),
-				__( 'Opened the product %ProductTitle% in the editor.', 'wsal-woocommerce' ),
+				esc_html__( 'User opened a product in the editor', 'wsal-woocommerce' ),
+				esc_html__( 'Opened the product %ProductTitle% in the editor.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'opened',
@@ -250,14 +250,14 @@ $custom_alerts = array(
 			array(
 				9073,
 				WSAL_INFORMATIONAL,
-				__( 'User viewed a product', 'wsal-woocommerce' ),
-				__( 'Viewed the product %ProductTitle% page.', 'wsal-woocommerce' ),
+				esc_html__( 'User viewed a product', 'wsal-woocommerce' ),
+				esc_html__( 'Viewed the product %ProductTitle% page.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'viewed',
@@ -265,14 +265,14 @@ $custom_alerts = array(
 			array(
 				9077,
 				WSAL_MEDIUM,
-				__( 'User renamed a product', 'wsal-woocommerce' ),
-				__( 'Renamed the product %OldTitle% to %NewTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User renamed a product', 'wsal-woocommerce' ),
+				esc_html__( 'Renamed the product %OldTitle% to %NewTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'renamed',
@@ -281,15 +281,15 @@ $custom_alerts = array(
 			array(
 				9016,
 				WSAL_MEDIUM,
-				__( 'User changed type of a price', 'wsal-woocommerce' ),
-				__( 'Changed the %PriceType% price of the product %ProductTitle% to %NewPrice%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed type of a price', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the %PriceType% price of the product %ProductTitle% to %NewPrice%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous price', 'wsal-woocommerce' ) => '%OldPrice%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous price', 'wsal-woocommerce' ) => '%OldPrice%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -297,15 +297,15 @@ $custom_alerts = array(
 			array(
 				9017,
 				WSAL_MEDIUM,
-				__( 'User changed the SKU of a product', 'wsal-woocommerce' ),
-				__( 'Changed the SKU of the product %ProductTitle% to %NewSku%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the SKU of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the SKU of the product %ProductTitle% to %NewSku%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous SKU', 'wsal-woocommerce' ) => '%OldSku%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous SKU', 'wsal-woocommerce' ) => '%OldSku%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -313,15 +313,15 @@ $custom_alerts = array(
 			array(
 				9018,
 				WSAL_LOW,
-				__( 'User changed the stock status of a product', 'wsal-woocommerce' ),
-				__( 'Changed the stock status of the product %ProductTitle% to %NewStatus%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the stock status of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the stock status of the product %ProductTitle% to %NewStatus%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous stock status', 'wsal-woocommerce' ) => '%OldStatus%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous stock status', 'wsal-woocommerce' ) => '%OldStatus%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -329,15 +329,15 @@ $custom_alerts = array(
 			array(
 				9020,
 				WSAL_MEDIUM,
-				__( 'User set a product type', 'wsal-woocommerce' ),
-				__( 'Changed the type of the product %ProductTitle% to %NewType%.', 'wsal-woocommerce' ),
+				esc_html__( 'User set a product type', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the type of the product %ProductTitle% to %NewType%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous type', 'wsal-woocommerce' ) => '%OldType%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous type', 'wsal-woocommerce' ) => '%OldType%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -345,15 +345,15 @@ $custom_alerts = array(
 			array(
 				9021,
 				WSAL_INFORMATIONAL,
-				__( 'User changed the weight of a product', 'wsal-woocommerce' ),
-				__( 'Changed the weight of the product %ProductTitle% to %NewWeight%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the weight of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the weight of the product %ProductTitle% to %NewWeight%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous weight', 'wsal-woocommerce' ) => '%OldWeight%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous weight', 'wsal-woocommerce' ) => '%OldWeight%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -361,15 +361,15 @@ $custom_alerts = array(
 			array(
 				9022,
 				WSAL_INFORMATIONAL,
-				__( 'User changed the dimensions of a product', 'wsal-woocommerce' ),
-				__( 'Changed the %DimensionType% dimensions of the product %ProductTitle% to %NewDimension%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the dimensions of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the %DimensionType% dimensions of the product %ProductTitle% to %NewDimension%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous value', 'wsal-woocommerce' ) => '%OldDimension%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous value', 'wsal-woocommerce' ) => '%OldDimension%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -377,15 +377,15 @@ $custom_alerts = array(
 			array(
 				9023,
 				WSAL_MEDIUM,
-				__( 'User added the Downloadable File to a product', 'wsal-woocommerce' ),
-				__( 'Added the downloadable file %FileName% to the product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User added the Downloadable File to a product', 'wsal-woocommerce' ),
+				esc_html__( 'Added the downloadable file %FileName% to the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'File URL', 'wsal-woocommerce' )   => '%FileUrl%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'File URL', 'wsal-woocommerce' )   => '%FileUrl%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -393,15 +393,15 @@ $custom_alerts = array(
 			array(
 				9024,
 				WSAL_MEDIUM,
-				__( 'User Removed the Downloadable File from a product', 'wsal-woocommerce' ),
-				__( 'Removed the downloadable file %FileName% from the product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User Removed the Downloadable File from a product', 'wsal-woocommerce' ),
+				esc_html__( 'Removed the downloadable file %FileName% from the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'File URL', 'wsal-woocommerce' )   => '%FileUrl%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'File URL', 'wsal-woocommerce' )   => '%FileUrl%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -409,15 +409,15 @@ $custom_alerts = array(
 			array(
 				9025,
 				WSAL_INFORMATIONAL,
-				__( 'User changed the name of a Downloadable File in a product', 'wsal-woocommerce' ),
-				__( 'Changed the name of the downloadable file %OldName% to %NewName% in the product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the name of a Downloadable File in a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the name of the downloadable file %OldName% to %NewName% in the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous file name', 'wsal-woocommerce' ) => '%OldName%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous file name', 'wsal-woocommerce' ) => '%OldName%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -425,17 +425,17 @@ $custom_alerts = array(
 			array(
 				9026,
 				WSAL_MEDIUM,
-				__( 'User changed the URL of the Downloadable File in a product', 'wsal-woocommerce' ),
-				__( 'Changed the URL of the downloadable file to the product %ProductTitle%', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the URL of the Downloadable File in a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the URL of the downloadable file to the product %ProductTitle%', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'File name', 'wsal-woocommerce' )  => '%FileName%',
-					__( 'Previous URL', 'wsal-woocommerce' ) => '%OldUrl%',
-					__( 'New URL', 'wsal-woocommerce' )    => '%NewUrl%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'File name', 'wsal-woocommerce' )  => '%FileName%',
+					esc_html__( 'Previous URL', 'wsal-woocommerce' ) => '%OldUrl%',
+					esc_html__( 'New URL', 'wsal-woocommerce' )    => '%NewUrl%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -443,15 +443,15 @@ $custom_alerts = array(
 			array(
 				9042,
 				WSAL_INFORMATIONAL,
-				__( 'User changed the catalog visibility of a product', 'wsal-woocommerce' ),
-				__( 'Changed the product visibility of the product %ProductTitle% to %NewVisibility%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the catalog visibility of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the product visibility of the product %ProductTitle% to %NewVisibility%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous visibility setting', 'wsal-woocommerce' ) => '%OldVisibility%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous visibility setting', 'wsal-woocommerce' ) => '%OldVisibility%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -459,14 +459,14 @@ $custom_alerts = array(
 			array(
 				9043,
 				WSAL_INFORMATIONAL,
-				__( 'User changed the setting Featured Product of a product', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the setting Featured Product of a product', 'wsal-woocommerce' ),
 				__( 'Changed the status of the setting <strong>Featured Product</strong> for the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'enabled',
@@ -474,15 +474,15 @@ $custom_alerts = array(
 			array(
 				9044,
 				WSAL_INFORMATIONAL,
-				__( 'User changed the Allow Backorders setting of a product', 'wsal-woocommerce' ),
-				__( 'Changed the Allow Backorders setting for the product %ProductTitle% to %NewStatus%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the Allow Backorders setting of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the Allow Backorders setting for the product %ProductTitle% to %NewStatus%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous status', 'wsal-woocommerce' ) => '%OldStatus%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous status', 'wsal-woocommerce' ) => '%OldStatus%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -490,15 +490,15 @@ $custom_alerts = array(
 			array(
 				9045,
 				WSAL_MEDIUM,
-				__( 'User added/removed products to upsell of a product', 'wsal-woocommerce' ),
-				__( 'Products to the Upsell setting in product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User added/removed products to upsell of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Products to the Upsell setting in product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'New product in Upsells', 'wsal-woocommerce' ) => '%UpsellTitle%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'New product in Upsells', 'wsal-woocommerce' ) => '%UpsellTitle%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'added',
@@ -506,15 +506,15 @@ $custom_alerts = array(
 			array(
 				9046,
 				WSAL_MEDIUM,
-				__( 'User added/removed products to cross-sells of a product', 'wsal-woocommerce' ),
-				__( 'Products to the Cross-sell setting in product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User added/removed products to cross-sells of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Products to the Cross-sell setting in product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'New product in Cross-sells', 'wsal-woocommerce' ) => '%CrossSellTitle%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'New product in Cross-sells', 'wsal-woocommerce' ) => '%CrossSellTitle%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'added',
@@ -523,16 +523,16 @@ $custom_alerts = array(
 			array(
 				9095,
 				WSAL_LOW,
-				__( 'Added or deleted a product image', 'wsal-woocommerce' ),
-				__( 'The product image of the product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'Added or deleted a product image', 'wsal-woocommerce' ),
+				esc_html__( 'The product image of the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Image name', 'wsal-woocommerce' ) => '%name%',
-					__( 'Image path', 'wsal-woocommerce' ) => '%path%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Image name', 'wsal-woocommerce' ) => '%name%',
+					esc_html__( 'Image path', 'wsal-woocommerce' ) => '%path%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'added',
@@ -540,18 +540,18 @@ $custom_alerts = array(
 			array(
 				9096,
 				WSAL_LOW,
-				__( 'Modified a product image', 'wsal-woocommerce' ),
-				__( 'Changed the product image of the product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'Modified a product image', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the product image of the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous image name', 'wsal-woocommerce' ) => '%old_name%',
-					__( 'Previous image path', 'wsal-woocommerce' ) => '%old_path%',
-					__( 'New image name', 'wsal-woocommerce' ) => '%name%',
-					__( 'New image path', 'wsal-woocommerce' ) => '%path%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous image name', 'wsal-woocommerce' ) => '%old_name%',
+					esc_html__( 'Previous image path', 'wsal-woocommerce' ) => '%old_path%',
+					esc_html__( 'New image name', 'wsal-woocommerce' ) => '%name%',
+					esc_html__( 'New image path', 'wsal-woocommerce' ) => '%path%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -559,15 +559,15 @@ $custom_alerts = array(
 			array(
 				9097,
 				WSAL_LOW,
-				__( 'Modified the download limit of the product', 'wsal-woocommerce' ),
-				__( 'Changed the download limit of the product %product_name% to %new_value%.', 'wsal-woocommerce' ),
+				esc_html__( 'Modified the download limit of the product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the download limit of the product %product_name% to %new_value%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%ID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous value', 'wsal-woocommerce' ) => '%previous_value%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous value', 'wsal-woocommerce' ) => '%previous_value%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -575,15 +575,15 @@ $custom_alerts = array(
 			array(
 				9098,
 				WSAL_LOW,
-				__( 'Modified the download expiry setting of the product', 'wsal-woocommerce' ),
-				__( 'Changed the download expire setting of the product %product_name% to %new_value%.', 'wsal-woocommerce' ),
+				esc_html__( 'Modified the download expiry setting of the product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the download expire setting of the product %product_name% to %new_value%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%ID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous value', 'wsal-woocommerce' ) => '%previous_value%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous value', 'wsal-woocommerce' ) => '%previous_value%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -591,11 +591,11 @@ $custom_alerts = array(
 			array(
 				9099,
 				WSAL_LOW,
-				__( 'A product was downloaded', 'wsal-woocommerce' ),
-				__( 'Downloaded the product %product_name%.', 'wsal-woocommerce' ),
+				esc_html__( 'A product was downloaded', 'wsal-woocommerce' ),
+				esc_html__( 'Downloaded the product %product_name%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%ID%',
-					__( 'User email', 'wsal-woocommerce' ) => '%email_address%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ID%',
+					esc_html__( 'User email', 'wsal-woocommerce' ) => '%email_address%',
 				),
 				array(),
 				'woocommerce-product',
@@ -605,17 +605,17 @@ $custom_alerts = array(
 			array(
 				9105,
 				WSAL_LOW,
-				__( 'System changed the stock quantity of a product', 'wsal-woocommerce' ),
-				__( 'The stock quantity of the product %ProductTitle% was changed to %NewValue% due to a purchase.', 'wsal-woocommerce' ),
+				esc_html__( 'System changed the stock quantity of a product', 'wsal-woocommerce' ),
+				esc_html__( 'The stock quantity of the product %ProductTitle% was changed to %NewValue% due to a purchase.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'User name', 'wsal-woocommerce' )  => '%Username%',
-					__( 'Order name', 'wsal-woocommerce' ) => '%StockOrderID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous quantity', 'wsal-woocommerce' ) => '%OldValue%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'User name', 'wsal-woocommerce' )  => '%Username%',
+					esc_html__( 'Order name', 'wsal-woocommerce' ) => '%StockOrderID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous quantity', 'wsal-woocommerce' ) => '%OldValue%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -623,15 +623,15 @@ $custom_alerts = array(
 			array(
 				9106,
 				WSAL_LOW,
-				__( 'Third-party plugin changed the stock quantity of a product', 'wsal-woocommerce' ),
-				__( 'The stock quantity of the product %ProductTitle% was changed to %NewValue% via third party system.', 'wsal-woocommerce' ),
+				esc_html__( 'Third-party plugin changed the stock quantity of a product', 'wsal-woocommerce' ),
+				esc_html__( 'The stock quantity of the product %ProductTitle% was changed to %NewValue% via third party system.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous quantity', 'wsal-woocommerce' ) => '%OldValue%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous quantity', 'wsal-woocommerce' ) => '%OldValue%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -639,15 +639,15 @@ $custom_alerts = array(
 			array(
 				9113,
 				WSAL_MEDIUM,
-				__( 'The Tax status of a product has been modified', 'wsal-woocommerce' ),
-				__( 'Changed the Tax status of the product %ProductTitle% to %new_tax_status%.', 'wsal-woocommerce' ),
+				esc_html__( 'The Tax status of a product has been modified', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the Tax status of the product %ProductTitle% to %new_tax_status%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous tax status', 'wsal-woocommerce' ) => '%old_tax_status%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous tax status', 'wsal-woocommerce' ) => '%old_tax_status%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -655,15 +655,15 @@ $custom_alerts = array(
 			array(
 				9114,
 				WSAL_MEDIUM,
-				__( 'The Tax class of a product has been modified', 'wsal-woocommerce' ),
-				__( 'Changed the Tax class of the product %ProductTitle% to %new_tax_class%.', 'wsal-woocommerce' ),
+				esc_html__( 'The Tax class of a product has been modified', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the Tax class of the product %ProductTitle% to %new_tax_class%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous tax class', 'wsal-woocommerce' ) => '%old_tax_class%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous tax class', 'wsal-woocommerce' ) => '%old_tax_class%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -672,15 +672,15 @@ $custom_alerts = array(
 			array(
 				9119,
 				WSAL_HIGH,
-				__( 'User changed the low stock threshold of a product', 'wsal-woocommerce' ),
-				__( 'Changed the Low stock threshold of the product %ProductTitle% to %new_low_stock_amount%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the low stock threshold of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the Low stock threshold of the product %ProductTitle% to %new_low_stock_amount%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous Low stock treshold value', 'wsal-woocommerce' ) => '%old_low_stock_amount%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous Low stock treshold value', 'wsal-woocommerce' ) => '%old_low_stock_amount%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -690,15 +690,15 @@ $custom_alerts = array(
 			array(
 				9120,
 				WSAL_HIGH,
-				__( 'User added a webhook', 'wsal-woocommerce' ),
-				__( 'The webhook %HookName% was %EventType%.', 'wsal-woocommerce' ),
+				esc_html__( 'User added a webhook', 'wsal-woocommerce' ),
+				esc_html__( 'The webhook %HookName% was %EventType%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Topic', 'wsal-woocommerce' )  => '%Topic%',
-					__( 'Delivery URL', 'wsal-woocommerce' ) => '%DeliveryURL%',
-					__( 'Status', 'wsal-woocommerce' ) => '%Status%',
+					esc_html__( 'Topic', 'wsal-woocommerce' )  => '%Topic%',
+					esc_html__( 'Delivery URL', 'wsal-woocommerce' ) => '%DeliveryURL%',
+					esc_html__( 'Status', 'wsal-woocommerce' ) => '%Status%',
 				),
 				array(
-					__( 'View details', 'wsal-woocommerce' ) => '%EditorLinkWebhook%',
+					esc_html__( 'View details', 'wsal-woocommerce' ) => '%EditorLinkWebhook%',
 				),
 				'woocommerce-product',
 				'added',
@@ -707,12 +707,12 @@ $custom_alerts = array(
 			array(
 				9121,
 				WSAL_HIGH,
-				__( 'User removed a webhook', 'wsal-woocommerce' ),
-				__( 'The webhook %HookName% was deleted.', 'wsal-woocommerce' ),
+				esc_html__( 'User removed a webhook', 'wsal-woocommerce' ),
+				esc_html__( 'The webhook %HookName% was deleted.', 'wsal-woocommerce' ),
 				array(
-					__( 'Topic', 'wsal-woocommerce' )  => '%Topic%',
-					__( 'Delivery URL', 'wsal-woocommerce' ) => '%DeliveryURL%',
-					__( 'Status', 'wsal-woocommerce' ) => '%Status%',
+					esc_html__( 'Topic', 'wsal-woocommerce' )  => '%Topic%',
+					esc_html__( 'Delivery URL', 'wsal-woocommerce' ) => '%DeliveryURL%',
+					esc_html__( 'Status', 'wsal-woocommerce' ) => '%Status%',
 				),
 				array(),
 				'woocommerce-product',
@@ -722,15 +722,15 @@ $custom_alerts = array(
 			array(
 				9019,
 				WSAL_LOW,
-				__( 'User changed the stock quantity', 'wsal-woocommerce' ),
-				__( 'Changed the stock quantity of the product %ProductTitle% to %NewValue%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the stock quantity', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the stock quantity of the product %ProductTitle% to %NewValue%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous quantity', 'wsal-woocommerce' ) => '%OldValue%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous quantity', 'wsal-woocommerce' ) => '%OldValue%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -739,15 +739,15 @@ $custom_alerts = array(
 			array(
 				9047,
 				WSAL_LOW,
-				__( 'Added a new attribute of a product', 'wsal-woocommerce' ),
-				__( 'Added a new attribute caled %AttributeName% to the product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'Added a new attribute of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Added a new attribute caled %AttributeName% to the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Attribute value', 'wsal-woocommerce' ) => '%AttributeValue%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Attribute value', 'wsal-woocommerce' ) => '%AttributeValue%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'added',
@@ -755,16 +755,16 @@ $custom_alerts = array(
 			array(
 				9048,
 				WSAL_LOW,
-				__( 'Modified the value of an attribute of a product', 'wsal-woocommerce' ),
-				__( 'Modified the value of the attribute %AttributeName$ in the product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'Modified the value of an attribute of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Modified the value of the attribute %AttributeName$ in the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous attribute value', 'wsal-woocommerce' ) => '%OldValue%',
-					__( 'New attribute value', 'wsal-woocommerce' ) => '%NewValue%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous attribute value', 'wsal-woocommerce' ) => '%OldValue%',
+					esc_html__( 'New attribute value', 'wsal-woocommerce' ) => '%NewValue%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
@@ -772,14 +772,14 @@ $custom_alerts = array(
 			array(
 				9049,
 				WSAL_LOW,
-				__( 'Changed the name of an attribute of a product', 'wsal-woocommerce' ),
-				__( 'Renamed the attribute %OldValue% to %NewValue% in the product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the name of an attribute of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Renamed the attribute %OldValue% to %NewValue% in the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'renamed',
@@ -787,15 +787,15 @@ $custom_alerts = array(
 			array(
 				9050,
 				WSAL_LOW,
-				__( 'Deleted an attribute of a product', 'wsal-woocommerce' ),
-				__( 'Deleted the attribute %AttributeName% from the product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'Deleted an attribute of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Deleted the attribute %AttributeName% from the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Attribute value', 'wsal-woocommerce' ) => '%AttributeValue%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Attribute value', 'wsal-woocommerce' ) => '%AttributeValue%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'deleted',
@@ -803,29 +803,29 @@ $custom_alerts = array(
 			array(
 				9051,
 				WSAL_LOW,
-				__( 'Set the attribute visibility of a product', 'wsal-woocommerce' ),
-				__( 'Changed the visibility of the attribute %AttributeName% to %AttributeVisiblilty% in the the product %ProductTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'Set the attribute visibility of a product', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the visibility of the attribute %AttributeName% to %AttributeVisiblilty% in the the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
-					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
-					__( 'Previous visibility', 'wsal-woocommerce' ) => '%OldAttributeVisiblilty%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					esc_html__( 'Previous visibility', 'wsal-woocommerce' ) => '%OldAttributeVisiblilty%',
 				),
 				array(
-					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+					esc_html__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
 				),
 				'woocommerce-product',
 				'modified',
 			),
 		),
 
-		__( 'Store', 'wsal-woocommerce' )            => array(
+		esc_html__( 'Store', 'wsal-woocommerce' )            => array(
 			array(
 				9027,
 				WSAL_HIGH,
-				__( 'User changed the Weight Unit', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the Weight Unit', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>weight unit</strong> of the store to %NewUnit%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous weight unit', 'wsal-woocommerce' ) => '%OldUnit%',
+					esc_html__( 'Previous weight unit', 'wsal-woocommerce' ) => '%OldUnit%',
 				),
 				array(),
 				'woocommerce-store',
@@ -834,10 +834,10 @@ $custom_alerts = array(
 			array(
 				9028,
 				WSAL_HIGH,
-				__( 'User changed the Dimensions Unit', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the Dimensions Unit', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>dimensions unit</strong> of the store to %NewUnit%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous dimensions unit', 'wsal-woocommerce' ) => '%OldUnit%',
+					esc_html__( 'Previous dimensions unit', 'wsal-woocommerce' ) => '%OldUnit%',
 				),
 				array(),
 				'woocommerce-store',
@@ -846,10 +846,10 @@ $custom_alerts = array(
 			array(
 				9029,
 				WSAL_HIGH,
-				__( 'User changed the Base Location', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the Base Location', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>base location</strong> of the store to %NewLocation%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous address', 'wsal-woocommerce' ) => '%OldLocation%',
+					esc_html__( 'Previous address', 'wsal-woocommerce' ) => '%OldLocation%',
 				),
 				array(),
 				'woocommerce-store',
@@ -858,7 +858,7 @@ $custom_alerts = array(
 			array(
 				9030,
 				WSAL_HIGH,
-				__( 'User enabled/disabled taxes', 'wsal-woocommerce' ),
+				esc_html__( 'User enabled/disabled taxes', 'wsal-woocommerce' ),
 				__( 'Changed the status of the <strong>Taxes</strong> store setting.', 'wsal-woocommerce' ),
 				array(),
 				array(),
@@ -868,10 +868,10 @@ $custom_alerts = array(
 			array(
 				9031,
 				WSAL_HIGH,
-				__( 'User changed the currency', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the currency', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>currency</strong> of the store to %NewCurrency%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous currency', 'wsal-woocommerce' ) => '%OldCurrency%',
+					esc_html__( 'Previous currency', 'wsal-woocommerce' ) => '%OldCurrency%',
 				),
 				array(),
 				'woocommerce-store',
@@ -880,8 +880,8 @@ $custom_alerts = array(
 			array(
 				9032,
 				WSAL_HIGH,
-				__( 'User enabled/disabled the use of coupons during checkout', 'wsal-woocommerce' ),
-				__( 'Changed the status of the store setting <strong>use of coupons during checkout</strong>.', 'wsal-woocommerce' ),
+				esc_html__( 'User enabled/disabled the use of coupons during checkout', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the status of the store setting <strong>use of coupons during checkout</strong>.', 'wsal-woocommerce' ),
 				array(),
 				array(),
 				'woocommerce-store',
@@ -890,7 +890,7 @@ $custom_alerts = array(
 			array(
 				9033,
 				WSAL_MEDIUM,
-				__( 'User enabled/disabled guest checkout', 'wsal-woocommerce' ),
+				esc_html__( 'User enabled/disabled guest checkout', 'wsal-woocommerce' ),
 				__( 'Changed the status of the store setting <strong>Guest checkout</strong>.', 'wsal-woocommerce' ),
 				array(),
 				array(),
@@ -900,7 +900,7 @@ $custom_alerts = array(
 			array(
 				9034,
 				WSAL_HIGH,
-				__( 'User enabled/disabled Cash on delivery', 'wsal-woocommerce' ),
+				esc_html__( 'User enabled/disabled Cash on delivery', 'wsal-woocommerce' ),
 				__( 'Changed the status of the store setting <strong>cash on delivery</strong>', 'wsal-woocommerce' ),
 				array(),
 				array(),
@@ -910,10 +910,10 @@ $custom_alerts = array(
 			array(
 				9085,
 				WSAL_HIGH,
-				__( 'User modified selling location(s)', 'wsal-woocommerce' ),
+				esc_html__( 'User modified selling location(s)', 'wsal-woocommerce' ),
 				__( 'Changed the store setting <strong>Selling location(s)</strong> to %new%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous setting', 'wsal-woocommerce' ) => '%old%',
+					esc_html__( 'Previous setting', 'wsal-woocommerce' ) => '%old%',
 				),
 				array(),
 				'woocommerce-store',
@@ -922,11 +922,11 @@ $custom_alerts = array(
 			array(
 				9086,
 				WSAL_HIGH,
-				__( 'User modified excluded selling location(s)', 'wsal-woocommerce' ),
+				esc_html__( 'User modified excluded selling location(s)', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>list of excluded countries to sell to</strong> setting in the store.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous list of countries', 'wsal-woocommerce' ) => '%old%',
-					__( 'New list of countries', 'wsal-woocommerce' ) => '%new%',
+					esc_html__( 'Previous list of countries', 'wsal-woocommerce' ) => '%old%',
+					esc_html__( 'New list of countries', 'wsal-woocommerce' ) => '%new%',
 				),
 				array(),
 				'woocommerce-store',
@@ -935,11 +935,11 @@ $custom_alerts = array(
 			array(
 				9087,
 				WSAL_HIGH,
-				__( 'User modified exclusive selling location(s)', 'wsal-woocommerce' ),
+				esc_html__( 'User modified exclusive selling location(s)', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>list of countries to sell to</strong> setting in the store.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous list of countries', 'wsal-woocommerce' ) => '%old%',
-					__( 'New list of countries', 'wsal-woocommerce' ) => '%new%',
+					esc_html__( 'Previous list of countries', 'wsal-woocommerce' ) => '%old%',
+					esc_html__( 'New list of countries', 'wsal-woocommerce' ) => '%new%',
 				),
 				array(),
 				'woocommerce-store',
@@ -948,11 +948,11 @@ $custom_alerts = array(
 			array(
 				9088,
 				WSAL_HIGH,
-				__( 'User modified shipping location(s)', 'wsal-woocommerce' ),
+				esc_html__( 'User modified shipping location(s)', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>Shipping location(s)</strong> setting in the store.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous setting', 'wsal-woocommerce' ) => '%old%',
-					__( 'New Setting', 'wsal-woocommerce' ) => '%new%',
+					esc_html__( 'Previous setting', 'wsal-woocommerce' ) => '%old%',
+					esc_html__( 'New Setting', 'wsal-woocommerce' ) => '%new%',
 				),
 				array(),
 				'woocommerce-store',
@@ -961,11 +961,11 @@ $custom_alerts = array(
 			array(
 				9089,
 				WSAL_HIGH,
-				__( 'User modified exclusive shipping location(s)', 'wsal-woocommerce' ),
+				esc_html__( 'User modified exclusive shipping location(s)', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>List of specific countries to</strong> ship to setting in the store.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous list of countries', 'wsal-woocommerce' ) => '%old%',
-					__( 'New list of countries', 'wsal-woocommerce' ) => '%new%',
+					esc_html__( 'Previous list of countries', 'wsal-woocommerce' ) => '%old%',
+					esc_html__( 'New list of countries', 'wsal-woocommerce' ) => '%new%',
 				),
 				array(),
 				'woocommerce-store',
@@ -974,10 +974,10 @@ $custom_alerts = array(
 			array(
 				9090,
 				WSAL_HIGH,
-				__( 'User modified default customer location', 'wsal-woocommerce' ),
+				esc_html__( 'User modified default customer location', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>Default customer location</strong> setting to %new%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous location', 'wsal-woocommerce' ) => '%old%',
+					esc_html__( 'Previous location', 'wsal-woocommerce' ) => '%old%',
 				),
 				array(),
 				'woocommerce-store',
@@ -986,10 +986,10 @@ $custom_alerts = array(
 			array(
 				9091,
 				WSAL_HIGH,
-				__( 'User modified the cart page', 'wsal-woocommerce' ),
+				esc_html__( 'User modified the cart page', 'wsal-woocommerce' ),
 				__( 'Changed the store\'s <strong>Cart page</strong> to %new%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous page', 'wsal-woocommerce' ) => '%old%',
+					esc_html__( 'Previous page', 'wsal-woocommerce' ) => '%old%',
 				),
 				array(),
 				'woocommerce-store',
@@ -998,10 +998,10 @@ $custom_alerts = array(
 			array(
 				9092,
 				WSAL_HIGH,
-				__( 'User modified the checkout page', 'wsal-woocommerce' ),
+				esc_html__( 'User modified the checkout page', 'wsal-woocommerce' ),
 				__( 'Changed the store\'s <strong>Checkout page</strong> to %new%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous page', 'wsal-woocommerce' ) => '%old%',
+					esc_html__( 'Previous page', 'wsal-woocommerce' ) => '%old%',
 				),
 				array(),
 				'woocommerce-store',
@@ -1010,10 +1010,10 @@ $custom_alerts = array(
 			array(
 				9093,
 				WSAL_HIGH,
-				__( 'User modified the my account page', 'wsal-woocommerce' ),
+				esc_html__( 'User modified the my account page', 'wsal-woocommerce' ),
 				__( 'Changed the store\'s <strong>My account page</strong> to %new%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous page', 'wsal-woocommerce' ) => '%old%',
+					esc_html__( 'Previous page', 'wsal-woocommerce' ) => '%old%',
 				),
 				array(),
 				'woocommerce-store',
@@ -1022,10 +1022,10 @@ $custom_alerts = array(
 			array(
 				9094,
 				WSAL_HIGH,
-				__( 'User modified the terms and conditions page', 'wsal-woocommerce' ),
+				esc_html__( 'User modified the terms and conditions page', 'wsal-woocommerce' ),
 				__( 'Changed the store\'s <strong>Terms and conditions page</strong> to %new%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous page', 'wsal-woocommerce' ) => '%old%',
+					esc_html__( 'Previous page', 'wsal-woocommerce' ) => '%old%',
 				),
 				array(),
 				'woocommerce-store',
@@ -1034,7 +1034,7 @@ $custom_alerts = array(
 			array(
 				9100,
 				WSAL_MEDIUM,
-				__( 'Changed the status of the Enable product reviews setting in the store', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the status of the Enable product reviews setting in the store', 'wsal-woocommerce' ),
 				__( 'Changed the status of the <strong>Enable product reviews</strong> setting in the store.', 'wsal-woocommerce' ),
 				array(),
 				array(),
@@ -1044,7 +1044,7 @@ $custom_alerts = array(
 			array(
 				9107,
 				WSAL_LOW,
-				__( 'Changed the status of the Show "verified owner" label on customer reviews setting in the store', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the status of the Show "verified owner" label on customer reviews setting in the store', 'wsal-woocommerce' ),
 				__( 'Changed the status of the <strong>Show "verified owner" label on customer reviews</strong> setting in the store.', 'wsal-woocommerce' ),
 				array(),
 				array(),
@@ -1054,7 +1054,7 @@ $custom_alerts = array(
 			array(
 				9108,
 				WSAL_LOW,
-				__( 'Changed the status of the Reviews can only be left by "verified owners" setting in the store', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the status of the Reviews can only be left by "verified owners" setting in the store', 'wsal-woocommerce' ),
 				__( 'Changed the status of the <strong>Reviews can only be left by "verified owners"</strong> setting in the store.', 'wsal-woocommerce' ),
 				array(),
 				array(),
@@ -1064,7 +1064,7 @@ $custom_alerts = array(
 			array(
 				9109,
 				WSAL_MEDIUM,
-				__( 'Changed the status of the Star rating on reviews setting in the store', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the status of the Star rating on reviews setting in the store', 'wsal-woocommerce' ),
 				__( 'Changed the status of the <strong>Star rating on reviews</strong> setting in the store.', 'wsal-woocommerce' ),
 				array(),
 				array(),
@@ -1074,7 +1074,7 @@ $custom_alerts = array(
 			array(
 				9110,
 				WSAL_MEDIUM,
-				__( 'Changed the status of the Star ratings should be required setting in the store', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the status of the Star ratings should be required setting in the store', 'wsal-woocommerce' ),
 				__( 'Changed the status of the <strong>Star ratings should be required</strong> setting in the store.', 'wsal-woocommerce' ),
 				array(),
 				array(),
@@ -1084,10 +1084,10 @@ $custom_alerts = array(
 			array(
 				9111,
 				WSAL_MEDIUM,
-				__( 'A Checkout endpoint has been modified', 'wsal-woocommerce' ),
+				esc_html__( 'A Checkout endpoint has been modified', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>Checkout endpoint</strong> %endpoint_name% to %new_value%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous endpoint value', 'wsal-woocommerce' ) => '%old%',
+					esc_html__( 'Previous endpoint value', 'wsal-woocommerce' ) => '%old%',
 				),
 				array(),
 				'woocommerce-store',
@@ -1096,10 +1096,10 @@ $custom_alerts = array(
 			array(
 				9112,
 				WSAL_MEDIUM,
-				__( 'An Account endpoint has been modified', 'wsal-woocommerce' ),
+				esc_html__( 'An Account endpoint has been modified', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>Account endpoint</strong> %endpoint_name% to %new_value%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous endpoint value', 'wsal-woocommerce' ) => '%old%',
+					esc_html__( 'Previous endpoint value', 'wsal-woocommerce' ) => '%old%',
 				),
 				array(),
 				'woocommerce-store',
@@ -1108,10 +1108,10 @@ $custom_alerts = array(
 			array(
 				9115,
 				WSAL_MEDIUM,
-				__( 'The Currency position setting has been modified', 'wsal-woocommerce' ),
+				esc_html__( 'The Currency position setting has been modified', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>Currency position</strong> setting to %new_setting%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous setting', 'wsal-woocommerce' ) => '%%old_setting%',
+					esc_html__( 'Previous setting', 'wsal-woocommerce' ) => '%%old_setting%',
 				),
 				array(),
 				'woocommerce-store',
@@ -1120,10 +1120,10 @@ $custom_alerts = array(
 			array(
 				9116,
 				WSAL_MEDIUM,
-				__( 'The Thousand separator setting has been modified', 'wsal-woocommerce' ),
+				esc_html__( 'The Thousand separator setting has been modified', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>Thousand separator</strong> setting in the Currency options to %new_setting%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous setting', 'wsal-woocommerce' ) => '%%old_setting%',
+					esc_html__( 'Previous setting', 'wsal-woocommerce' ) => '%%old_setting%',
 				),
 				array(),
 				'woocommerce-store',
@@ -1132,10 +1132,10 @@ $custom_alerts = array(
 			array(
 				9117,
 				WSAL_MEDIUM,
-				__( 'The Decimal separator setting has been modified', 'wsal-woocommerce' ),
+				esc_html__( 'The Decimal separator setting has been modified', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>Decimal separator</strong> setting in the Currency options to %new_setting%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous setting', 'wsal-woocommerce' ) => '%%old_setting%',
+					esc_html__( 'Previous setting', 'wsal-woocommerce' ) => '%%old_setting%',
 				),
 				array(),
 				'woocommerce-store',
@@ -1144,10 +1144,10 @@ $custom_alerts = array(
 			array(
 				9118,
 				WSAL_MEDIUM,
-				__( 'The Number of decimals position setting has been modified', 'wsal-woocommerce' ),
+				esc_html__( 'The Number of decimals position setting has been modified', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>Number of decimals</strong> setting in the Currency options to %new_setting%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous setting', 'wsal-woocommerce' ) => '%%old_setting%',
+					esc_html__( 'Previous setting', 'wsal-woocommerce' ) => '%%old_setting%',
 				),
 				array(),
 				'woocommerce-store',
@@ -1155,12 +1155,12 @@ $custom_alerts = array(
 			),
 		),
 
-		__( 'Payment Gateways', 'wsal-woocommerce' ) => array(
+		esc_html__( 'Payment Gateways', 'wsal-woocommerce' ) => array(
 			array(
 				9074,
 				WSAL_HIGH,
-				__( 'User enabled/disabled a payment gateway', 'wsal-woocommerce' ),
-				__( 'Changed the status of the payment gateway %GatewayName%.', 'wsal-woocommerce' ),
+				esc_html__( 'User enabled/disabled a payment gateway', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the status of the payment gateway %GatewayName%.', 'wsal-woocommerce' ),
 				array(),
 				array(),
 				'woocommerce-store',
@@ -1169,10 +1169,10 @@ $custom_alerts = array(
 			array(
 				9075,
 				E_CRITICAL,
-				__( 'User disabled a payment gateway', 'wsal-woocommerce' ),
-				__( 'User disabled a payment gateway', 'wsal-woocommerce' ),
+				esc_html__( 'User disabled a payment gateway', 'wsal-woocommerce' ),
+				esc_html__( 'User disabled a payment gateway', 'wsal-woocommerce' ),
 				array(
-					__( 'The payment gateway', 'wsal-woocommerce' ) => '%GatewayName%',
+					esc_html__( 'The payment gateway', 'wsal-woocommerce' ) => '%GatewayName%',
 				),
 				array(),
 				'woocommerce-store',
@@ -1181,8 +1181,8 @@ $custom_alerts = array(
 			array(
 				9076,
 				WSAL_HIGH,
-				__( 'User modified a payment gateway', 'wsal-woocommerce' ),
-				__( 'Changed the settings of the %GatewayName% payment gateway.', 'wsal-woocommerce' ),
+				esc_html__( 'User modified a payment gateway', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the settings of the %GatewayName% payment gateway.', 'wsal-woocommerce' ),
 				array(),
 				array(),
 				'woocommerce-store',
@@ -1190,11 +1190,11 @@ $custom_alerts = array(
 			),
 		),
 
-		__( 'Tax Settings', 'wsal-woocommerce' )     => array(
+		esc_html__( 'Tax Settings', 'wsal-woocommerce' )     => array(
 			array(
 				9078,
 				WSAL_LOW,
-				__( 'User modified prices with tax option', 'wsal-woocommerce' ),
+				esc_html__( 'User modified prices with tax option', 'wsal-woocommerce' ),
 				__( 'Changed the store setting <strong>Prices entered with tax</strong> to %TaxStatus% taxes.', 'wsal-woocommerce' ),
 				array(),
 				array(),
@@ -1204,7 +1204,7 @@ $custom_alerts = array(
 			array(
 				9079,
 				WSAL_LOW,
-				__( 'User modified tax calculation base', 'wsal-woocommerce' ),
+				esc_html__( 'User modified tax calculation base', 'wsal-woocommerce' ),
 				__( 'Changed the store setting <strong>Calculate tax based on</strong> to %Setting%', 'wsal-woocommerce' ),
 				array(),
 				array(),
@@ -1214,7 +1214,7 @@ $custom_alerts = array(
 			array(
 				9080,
 				WSAL_MEDIUM,
-				__( 'User modified shipping tax class', 'wsal-woocommerce' ),
+				esc_html__( 'User modified shipping tax class', 'wsal-woocommerce' ),
 				__( 'Changed the store setting <strong>Shipping tax class</strong> to %Setting%', 'wsal-woocommerce' ),
 				array(),
 				array(),
@@ -1224,7 +1224,7 @@ $custom_alerts = array(
 			array(
 				9081,
 				WSAL_MEDIUM,
-				__( 'User enabled/disabled rounding of tax', 'wsal-woocommerce' ),
+				esc_html__( 'User enabled/disabled rounding of tax', 'wsal-woocommerce' ),
 				__( 'Changed the status of the store tax setting <strong>Rounding</strong> of tax at subtotal level.', 'wsal-woocommerce' ),
 				array(),
 				array(),
@@ -1234,8 +1234,8 @@ $custom_alerts = array(
 			array(
 				9082,
 				WSAL_MEDIUM,
-				__( 'User modified a shipping zone', 'wsal-woocommerce' ),
-				__( 'The shipping zone %ShippingZoneName% on the WooCommerce store', 'wsal-woocommerce' ),
+				esc_html__( 'User modified a shipping zone', 'wsal-woocommerce' ),
+				esc_html__( 'The shipping zone %ShippingZoneName% on the WooCommerce store', 'wsal-woocommerce' ),
 				array(),
 				array(),
 				'woocommerce-store',
@@ -1243,17 +1243,17 @@ $custom_alerts = array(
 			),
 		),
 
-		__( 'WC Categories', 'wsal-woocommerce' )    => array(
+		esc_html__( 'WC Categories', 'wsal-woocommerce' )    => array(
 			array(
 				9002,
 				WSAL_INFORMATIONAL,
-				__( 'User created a new product category', 'wsal-woocommerce' ),
-				__( 'Created new product category called %CategoryName%.', 'wsal-woocommerce' ),
+				esc_html__( 'User created a new product category', 'wsal-woocommerce' ),
+				esc_html__( 'Created new product category called %CategoryName%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Category slug', 'wsal-woocommerce' ) => '%Slug%',
+					esc_html__( 'Category slug', 'wsal-woocommerce' ) => '%Slug%',
 				),
 				array(
-					__( 'View category', 'wsal-woocommerce' ) => '%ProductCatLink%',
+					esc_html__( 'View category', 'wsal-woocommerce' ) => '%ProductCatLink%',
 				),
 				'woocommerce-category',
 				'created',
@@ -1261,10 +1261,10 @@ $custom_alerts = array(
 			array(
 				9052,
 				WSAL_MEDIUM,
-				__( 'User deleted a product category', 'wsal-woocommerce' ),
-				__( 'Deleted the product category called %CategoryName%.', 'wsal-woocommerce' ),
+				esc_html__( 'User deleted a product category', 'wsal-woocommerce' ),
+				esc_html__( 'Deleted the product category called %CategoryName%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Category slug', 'wsal-woocommerce' ) => '%CategorySlug%',
+					esc_html__( 'Category slug', 'wsal-woocommerce' ) => '%CategorySlug%',
 				),
 				array(),
 				'woocommerce-category',
@@ -1273,14 +1273,14 @@ $custom_alerts = array(
 			array(
 				9053,
 				WSAL_INFORMATIONAL,
-				__( 'User changed the slug of a product category', 'wsal-woocommerce' ),
-				__( 'Changed the slug of the product category called %CategoryName%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the slug of a product category', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the slug of the product category called %CategoryName%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous category slug', 'wsal-woocommerce' ) => '%OldSlug%',
-					__( 'New category slug', 'wsal-woocommerce' ) => '%NewSlug%',
+					esc_html__( 'Previous category slug', 'wsal-woocommerce' ) => '%OldSlug%',
+					esc_html__( 'New category slug', 'wsal-woocommerce' ) => '%NewSlug%',
 				),
 				array(
-					__( 'View category', 'wsal-woocommerce' ) => '%ProductCatLink%',
+					esc_html__( 'View category', 'wsal-woocommerce' ) => '%ProductCatLink%',
 				),
 				'woocommerce-category',
 				'modified',
@@ -1288,14 +1288,14 @@ $custom_alerts = array(
 			array(
 				9054,
 				WSAL_MEDIUM,
-				__( 'User changed the parent category of a product category', 'wsal-woocommerce' ),
-				__( 'Changed the parent of the product category %CategoryName% to %NewParentCat%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the parent category of a product category', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the parent of the product category %CategoryName% to %NewParentCat%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Category slug', 'wsal-woocommerce' ) => '%CategorySlug%',
-					__( 'Previous parent', 'wsal-woocommerce' ) => '%OldParentCat%',
+					esc_html__( 'Category slug', 'wsal-woocommerce' ) => '%CategorySlug%',
+					esc_html__( 'Previous parent', 'wsal-woocommerce' ) => '%OldParentCat%',
 				),
 				array(
-					__( 'View category', 'wsal-woocommerce' ) => '%ProductCatLink%',
+					esc_html__( 'View category', 'wsal-woocommerce' ) => '%ProductCatLink%',
 				),
 				'woocommerce-category',
 				'modified',
@@ -1303,14 +1303,14 @@ $custom_alerts = array(
 			array(
 				9055,
 				WSAL_INFORMATIONAL,
-				__( 'User changed the display type of a product category', 'wsal-woocommerce' ),
-				__( 'Changed the display type of the product category %name% to %NewDisplayType%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the display type of a product category', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the display type of the product category %name% to %NewDisplayType%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Category slug', 'wsal-woocommerce' ) => '%CategorySlug%',
-					__( 'Previous display type', 'wsal-woocommerce' ) => '%OldDisplayType%',
+					esc_html__( 'Category slug', 'wsal-woocommerce' ) => '%CategorySlug%',
+					esc_html__( 'Previous display type', 'wsal-woocommerce' ) => '%OldDisplayType%',
 				),
 				array(
-					__( 'View category', 'wsal-woocommerce' ) => '%ProductCatLink%',
+					esc_html__( 'View category', 'wsal-woocommerce' ) => '%ProductCatLink%',
 				),
 				'woocommerce-category',
 				'modified',
@@ -1318,31 +1318,31 @@ $custom_alerts = array(
 			array(
 				9056,
 				WSAL_LOW,
-				__( 'User changed the name of a product category', 'wsal-woocommerce' ),
-				__( 'Renamed the product category %OldName% to %NewName%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the name of a product category', 'wsal-woocommerce' ),
+				esc_html__( 'Renamed the product category %OldName% to %NewName%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous category name', 'wsal-woocommerce' ) => '%OldName%',
-					__( 'Category slug', 'wsal-woocommerce' ) => '%CategorySlug%',
+					esc_html__( 'Previous category name', 'wsal-woocommerce' ) => '%OldName%',
+					esc_html__( 'Category slug', 'wsal-woocommerce' ) => '%CategorySlug%',
 				),
 				array(
-					__( 'View category', 'wsal-woocommerce' ) => '%ProductCatLink%',
+					esc_html__( 'View category', 'wsal-woocommerce' ) => '%ProductCatLink%',
 				),
 				'woocommerce-category',
 				'renamed',
 			),
 		),
 
-		__( 'WC Tags', 'wsal-woocommerce' )          => array(
+		esc_html__( 'WC Tags', 'wsal-woocommerce' )          => array(
 			array(
 				9101,
 				WSAL_INFORMATIONAL,
-				__( 'User created a new product tag', 'wsal-woocommerce' ),
-				__( 'Created the tag %CategoryName%.', 'wsal-woocommerce' ),
+				esc_html__( 'User created a new product tag', 'wsal-woocommerce' ),
+				esc_html__( 'Created the tag %CategoryName%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Slug', 'wsal-woocommerce' ) => '%Slug%',
+					esc_html__( 'Slug', 'wsal-woocommerce' ) => '%Slug%',
 				),
 				array(
-					__( 'View product tag', 'wsal-woocommerce' ) => '%ProductTagLink%',
+					esc_html__( 'View product tag', 'wsal-woocommerce' ) => '%ProductTagLink%',
 				),
 				'woocommerce-tag',
 				'created',
@@ -1350,10 +1350,10 @@ $custom_alerts = array(
 			array(
 				9102,
 				WSAL_INFORMATIONAL,
-				__( 'User deleted a product tag', 'wsal-woocommerce' ),
-				__( 'Deleted the tag %Name%.', 'wsal-woocommerce' ),
+				esc_html__( 'User deleted a product tag', 'wsal-woocommerce' ),
+				esc_html__( 'Deleted the tag %Name%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Slug', 'wsal-woocommerce' ) => '%Slug%',
+					esc_html__( 'Slug', 'wsal-woocommerce' ) => '%Slug%',
 				),
 				array(),
 				'woocommerce-tag',
@@ -1362,13 +1362,13 @@ $custom_alerts = array(
 			array(
 				9103,
 				WSAL_INFORMATIONAL,
-				__( 'User renamed product tag', 'wsal-woocommerce' ),
-				__( 'Renamed the tag %OldName% to %NewName%.', 'wsal-woocommerce' ),
+				esc_html__( 'User renamed product tag', 'wsal-woocommerce' ),
+				esc_html__( 'Renamed the tag %OldName% to %NewName%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Slug', 'wsal-woocommerce' ) => '%Slug%',
+					esc_html__( 'Slug', 'wsal-woocommerce' ) => '%Slug%',
 				),
 				array(
-					__( 'View product tag', 'wsal-woocommerce' ) => '%ProductTagLink%',
+					esc_html__( 'View product tag', 'wsal-woocommerce' ) => '%ProductTagLink%',
 				),
 				'woocommerce-tag',
 				'renamed',
@@ -1376,27 +1376,27 @@ $custom_alerts = array(
 			array(
 				9104,
 				WSAL_INFORMATIONAL,
-				__( 'User changed product tag slug', 'wsal-woocommerce' ),
-				__( 'Changed the slug of the tag %TagName% to %NewSlug%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed product tag slug', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the slug of the tag %TagName% to %NewSlug%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous slug', 'wsal-woocommerce' ) => '%OldSlug%',
+					esc_html__( 'Previous slug', 'wsal-woocommerce' ) => '%OldSlug%',
 				),
 				array(
-					__( 'View product tag', 'wsal-woocommerce' ) => '%ProductTagLink%',
+					esc_html__( 'View product tag', 'wsal-woocommerce' ) => '%ProductTagLink%',
 				),
 				'woocommerce-tag',
 				'modified',
 			),
 		),
 
-		__( 'Attributes', 'wsal-woocommerce' )       => array(
+		esc_html__( 'Attributes', 'wsal-woocommerce' )       => array(
 			array(
 				9057,
 				WSAL_MEDIUM,
-				__( 'User created a new attribute', 'wsal-woocommerce' ),
-				__( 'Created a new attribute in WooCommerce called %AttributeName%.', 'wsal-woocommerce' ),
+				esc_html__( 'User created a new attribute', 'wsal-woocommerce' ),
+				esc_html__( 'Created a new attribute in WooCommerce called %AttributeName%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Attribute slug', 'wsal-woocommerce' ) => '%AttributeSlug%',
+					esc_html__( 'Attribute slug', 'wsal-woocommerce' ) => '%AttributeSlug%',
 				),
 				array(),
 				'woocommerce-store',
@@ -1405,10 +1405,10 @@ $custom_alerts = array(
 			array(
 				9058,
 				WSAL_LOW,
-				__( 'User deleted an attribute', 'wsal-woocommerce' ),
-				__( 'Deleted the WooCommerce attribute %AttributeName%.', 'wsal-woocommerce' ),
+				esc_html__( 'User deleted an attribute', 'wsal-woocommerce' ),
+				esc_html__( 'Deleted the WooCommerce attribute %AttributeName%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Attribute slug', 'wsal-woocommerce' ) => '%AttributeSlug%',
+					esc_html__( 'Attribute slug', 'wsal-woocommerce' ) => '%AttributeSlug%',
 				),
 				array(),
 				'woocommerce-store',
@@ -1417,10 +1417,10 @@ $custom_alerts = array(
 			array(
 				9059,
 				WSAL_LOW,
-				__( 'User changed the slug of an attribute', 'wsal-woocommerce' ),
-				__( 'Changed the slug of the WooCommerce attribute %AttributeName% to %NewSlug%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the slug of an attribute', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the slug of the WooCommerce attribute %AttributeName% to %NewSlug%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous slug', 'wsal-woocommerce' ) => '%OldSlug%',
+					esc_html__( 'Previous slug', 'wsal-woocommerce' ) => '%OldSlug%',
 				),
 				array(),
 				'woocommerce-store',
@@ -1429,11 +1429,11 @@ $custom_alerts = array(
 			array(
 				9060,
 				WSAL_LOW,
-				__( 'User changed the name of an attribute', 'wsal-woocommerce' ),
-				__( 'Renamed the WooCommerce attribute %AttributeName% to %NewName%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the name of an attribute', 'wsal-woocommerce' ),
+				esc_html__( 'Renamed the WooCommerce attribute %AttributeName% to %NewName%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Attribute slug', 'wsal-woocommerce' ) => '%AttributeSlug%',
-					__( 'Previous name', 'wsal-woocommerce' ) => '%OldName%',
+					esc_html__( 'Attribute slug', 'wsal-woocommerce' ) => '%AttributeSlug%',
+					esc_html__( 'Previous name', 'wsal-woocommerce' ) => '%OldName%',
 				),
 				array(),
 				'woocommerce-store',
@@ -1442,11 +1442,11 @@ $custom_alerts = array(
 			array(
 				9061,
 				WSAL_LOW,
-				__( 'User changed the default sort order of an attribute', 'wsal-woocommerce' ),
-				__( 'Changed the Default Sorting Order of the attribute %AttributeName% in WooCommerce to %NewSortOrder%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the default sort order of an attribute', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the Default Sorting Order of the attribute %AttributeName% in WooCommerce to %NewSortOrder%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Attribute slug', 'wsal-woocommerce' ) => '%AttributeSlug%',
-					__( 'Previous sorting order', 'wsal-woocommerce' ) => '%OldSortOrder%',
+					esc_html__( 'Attribute slug', 'wsal-woocommerce' ) => '%AttributeSlug%',
+					esc_html__( 'Previous sorting order', 'wsal-woocommerce' ) => '%OldSortOrder%',
 				),
 				array(),
 				'woocommerce-store',
@@ -1455,10 +1455,10 @@ $custom_alerts = array(
 			array(
 				9062,
 				WSAL_LOW,
-				__( 'User enabled/disabled the option Enable Archives of an attribute', 'wsal-woocommerce' ),
-				__( 'Changed the status of the option Enable Archives in WooCommerce attribute %AttributeName%.', 'wsal-woocommerce' ),
+				esc_html__( 'User enabled/disabled the option Enable Archives of an attribute', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the status of the option Enable Archives in WooCommerce attribute %AttributeName%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Attribute slug', 'wsal-woocommerce' ) => '%Slug%',
+					esc_html__( 'Attribute slug', 'wsal-woocommerce' ) => '%Slug%',
 				),
 				array(),
 				'woocommerce-store',
@@ -1466,15 +1466,15 @@ $custom_alerts = array(
 			),
 		),
 
-		__( 'Coupons', 'wsal-woocommerce' )          => array(
+		esc_html__( 'Coupons', 'wsal-woocommerce' )          => array(
 			array(
 				9063,
 				WSAL_LOW,
-				__( 'User published a new coupon', 'wsal-woocommerce' ),
-				__( 'Created the WooCommerce coupon: %CouponName%.', 'wsal-woocommerce' ),
+				esc_html__( 'User published a new coupon', 'wsal-woocommerce' ),
+				esc_html__( 'Created the WooCommerce coupon: %CouponName%.', 'wsal-woocommerce' ),
 				array(),
 				array(
-					__( 'View coupon in editor', 'wsal-woocommerce' ) => '%EditorLinkCoupon%',
+					esc_html__( 'View coupon in editor', 'wsal-woocommerce' ) => '%EditorLinkCoupon%',
 				),
 				'woocommerce-coupon',
 				'published',
@@ -1482,10 +1482,10 @@ $custom_alerts = array(
 			array(
 				9064,
 				WSAL_LOW,
-				__( 'User changed the discount type of a coupon', 'wsal-woocommerce' ),
-				__( 'Changed the Discount Type in the coupon %CouponName% to %NewDiscountType%.%', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the discount type of a coupon', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the Discount Type in the coupon %CouponName% to %NewDiscountType%.%', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous discount type', 'wsal-woocommerce' ) => '%OldDiscountType%',
+					esc_html__( 'Previous discount type', 'wsal-woocommerce' ) => '%OldDiscountType%',
 				),
 				array(
 					'%EditorLinkCoupon%',
@@ -1496,13 +1496,13 @@ $custom_alerts = array(
 			array(
 				9065,
 				WSAL_LOW,
-				__( 'User changed the coupon amount of a coupon', 'wsal-woocommerce' ),
-				__( 'Changed the Coupon amount in the coupon %CouponName% to %NewAmount%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the coupon amount of a coupon', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the Coupon amount in the coupon %CouponName% to %NewAmount%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous amount', 'wsal-woocommerce' ) => '%OldAmount%',
+					esc_html__( 'Previous amount', 'wsal-woocommerce' ) => '%OldAmount%',
 				),
 				array(
-					__( 'View coupon in editor', 'wsal-woocommerce' ) => '%EditorLinkCoupon%',
+					esc_html__( 'View coupon in editor', 'wsal-woocommerce' ) => '%EditorLinkCoupon%',
 				),
 				'woocommerce-coupon',
 				'modified',
@@ -1510,13 +1510,13 @@ $custom_alerts = array(
 			array(
 				9066,
 				WSAL_LOW,
-				__( 'User changed the coupon expire date of a coupon', 'wsal-woocommerce' ),
-				__( 'Changed the expire date of the coupon %CouponName% to %NewDate%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the coupon expire date of a coupon', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the expire date of the coupon %CouponName% to %NewDate%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous date', 'wsal-woocommerce' ) => '%OldDate%',
+					esc_html__( 'Previous date', 'wsal-woocommerce' ) => '%OldDate%',
 				),
 				array(
-					__( 'View coupon in editor', 'wsal-woocommerce' ) => '%EditorLinkCoupon%',
+					esc_html__( 'View coupon in editor', 'wsal-woocommerce' ) => '%EditorLinkCoupon%',
 				),
 				'woocommerce-coupon',
 				'modified',
@@ -1524,14 +1524,14 @@ $custom_alerts = array(
 			array(
 				9067,
 				WSAL_LOW,
-				__( 'User changed the usage restriction settings of a coupon', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the usage restriction settings of a coupon', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>Usage restriction</strong> of the coupon %CouponName% to %NewMetaValue%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Usage restriction parameter', 'wsal-woocommerce' ) => '%MetaKey%',
-					__( 'Previous value', 'wsal-woocommerce' ) => '%OldMetaValue%',
+					esc_html__( 'Usage restriction parameter', 'wsal-woocommerce' ) => '%MetaKey%',
+					esc_html__( 'Previous value', 'wsal-woocommerce' ) => '%OldMetaValue%',
 				),
 				array(
-					__( 'View coupon in editor', 'wsal-woocommerce' ) => '%EditorLinkCoupon%',
+					esc_html__( 'View coupon in editor', 'wsal-woocommerce' ) => '%EditorLinkCoupon%',
 				),
 				'woocommerce-coupon',
 				'modified',
@@ -1539,13 +1539,13 @@ $custom_alerts = array(
 			array(
 				9068,
 				WSAL_LOW,
-				__( 'User changed the usage limits settings of a coupon', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the usage limits settings of a coupon', 'wsal-woocommerce' ),
 				__( 'Change the <strong>Usage limits</strong> of the coupon %CouponName% to %NewMetaValue%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous usage limits', 'wsal-woocommerce' ) => '%OldMetaValue%',
+					esc_html__( 'Previous usage limits', 'wsal-woocommerce' ) => '%OldMetaValue%',
 				),
 				array(
-					__( 'View coupon in editor', 'wsal-woocommerce' ) => '%EditorLinkCoupon%',
+					esc_html__( 'View coupon in editor', 'wsal-woocommerce' ) => '%EditorLinkCoupon%',
 				),
 				'woocommerce-store',
 				'modified',
@@ -1553,14 +1553,14 @@ $custom_alerts = array(
 			array(
 				9069,
 				WSAL_INFORMATIONAL,
-				__( 'User changed the description of a coupon', 'wsal-woocommerce' ),
-				__( 'Changed the description of the coupon %CouponName%.', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the description of a coupon', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the description of the coupon %CouponName%.', 'wsal-woocommerce' ),
 				array(
-					__( 'Previous description', 'wsal-woocommerce' ) => '%OldDescription%',
-					__( 'New description', 'wsal-woocommerce' ) => '%NewDescription%',
+					esc_html__( 'Previous description', 'wsal-woocommerce' ) => '%OldDescription%',
+					esc_html__( 'New description', 'wsal-woocommerce' ) => '%NewDescription%',
 				),
 				array(
-					__( 'View coupon in editor', 'wsal-woocommerce' ) => '%EditorLinkCoupon%',
+					esc_html__( 'View coupon in editor', 'wsal-woocommerce' ) => '%EditorLinkCoupon%',
 				),
 				'woocommerce-coupon',
 				'modified',
@@ -1568,11 +1568,11 @@ $custom_alerts = array(
 			array(
 				9070,
 				E_WARNING,
-				__( 'User changed the status of a coupon', 'wsal-woocommerce' ),
-				__( 'Changed the status of WooCommerce coupon %CouponName%', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the status of a coupon', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the status of WooCommerce coupon %CouponName%', 'wsal-woocommerce' ),
 				array(
-					__( 'Old status', 'wsal-woocommerce' ) => '%OldStatus%',
-					__( 'New status', 'wsal-woocommerce' ) => '%NewStatus%',
+					esc_html__( 'Old status', 'wsal-woocommerce' ) => '%OldStatus%',
+					esc_html__( 'New status', 'wsal-woocommerce' ) => '%NewStatus%',
 				),
 				array(),
 				'woocommerce-coupon',
@@ -1581,28 +1581,28 @@ $custom_alerts = array(
 			array(
 				9071,
 				WSAL_INFORMATIONAL,
-				__( 'User renamed a WooCommerce coupon', 'wsal-woocommerce' ),
-				__( 'Renamed the coupon %OldName% to %NewName%.', 'wsal-woocommerce' ),
+				esc_html__( 'User renamed a WooCommerce coupon', 'wsal-woocommerce' ),
+				esc_html__( 'Renamed the coupon %OldName% to %NewName%.', 'wsal-woocommerce' ),
 				array(),
 				array(
-					__( 'View coupon in editor', 'wsal-woocommerce' ) => '%EditorLinkCoupon%',
+					esc_html__( 'View coupon in editor', 'wsal-woocommerce' ) => '%EditorLinkCoupon%',
 				),
 				'woocommerce-coupon',
 				'renamed',
 			),
 		),
 
-		__( 'Orders', 'wsal-woocommerce' )           => array(
+		esc_html__( 'Orders', 'wsal-woocommerce' )           => array(
 			array(
 				9035,
 				WSAL_LOW,
-				__( 'A WooCommerce order has been placed', 'wsal-woocommerce' ),
-				__( 'A new order has been placed.', 'wsal-woocommerce' ),
+				esc_html__( 'A WooCommerce order has been placed', 'wsal-woocommerce' ),
+				esc_html__( 'A new order has been placed.', 'wsal-woocommerce' ),
 				array(
-					__( 'Order name', 'wsal-woocommerce' ) => '%OrderTitle%',
+					esc_html__( 'Order name', 'wsal-woocommerce' ) => '%OrderTitle%',
 				),
 				array(
-					__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
 				),
 				'woocommerce-order',
 				'created',
@@ -1610,11 +1610,11 @@ $custom_alerts = array(
 			array(
 				9036,
 				WSAL_INFORMATIONAL,
-				__( 'WooCommerce order status changed', 'wsal-woocommerce' ),
-				__( 'Marked the order %OrderTitle% as %OrderStatus%.', 'wsal-woocommerce' ),
+				esc_html__( 'WooCommerce order status changed', 'wsal-woocommerce' ),
+				esc_html__( 'Marked the order %OrderTitle% as %OrderStatus%.', 'wsal-woocommerce' ),
 				array(),
 				array(
-					__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
 				),
 				'woocommerce-order',
 				'modified',
@@ -1622,11 +1622,11 @@ $custom_alerts = array(
 			array(
 				9037,
 				WSAL_MEDIUM,
-				__( 'User moved a WooCommerce order to trash', 'wsal-woocommerce' ),
-				__( 'Moved the order %OrderTitle% to trash', 'wsal-woocommerce' ),
+				esc_html__( 'User moved a WooCommerce order to trash', 'wsal-woocommerce' ),
+				esc_html__( 'Moved the order %OrderTitle% to trash', 'wsal-woocommerce' ),
 				array(),
 				array(
-					__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
 				),
 				'woocommerce-order',
 				'deleted',
@@ -1634,11 +1634,11 @@ $custom_alerts = array(
 			array(
 				9038,
 				WSAL_LOW,
-				__( 'User moved a WooCommerce order out of trash', 'wsal-woocommerce' ),
-				__( 'Restored the order %OrderTitle% out of the trash.', 'wsal-woocommerce' ),
+				esc_html__( 'User moved a WooCommerce order out of trash', 'wsal-woocommerce' ),
+				esc_html__( 'Restored the order %OrderTitle% out of the trash.', 'wsal-woocommerce' ),
 				array(),
 				array(
-					__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
 				),
 				'woocommerce-order',
 				'restored',
@@ -1646,8 +1646,8 @@ $custom_alerts = array(
 			array(
 				9039,
 				WSAL_LOW,
-				__( 'User permanently deleted a WooCommerce order', 'wsal-woocommerce' ),
-				__( 'Permanently deleted the order %OrderTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User permanently deleted a WooCommerce order', 'wsal-woocommerce' ),
+				esc_html__( 'Permanently deleted the order %OrderTitle%.', 'wsal-woocommerce' ),
 				array(),
 				array(),
 				'woocommerce-order',
@@ -1656,11 +1656,11 @@ $custom_alerts = array(
 			array(
 				9040,
 				WSAL_MEDIUM,
-				__( 'User edited a WooCommerce order', 'wsal-woocommerce' ),
-				__( 'Changed the details in order %OrderTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User edited a WooCommerce order', 'wsal-woocommerce' ),
+				esc_html__( 'Changed the details in order %OrderTitle%.', 'wsal-woocommerce' ),
 				array(),
 				array(
-					__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
 				),
 				'woocommerce-order',
 				'modified',
@@ -1668,30 +1668,30 @@ $custom_alerts = array(
 			array(
 				9041,
 				WSAL_HIGH,
-				__( 'User refunded a WooCommerce order', 'wsal-woocommerce' ),
-				__( 'Refunded the order %OrderTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'User refunded a WooCommerce order', 'wsal-woocommerce' ),
+				esc_html__( 'Refunded the order %OrderTitle%.', 'wsal-woocommerce' ),
 				array(),
 				array(
-					__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
 				),
 				'woocommerce-order',
 				'modified',
 			),
 		),
 
-		__( 'User Profile', 'wsal-woocommerce' )     => array(
+		esc_html__( 'User Profile', 'wsal-woocommerce' )     => array(
 			array(
 				9083,
 				WSAL_INFORMATIONAL,
-				__( 'User changed the billing address details', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the billing address details', 'wsal-woocommerce' ),
 				__( 'Changed <strong>billing address</strong> details of the user %TargetUsername%', 'wsal-woocommerce' ),
 				array(
-					__( 'Role', 'wsal-woocommerce' ) => '%Roles%',
-					__( 'Previous billing address', 'wsal-woocommerce' ) => '%OldValue%',
-					__( 'New Billing address', 'wsal-woocommerce' ) => '%NewValue%',
+					esc_html__( 'Role', 'wsal-woocommerce' ) => '%Roles%',
+					esc_html__( 'Previous billing address', 'wsal-woocommerce' ) => '%OldValue%',
+					esc_html__( 'New Billing address', 'wsal-woocommerce' ) => '%NewValue%',
 				),
 				array(
-					__( 'User profile page', 'wsal-woocommerce' ) => '%EditUserLink%',
+					esc_html__( 'User profile page', 'wsal-woocommerce' ) => '%EditUserLink%',
 				),
 				'user',
 				'modified',
@@ -1699,15 +1699,15 @@ $custom_alerts = array(
 			array(
 				9084,
 				WSAL_INFORMATIONAL,
-				__( 'User changed the shipping address details', 'wsal-woocommerce' ),
+				esc_html__( 'User changed the shipping address details', 'wsal-woocommerce' ),
 				__( 'Changed the <strong>shipping address</strong> details of the user %TargetUsername%', 'wsal-woocommerce' ),
 				array(
-					__( 'Role', 'wsal-woocommerce' ) => '%Roles%',
-					__( 'Previous shipping address', 'wsal-woocommerce' ) => '%OldValue%',
-					__( 'New Shipping address', 'wsal-woocommerce' ) => '%NewValue%',
+					esc_html__( 'Role', 'wsal-woocommerce' ) => '%Roles%',
+					esc_html__( 'Previous shipping address', 'wsal-woocommerce' ) => '%OldValue%',
+					esc_html__( 'New Shipping address', 'wsal-woocommerce' ) => '%NewValue%',
 				),
 				array(
-					__( 'User profile page', 'wsal-woocommerce' ) => '%EditUserLink%',
+					esc_html__( 'User profile page', 'wsal-woocommerce' ) => '%EditUserLink%',
 				),
 				'user',
 				'modified',
