@@ -400,6 +400,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					+ $this->check_image_change( $this->_old_post );
 					+ $this->check_download_limit_change( $this->_old_meta_data );
 					+ $this->check_tax_status_change( $this->_old_post, $this->_old_meta_data, $this->new_data );
+                    + $this->check_low_stock_threshold_change( $this->_old_post, $this->_old_meta_data, $this->new_data );
 
 				if ( ! $changes ) {
 					// Change Permalink.
@@ -2515,6 +2516,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			'cross_sell_ids'     => $product->get_cross_sell_ids(),
 			'tax_status'         => $product->get_tax_status(),
 			'tax_class'          => $product->get_tax_class(),
+			'low_stock_amount'   => $product->get_low_stock_amount(),
 			'file_names'         => array(),
 			'file_urls'          => array(),
 		);
@@ -3743,6 +3745,27 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			);
 		}
 
+	}
+
+    private function check_low_stock_threshold_change( $product, $oldpost, $post ) {
+
+		$old_status = ( isset( $oldpost['_low_stock_amount'] ) ) ? $oldpost['_low_stock_amount'][0] : __( 'Store Default', 'wsal-woocommerce' );
+		$status     = ( isset( $post['low_stock_amount'] ) ) ? $post['low_stock_amount'] : __( 'Store Default', 'wsal-woocommerce' );
+
+		if ( $status !== $old_status ) {
+			$editor_link = $this->GetEditorLink( $product );
+			$this->plugin->alerts->Trigger(
+				9119,
+				array(
+					'PostID'               => $product->ID,
+					'ProductTitle'         => $product->post_title,
+					'ProductStatus'        => $product->post_status,
+					'old_low_stock_amount' => $old_status,
+					'new_low_stock_amount' => $status,
+					$editor_link['name']   => $editor_link['value'],
+				)
+			);
+		}
 	}
 
 	/**

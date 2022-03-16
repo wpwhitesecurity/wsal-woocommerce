@@ -664,6 +664,24 @@ $custom_alerts = array(
 			),
 
             array(
+				9119,
+				WSAL_HIGH,
+				__( 'User changed the low stock threshold of a product', 'wsal-woocommerce' ),
+				__( 'Changed the Low stock threshold of the product %ProductTitle% to %new_low_stock_amount%.', 'wsal-woocommerce' ),
+				array(
+					__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
+					__( 'Previous Low stock treshold value', 'wsal-woocommerce' ) => '%old_low_stock_amount%',
+                ),
+				array(
+					__( 'View product in editor', 'wsal-woocommerce' ) => '%EditorLinkProduct%',
+				),
+				'woocommerce-product',
+				'modified',
+			),
+
+
+            array(
 				9120,
 				WSAL_HIGH,
 				__( 'User added a webhook', 'wsal-woocommerce' ),
