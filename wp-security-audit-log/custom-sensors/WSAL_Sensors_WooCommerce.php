@@ -209,9 +209,25 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
         add_action( 'woocommerce_new_webhook', array( $this, 'webhook_added' ), 10, 2 );
         add_action( 'woocommerce_webhook_deleted', array( $this, 'webhook_deleted' ), 10, 2 );
+        add_action( 'woocommerce_webhook_updated', array( $this, 'webhook_updated' ), 10 );
 	}
 
     public function webhook_added( $webhook_id, $webhook ) {
+        $editor_link = $this->create_webhook_editor_link( $webhook_id );
+        $this->plugin->alerts->Trigger(
+			9120,
+			array(
+				'HookName'          => sanitize_text_field( $webhook->get_name() ),
+				'DeliveryURL'       => sanitize_text_field( $webhook->get_delivery_url() ),
+				'Topic'             => sanitize_text_field( $webhook->get_topic() ),
+				'Status'            => sanitize_text_field( $webhook->get_status() ),
+				'EditorLinkWebhook' => $editor_link,
+			)
+		);
+        return $webhook_id;
+    }
+
+    public function webhook_deleted( $webhook_id, $webhook ) {
         $this->plugin->alerts->Trigger(
 			9121,
 			array(
@@ -224,14 +240,18 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
         return $webhook_id;
     }
 
-    public function webhook_deleted( $webhook_id, $webhook ) {
+    public function webhook_updated( $webhook_id ) {
+        $editor_link = $this->create_webhook_editor_link( $webhook_id );
+        $webhook = wc_get_webhook( $webhook_id );
         $this->plugin->alerts->Trigger(
-			91212,
+			9120,
 			array(
-				'HookName'    => sanitize_text_field( $webhook->get_name() ),
-				'DeliveryURL' => sanitize_text_field( $webhook->get_delivery_url() ),
-				'Topic'       => sanitize_text_field( $webhook->get_topic() ),
-				'Status'      => sanitize_text_field( $webhook->get_status() ),
+                'EventType'         => 'modified',
+				'HookName'          => sanitize_text_field( $webhook->get_name() ),
+				'DeliveryURL'       => sanitize_text_field( $webhook->get_delivery_url() ),
+				'Topic'             => sanitize_text_field( $webhook->get_topic() ),
+				'Status'            => sanitize_text_field( $webhook->get_status() ),
+				'EditorLinkWebhook' => $editor_link,
 			)
 		);
         return $webhook_id;
@@ -4622,5 +4642,26 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			return false;
 		}
 		return true;
+	}
+
+    /**
+	 * Creates an editor link for a given  hook_ID.
+	 *
+	 * @param  int $post_id        - Forms ID.
+	 * @return string $editor_link - URL to edit screen.
+	 */
+	private function create_webhook_editor_link( $webhook_id ) {
+		$editor_link = esc_url(
+			add_query_arg(
+				array(
+					'tab'          => 'advanced',
+					'section'      => 'webhooks',
+					'edit-webhook' => $webhook_id,
+				),
+				admin_url( 'admin.php?page=wc-settings' )
+			)
+		);
+
+		return $editor_link;
 	}
 }

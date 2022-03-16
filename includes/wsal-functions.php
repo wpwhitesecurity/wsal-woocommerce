@@ -197,6 +197,21 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $expression,
 		}
 	}
 
+    if ( '%WebhookID%' === $expression ) {
+		$check_value = (string) $value;
+        $editor_link = array(
+			'name'  => 'ZZZ', // Meta key.
+			'value' => 'AAA', // Meta value.
+		);
+        //$webhook_id  =  $alert_formatter->get_occurrence_meta_item( $occurrence_id, 'WebhookID' );
+		// if ( 'NULL' !== $check_value ) {
+        //     return $value;
+		// } else {
+		// 	return '';
+		// }
+        return $editor_link['value'];
+	}
+
 	return $value;
 }
 

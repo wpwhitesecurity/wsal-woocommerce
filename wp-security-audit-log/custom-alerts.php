@@ -664,10 +664,10 @@ $custom_alerts = array(
 			),
 
             array(
-				9121,
+				9120,
 				WSAL_HIGH,
 				__( 'User added a webhook', 'wsal-woocommerce' ),
-				__( 'The webhook %HookName% was added.', 'wsal-woocommerce' ),
+				__( 'The webhook %HookName% was %EventType%.', 'wsal-woocommerce' ),
 				array(
 					__( 'Topic', 'wsal-woocommerce' ) => '%Topic%',
 					__( 'Delivery URL', 'wsal-woocommerce' ) => '%DeliveryURL%',
@@ -681,7 +681,7 @@ $custom_alerts = array(
 			),
 
             array(
-				9122,
+				9121,
 				WSAL_HIGH,
 				__( 'User removed a webhook', 'wsal-woocommerce' ),
 				__( 'The webhook %HookName% was deleted.', 'wsal-woocommerce' ),
@@ -1652,18 +1652,6 @@ $custom_alerts = array(
 				),
 				'woocommerce-order',
 				'modified',
-			),
-			array(
-				9120,
-				WSAL_HIGH,
-				__( 'User added/removed a product from an order', 'wsal-woocommerce' ),
-				__( 'The product %ProductTitle% to/from the order %OrderTitle%.', 'wsal-woocommerce' ),
-				array(),
-				array(
-					__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
-				),
-				'woocommerce-order',
-				'added',
 			),
 		),
 
