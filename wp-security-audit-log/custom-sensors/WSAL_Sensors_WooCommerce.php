@@ -1988,7 +1988,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						}
 						if ( 'woocommerce_default_country' === $option ) {
 							$$this->old_location_data = $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $this->GetConfig( 'store_address' ) . ', ' . WC()->countries->countries[ strtok( $old_value, ':' ) ] . ', ' . $old_value;
-							$this->new_location_data  = $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $this->GetConfig( 'store_address' ) . ', ' . WC()->countries->countries[ strtok( $_POST['woocommerce_default_country'], ':' ) ] . ', ' . $this->GetConfig( 'store_postcode' );
+							$this->new_location_data  = $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $this->GetConfig( 'store_address' ) . ', ' . WC()->countries->countries[ strtok( sanitize_text_field( wp_unslash( $_POST['woocommerce_default_country'] ) ), ':' ) ] . ', ' . $this->GetConfig( 'store_postcode' );
 						}
 						if ( 'woocommerce_store_postcode' === $option ) {
 							$this->old_location_data = $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'store_address_2' ) . ', ' . $this->GetConfig( 'store_address' ) . ', ' . $this->GetConfig( 'default_country' ) . ', ' . $old_value;
@@ -1997,7 +1997,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 						if ( $this->old_location_data !== $this->new_location_data ) {
 							sleep( 0.5 );
-							$this->new_location_data = sanitize_text_field( wp_unslash( $_POST['woocommerce_store_address'] ) ) . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_address_2'] ) ) . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_city'] ) ) . ', ' . WC()->countries->countries[ strtok( $_POST['woocommerce_default_country'], ':' ) ] . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_postcode'] ) );
+							$this->new_location_data = sanitize_text_field( wp_unslash( $_POST['woocommerce_store_address'] ) ) . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_address_2'] ) ) . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_city'] ) ) . ', ' . WC()->countries->countries[ strtok( sanitize_text_field( wp_unslash( $_POST['woocommerce_default_country'] ) ), ':' ) ] . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_postcode'] ) );
 							if ( ! $this->was_triggered_recently( 9029 ) ) {
 								$this->plugin->alerts->Trigger(
 									9029,
@@ -2061,7 +2061,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							$old_value = get_option( 'woocommerce_all_except_countries' );
 						}
 						if ( $old_value !== $value ) {
-							// Check if any old values are present
+							// Check if any old values are present.
 							if ( ! empty( $old_value ) ) {
 								$old_country_codes = '';
 								// add each old country to a string to output in alert.
@@ -2071,7 +2071,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							} else {
 								$old_country_codes = __( 'None, ', 'wsal-woocommerce' );
 							}
-							// Check if any new values are present
+							// Check if any new values are present.
 							if ( ! empty( $value ) ) {
 								$country_codes = '';
 								foreach ( $value as $country_code ) {
@@ -2110,7 +2110,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							$old_value = get_option( 'woocommerce_specific_ship_to_countries' );
 						}
 						if ( $old_value !== $value ) {
-							// Check if any old values are present
+							// Check if any old values are present.
 							if ( ! empty( $old_value ) ) {
 								$old_country_codes = '';
 								// add each old country to a string to output in alert.
@@ -2120,7 +2120,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							} else {
 								$old_country_codes = __( 'None, ', 'wsal-woocommerce' );
 							}
-							// Check if any new values are present
+							// Check if any new values are present.
 							if ( ! empty( $value ) ) {
 								$country_codes = '';
 								foreach ( $value as $country_code ) {
@@ -3282,6 +3282,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			}
 
 			// Get the attributes data.
+            // @codingStandardsIgnoreLine
 			parse_str( $_POST['data'], $data );
 			$this->check_attributes_change( $post, $data );
 		} elseif ( 'woocommerce_save_variations' === $action ) {
@@ -3717,7 +3718,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	/**
 	 * Trigger alert if change of tax status or class occurs.
 	 *
-	 * @param WC_Product $product - Old post meta data
+	 * @param WC_Product $product - Old post meta data.
 	 * @param array      $oldpost - Old post.
 	 * @param WC_Product $post    - new post.
 	 * @return void
@@ -4429,15 +4430,14 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						unset( $old_address_array['billing_last_name'] );
 					}
 
-					// Turn them into a nice string
+					// Turn them into a nice string.
 					$new_address = implode( ', ', $new_address_array );
 					$old_address = implode( ', ', $old_address_array );
 
 					if ( $event_id ) {
 						$user = get_user_by( 'ID', $user_id );
-						if ( $event_id === 9083 ) {
-
-							// Add 1 to our changed fields counter
+						if ( 9083 === $event_id ) {
+							// Add 1 to our changed fields counter.
 							$this->updated_field_count++;
 							$this->plugin->alerts->TriggerIf(
 								$event_id,
@@ -4494,7 +4494,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					if ( $event_id ) {
 						$user = get_user_by( 'ID', $user_id );
 
-						if ( $event_id === 9084 ) {
+						if ( 9084 === $event_id ) {
 							$this->updated_shipping_field_count++;
 							$this->plugin->alerts->TriggerIf(
 								$event_id,
@@ -4517,17 +4517,29 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		}
 	}
 
+	/**
+	 * Check if is a repeated billing alert.
+	 *
+	 * @param WSAL_AlertManager $manager - WSAL alert manager.
+	 * @return bool - If was repeat or not.
+	 */
 	public function must_not_repeat_billing( WSAL_AlertManager $manager ) {
 		$this->updated_field_count--;
-		if ( $this->updated_field_count == 1 ) {
+		if ( 1 == $this->updated_field_count ) {
 			return true;
 		}
 		return false;
 	}
 
+	/**
+	 * Check if is a repeated shipping alert.
+	 *
+	 * @param  WSAL_AlertManager $manager - WSAL alert manager.
+	 * @return bool - If was repeat or not.
+	 */
 	public function must_not_repeat_shipping( WSAL_AlertManager $manager ) {
 		$this->updated_shipping_field_count--;
-		if ( $this->updated_shipping_field_count == 1 ) {
+		if ( 1 == $this->updated_shipping_field_count ) {
 			return true;
 		}
 		return false;
@@ -4535,6 +4547,13 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 	/**
 	 * Trigger 9106 (stock level change by 3rd party).
+	 *
+	 * @since 3.3.1
+	 *
+	 * @param int    $meta_id    - ID of the metadata entry to update.
+	 * @param int    $object_id  - Object ID.
+	 * @param string $meta_key   - Meta key.
+	 * @param mixed  $meta_value - Meta value.
 	 */
 	public function detect_stock_level_change( $meta_id, $object_id, $meta_key, $meta_value ) {
 		if ( '_stock' === $meta_key ) {
@@ -4706,6 +4725,12 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		return false;
 	}
 
+	/**
+	 * Ensure not a repated order event.
+	 *
+	 * @param  WSAL_AlertManager $manager - WSAL alert manager.
+	 * @return bool - If was repeated or not.
+	 */
 	public function must_not_edit_or_order( WSAL_AlertManager $manager ) {
 		if ( $manager->WillOrHasTriggered( 9019 ) ) {
 			return false;
@@ -4722,7 +4747,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	/**
 	 * Creates an editor link for a given  hook_ID.
 	 *
-	 * @param  int $post_id        - Forms ID.
+	 * @param  int $webhook_id - Hook ID.
 	 * @return string $editor_link - URL to edit screen.
 	 */
 	private function create_webhook_editor_link( $webhook_id ) {
