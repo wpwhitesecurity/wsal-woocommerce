@@ -719,6 +719,27 @@ $custom_alerts = array(
 				'deleted',
 			),
 
+            array(
+				9122,
+				WSAL_HIGH,
+				esc_html__( 'User modified a webhook', 'wsal-woocommerce' ),
+				esc_html__( 'The webhook %HookName% was modified.', 'wsal-woocommerce' ),
+				array(
+					esc_html__( 'Previous Name', 'wsal-woocommerce' )  => '%OldHookName',
+                    esc_html__( 'Topic', 'wsal-woocommerce' )  => '%Topic%',
+                    esc_html__( 'Previous Topic', 'wsal-woocommerce' )  => '%OldTopic%',
+					esc_html__( 'Delivery URL', 'wsal-woocommerce' ) => '%DeliveryURL%',
+					esc_html__( 'Previous Delivery URL', 'wsal-woocommerce' ) => '%OldDeliveryURL%',
+					esc_html__( 'Status', 'wsal-woocommerce' ) => '%Status%',
+					esc_html__( 'Previous Status', 'wsal-woocommerce' ) => '%OldStatus%',
+				),				
+				array(
+					esc_html__( 'View details', 'wsal-woocommerce' ) => '%EditorLinkWebhook%',
+				),
+				'woocommerce-product',
+				'modified',
+			),
+
 			array(
 				9019,
 				WSAL_LOW,
