@@ -2368,58 +2368,58 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				}
 			}
 
-            $webhook_id = ( isset( $_POST['webhook_id'] ) ) ? $_POST['webhook_id'] : false;
-            if ( $webhook_id ) {
-                // Gather POSTed (freshest) data.
-                $new_webhook_data = array(
-                    'id'           => $webhook_id,
-                    'name'         => isset( $_POST['webhook_name'] ) ? $_POST['webhook_name'] : '',
-                    'delivery_url' => isset( $_POST['webhook_delivery_url'] ) ? $_POST['webhook_delivery_url'] : '',
-                    'topic'        => isset( $_POST['webhook_topic'] ) ? $_POST['webhook_topic'] : '',
-                    'status'       => isset( $_POST['webhook_status'] ) ? $_POST['webhook_status'] : '',
-                );
+			$webhook_id = ( isset( $_POST['webhook_id'] ) ) ? $_POST['webhook_id'] : false;
+			if ( $webhook_id ) {
+				// Gather POSTed (freshest) data.
+				$new_webhook_data = array(
+					'id'           => $webhook_id,
+					'name'         => isset( $_POST['webhook_name'] ) ? $_POST['webhook_name'] : '',
+					'delivery_url' => isset( $_POST['webhook_delivery_url'] ) ? $_POST['webhook_delivery_url'] : '',
+					'topic'        => isset( $_POST['webhook_topic'] ) ? $_POST['webhook_topic'] : '',
+					'status'       => isset( $_POST['webhook_status'] ) ? $_POST['webhook_status'] : '',
+				);
 
-                // Get a current copy of the soon to be "old" version for comparison.
-                $data_store       = \WC_Data_Store::load( 'webhook' );
-                $webhooks         = $data_store->search_webhooks([ 'limit' => -1 ] );
-                $webhook_items    = array_map( 'wc_get_webhook', $webhooks  );    
-                $key              = array_search( $webhook_id, array_column( $webhook_items, 'id' ) );
-                $old_webhook      = $webhook_items[ $key ];
-                $alert_needed     = false;
+				// Get a current copy of the soon to be "old" version for comparison.
+				$data_store    = \WC_Data_Store::load( 'webhook' );
+				$webhooks      = $data_store->search_webhooks( array( 'limit' => -1 ) );
+				$webhook_items = array_map( 'wc_get_webhook', $webhooks );
+				$key           = array_search( $webhook_id, array_column( $webhook_items, 'id' ) );
+				$old_webhook   = $webhook_items[ $key ];
+				$alert_needed  = false;
 
-                // Tidy up data for comparison.
-                $old_webhook_data = array(
-                    'id'           => $webhook_id,
-                    'name'         => $old_webhook->get_name(),
-                    'delivery_url' => $old_webhook->get_delivery_url(),
-                    'topic'        => $old_webhook->get_topic(),
-                    'status'       => $old_webhook->get_status(),
-                );
+				// Tidy up data for comparison.
+				$old_webhook_data = array(
+					'id'           => $webhook_id,
+					'name'         => $old_webhook->get_name(),
+					'delivery_url' => $old_webhook->get_delivery_url(),
+					'topic'        => $old_webhook->get_topic(),
+					'status'       => $old_webhook->get_status(),
+				);
 
-                foreach ( $new_webhook_data as $key => $data ) {
-                    if ( $old_webhook_data[ $key ] !== $new_webhook_data[ $key ] ) {
-                        $alert_needed = true;
-                    }
-                }
+				foreach ( $new_webhook_data as $key => $data ) {
+					if ( $old_webhook_data[ $key ] !== $new_webhook_data[ $key ] ) {
+						$alert_needed = true;
+					}
+				}
 
-                if ( $alert_needed ) {
-                    $editor_link = $this->create_webhook_editor_link( $webhook_id );
-                    $this->plugin->alerts->Trigger(
-                        9122,
-                        array(
-                            'HookName'          => $new_webhook_data[ 'name' ],
-                            'OldHookName'       => $old_webhook_data[ 'name' ],
-                            'DeliveryURL'       => $new_webhook_data[ 'delivery_url' ],
-                            'OldDeliveryURL'    => $old_webhook_data[ 'delivery_url' ],
-                            'Topic'             => $new_webhook_data[ 'topic' ],
-                            'OldTopic'          => $old_webhook_data[ 'topic' ],
-                            'Status'            => $new_webhook_data[ 'status' ],
-                            'OldStatus'         => $old_webhook_data[ 'status' ],
-                            'EditorLinkWebhook' => $editor_link,
-                        )
-                    );
-                }
-            }
+				if ( $alert_needed ) {
+					$editor_link = $this->create_webhook_editor_link( $webhook_id );
+					$this->plugin->alerts->Trigger(
+						9122,
+						array(
+							'HookName'          => $new_webhook_data['name'],
+							'OldHookName'       => $old_webhook_data['name'],
+							'DeliveryURL'       => $new_webhook_data['delivery_url'],
+							'OldDeliveryURL'    => $old_webhook_data['delivery_url'],
+							'Topic'             => $new_webhook_data['topic'],
+							'OldTopic'          => $old_webhook_data['topic'],
+							'Status'            => $new_webhook_data['status'],
+							'OldStatus'         => $old_webhook_data['status'],
+							'EditorLinkWebhook' => $editor_link,
+						)
+					);
+				}
+			}
 		}
 
 		// Verify nonce for payment gateways.
