@@ -355,6 +355,7 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 				9105,
 				array(
 					'PostID'             => $post->ID,
+                    'SKU'                => esc_attr( $this->get_product_sku( $post->ID ) ),
 					'ProductTitle'       => $product_title,
 					'ProductStatus'      => ! $product_status ? $post->post_status : $product_status,
 					'OldValue'           => ! empty( $old_stock ) ? $old_stock : 0,

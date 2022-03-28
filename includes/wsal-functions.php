@@ -61,6 +61,7 @@ function wsal_woocommerce_extension_detect_file_download( $download_get_user_ema
 		array(
 			'product_name'  => $product_title,
 			'ID'            => $download_get_product_id,
+            'SKU'           => ( $product->get_sku() ) ? $product->get_sku() : __( 'Not provided', 'wsal-woocommerce' ),
 			'email_address' => $download_get_user_email,
 		)
 	);
