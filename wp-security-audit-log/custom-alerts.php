@@ -1677,6 +1677,47 @@ $custom_alerts = array(
 				'woocommerce-order',
 				'modified',
 			),
+            array(
+                9130,
+                WSAL_HIGH,
+                esc_html__( 'User added/removed a product from an order', 'wsal-woocommerce' ),
+                esc_html__( 'The product %ProductTitle% to/from the order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'modified',
+            ),
+            array(
+                9131,
+                WSAL_HIGH,
+                esc_html__( 'User modified a quantity in an order', 'wsal-woocommerce' ),
+                esc_html__( 'The product quanity %ProductTitle% was modified in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(
+                    esc_html__( 'New quantity', 'wsal-woocommerce' ) => '%NewQuantity%',
+                    esc_html__( 'Previous Quantity', 'wsal-woocommerce' ) => '%OldQuantity%',
+                ),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'modified',
+            ),
+            array(
+                9132,
+                WSAL_HIGH,
+                esc_html__( 'User added/removed a fee from an order', 'wsal-woocommerce' ),
+                esc_html__( 'Added/Removed a fee in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(
+                    esc_html__( 'Fee amount', 'wsal-woocommerce' ) => '%FeeAmount%',
+                ),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'added',
+            ),
 		),
 
 		esc_html__( 'User Profile', 'wsal-woocommerce' )     => array(

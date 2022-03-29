@@ -149,6 +149,8 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 			return false;
 		}
 
+        $buyer = '';
+
 		if ( $order->get_billing_first_name() || $order->get_billing_last_name() ) {
 			$buyer = trim( sprintf( '%1$s %2$s', $order->get_billing_first_name(), $order->get_billing_last_name() ) );
 		} elseif ( $order->get_billing_company() ) {
