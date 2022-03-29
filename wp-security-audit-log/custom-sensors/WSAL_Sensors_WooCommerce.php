@@ -2919,7 +2919,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$user  = get_user_by( 'id', $order->get_customer_id() );
 			$buyer = ucwords( $user->display_name );
 		}
-		return '#' . $order->get_order_number() . ' ' . $buyer;
+		return ( ! empty( $buyer ) ) ? '#' . $order->get_order_number() . ' ' . $buyer : '#' . $order->get_order_number(); 
 	}
 
 	/**
@@ -2986,6 +2986,37 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
             );
             $this->plugin->alerts->Trigger( 9132, $event_data );
         }
+
+        if ( $item instanceof WC_Order_Item_Coupon ) {
+            $order      = wc_get_order( $order_id );
+            $order_post = get_post( $order_id );
+            $edit_link  = $this->GetEditorLink( $order_post );
+            $event_data = array(
+                'OrderID'          => esc_attr( $order_id ),
+                'OrderTitle'       => $this->get_order_title( $order ),
+                'CouponTitle'      => $item->get_name(),
+                'CouponValue'      => $item->get_discount(),
+                'OrderStatus'      => $order_post->post_status,
+                'EventType'        => 'added',
+                $edit_link['name'] => $edit_link['value'],
+            );
+            $this->plugin->alerts->Trigger( 9134, $event_data );
+        }
+
+        if ( $item instanceof WC_Order_Item_Tax ) {
+            $order      = wc_get_order( $order_id );
+            $order_post = get_post( $order_id );
+            $edit_link  = $this->GetEditorLink( $order_post );
+            $event_data = array(
+                'OrderID'          => esc_attr( $order_id ),
+                'OrderTitle'       => $this->get_order_title( $order ),
+                'CouponTitle'      => $item->get_name(),
+                'OrderStatus'      => $order_post->post_status,
+                'EventType'        => 'added',
+                $edit_link['name'] => $edit_link['value'],
+            );
+            $this->plugin->alerts->Trigger( 9135, $event_data );
+        }
 	}
 
 	/**
@@ -3030,32 +3061,91 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
             );
             $this->plugin->alerts->Trigger( 9132, $event_data );
         }
+
+        if ( isset( $order->get_coupons()[ $item_id ] ) ) {
+            $item     = $order->get_coupons()[ $item_id ];
+    
+            $order_post = get_post( $order_id );
+            $edit_link  = $this->GetEditorLink( $order_post );
+            $event_data = array(
+                'OrderID'          => esc_attr( $order_id ),
+                'OrderTitle'       => $this->get_order_title( $order ),
+                'CouponTitle'      => $item->get_name(),
+                'CouponValue'      => $item->get_discount(),
+                'OrderStatus'      => $order_post->post_status,
+                'EventType'        => 'removed',
+                $edit_link['name'] => $edit_link['value'],
+            );
+            $this->plugin->alerts->Trigger( 9134, $event_data );
+        }
+
+        if ( isset( $order->get_taxes()[ $item_id ] ) ) {
+            $item     = $order->get_taxes()[ $item_id ];
+    
+            $order_post = get_post( $order_id );
+            $edit_link  = $this->GetEditorLink( $order_post );
+            $event_data = array(
+                'OrderID'          => esc_attr( $order_id ),
+                'OrderTitle'       => $this->get_order_title( $order ),
+                'CouponTitle'      => $item->get_name(),
+                'OrderStatus'      => $order_post->post_status,
+                'EventType'        => 'removed',
+                $edit_link['name'] => $edit_link['value'],
+            );
+            $this->plugin->alerts->Trigger( 9135, $event_data );
+        }
 	}
 
     public function event_order_items_quantity_changed( $order_id, $items ) {
 		$order    = wc_get_order( $order_id );
 
         $output = array();
+
+        if ( ! isset( $_POST['items'] ) ) {
+            return;
+        }
+
         $posted = parse_str( $_POST['items'], $output );
         foreach ( $items['order_item_id'] as $item_id ) {
-            $item = $order->get_items()[ $item_id ];
-            if ( $item instanceof WC_Order_Item_Product ) {
-                $product         = $item->get_product();
-                $old_quantity    = $item->get_quantity();
-                $order      = wc_get_order( $order_id );
-                $order_post = get_post( $order_id );
-                $edit_link  = $this->GetEditorLink( $order_post );
-                if ( $output['order_item_qty'][ $item_id ] !== $old_quantity ) {
-                    $event_data = array(
-                        'OrderID'          => esc_attr( $order_id ),
-                        'OrderTitle'       => $this->get_order_title( $order ),
-                        'NewQuantity'      => $output['order_item_qty'][ $item_id ],
-                        'OldQuantity'      => $old_quantity,
-                        'ProductTitle'     => $product->get_name(),
-                        'OrderStatus'      => $order_post->post_status,
-                        $edit_link['name'] => $edit_link['value'],
-                    );
-                    $this->plugin->alerts->Trigger( 9131, $event_data );
+            if ( isset( $order->get_items()[ $item_id ] ) ) {
+                $item = $order->get_items()[ $item_id ];
+                if ( $item instanceof WC_Order_Item_Product ) {
+                    $product         = $item->get_product();
+                    $old_quantity    = $item->get_quantity();
+                    $order      = wc_get_order( $order_id );
+                    $order_post = get_post( $order_id );
+                    $edit_link  = $this->GetEditorLink( $order_post );
+                    if ( intval( $output['order_item_qty'][ $item_id ] ) !== intval( $old_quantity ) ) {
+                        $event_data = array(
+                            'OrderID'          => esc_attr( $order_id ),
+                            'OrderTitle'       => $this->get_order_title( $order ),
+                            'NewQuantity'      => $output['order_item_qty'][ $item_id ],
+                            'OldQuantity'      => $old_quantity,
+                            'ProductTitle'     => $product->get_name(),
+                            'OrderStatus'      => $order_post->post_status,
+                            $edit_link['name'] => $edit_link['value'],
+                        );
+                        $this->plugin->alerts->Trigger( 9131, $event_data );
+                    }
+                }
+            }
+            if ( isset( $order->get_fees()[ $item_id ] ) ) {
+                $item = $order->get_fees()[ $item_id ];
+                if ( $item instanceof WC_Order_Item_Fee ) {
+                    $order      = wc_get_order( $order_id );
+                    $order_post = get_post( $order_id );
+                    $edit_link  = $this->GetEditorLink( $order_post );
+                    if ( intval( $output['line_total'][ $item_id ] ) !== intval( $item->get_amount() ) ) {
+                        $event_data = array(
+                            'OrderID'          => esc_attr( $order_id ),
+                            'OrderTitle'       => $this->get_order_title( $order ),
+                            'FeeAmount'        => $output['line_total'][ $item_id ],
+                            'OldFeeAmount'     => $item->get_amount(),
+                            'OrderStatus'      => $order_post->post_status,
+                            $edit_link['name'] => $edit_link['value'],
+                        );
+                        $this->plugin->alerts->Trigger( 9133, $event_data );
+                    }
                 }
             }
         }

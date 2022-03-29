@@ -1718,6 +1718,46 @@ $custom_alerts = array(
 				'woocommerce-order',
 				'added',
             ),
+            array(
+                9133,
+                WSAL_HIGH,
+                esc_html__( 'User modified a fee from an order', 'wsal-woocommerce' ),
+                esc_html__( 'User modified a fee in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(
+                    esc_html__( 'New fee amount', 'wsal-woocommerce' ) => '%FeeAmount%',
+                    esc_html__( 'Previous fee amount', 'wsal-woocommerce' ) => '%OldFeeAmount%',
+                ),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'modified',
+            ),
+            array(
+                9134,
+                WSAL_HIGH,
+                esc_html__( 'User added/removed a coupon from an order', 'wsal-woocommerce' ),
+                esc_html__( 'Added/Removed a coupon %CouponTitle% in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'added',
+            ),
+
+            array(
+                9135,
+                WSAL_HIGH,
+                esc_html__( 'User added/removed a tax from an order', 'wsal-woocommerce' ),
+                esc_html__( 'Added/Removed a tax %CouponTitle% in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'added',
+            ),
 		),
 
 		esc_html__( 'User Profile', 'wsal-woocommerce' )     => array(
