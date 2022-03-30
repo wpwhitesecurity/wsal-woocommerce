@@ -3340,14 +3340,45 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 */
 	public function event_order_refunded( $order_id, $refund_id ) {
 		// Get order post object.
-		$order_obj = get_post( $order_id );
-		$edit_link = $this->GetEditorLink( $order_obj );
+		$order_obj        = get_post( $order_id );
+		$edit_link        = $this->GetEditorLink( $order_obj );
+        $order            = wc_get_order( $order_id );
+        $customer_user_id = $order->get_user_id();
+        $username         = __( 'Guest', 'wsal-woocommerce' );
+
+        if ( 0 !== $customer_user_id ) {
+            $user = get_user_by( 'id', $customer_user_id );
+            $username = $user->user_login;
+        }
+
+        $date          = $order->get_date_created();
+        $date_format   = get_option( 'date_format' );
+        $time_format   = get_option( 'time_format' );
+        $created_date  = $date->date( $date_format . ' ' . $time_format );
+        $refund_amount = '';
+        $refund_reason = '';
+        $currency      = get_woocommerce_currency_symbol( $order->get_currency() );
+        $refunds       = $order->get_refunds();
+
+        foreach ( $refunds as $refund_object ) {
+            $id = $refund_object->get_id();
+            if ( $id === $refund_id ) {
+                $amount        = $refund_object->get_refund_amount();
+                $refund_amount = ( $amount ) ? $amount : '0.00';
+                $reason        = $refund_object->get_reason();
+                $refund_reason = ( $reason ) ? $reason : __( 'None supplied', 'wsal-woocommerce' );
+            }
+        }
 
 		$this->plugin->alerts->Trigger(
 			9041,
 			array(
 				'OrderID'          => esc_attr( $order_id ),
 				'RefundID'         => esc_attr( $refund_id ),
+				'CustomerUser'     => $username,
+                'RefundedAmount'   => $currency . $refund_amount,
+                'Reason'           => $refund_reason,
+                'OrderDate'        => $created_date,
 				'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order_id ) ),
 				'OrderStatus'      => sanitize_text_field( $order_obj->post_status ),
 				$edit_link['name'] => $edit_link['value'],
