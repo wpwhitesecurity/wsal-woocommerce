@@ -1723,7 +1723,7 @@ $custom_alerts = array(
 					esc_html__( 'Order date', 'wsal-woocommerce' ) => '%OrderDate%',
 					esc_html__( 'Refund amount', 'wsal-woocommerce' ) => '%RefundedAmount%',
 					esc_html__( 'Refund reason', 'wsal-woocommerce' ) => '%Reason%',
-                ),
+				),
 				array(
 					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
 				),
@@ -1817,14 +1817,14 @@ $custom_alerts = array(
 				'added',
 			),
 
-            array(
+			array(
 				9136,
 				WSAL_HIGH,
 				esc_html__( 'User removed a refund from an order', 'wsal-woocommerce' ),
 				esc_html__( 'A refund was reversed in order %OrderTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Order ID', 'wsal-woocommerce' ) => '%OrderID%',
-                ),
+				),
 				array(
 					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
 				),
