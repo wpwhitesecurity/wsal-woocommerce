@@ -149,6 +149,8 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 			return false;
 		}
 
+        $buyer = '';
+
 		if ( $order->get_billing_first_name() || $order->get_billing_last_name() ) {
 			$buyer = trim( sprintf( '%1$s %2$s', $order->get_billing_first_name(), $order->get_billing_last_name() ) );
 		} elseif ( $order->get_billing_company() ) {
@@ -355,6 +357,7 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 				9105,
 				array(
 					'PostID'             => $post->ID,
+                    'SKU'                => esc_attr( $this->get_product_sku( $post->ID ) ),
 					'ProductTitle'       => $product_title,
 					'ProductStatus'      => ! $product_status ? $post->post_status : $product_status,
 					'OldValue'           => ! empty( $old_stock ) ? $old_stock : 0,

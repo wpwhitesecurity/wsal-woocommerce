@@ -34,6 +34,13 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	protected $_old_post = null;
 
 	/**
+	 * Old Order.
+	 *
+	 * @var WC_Order
+	 */
+	protected $_old_order = null;
+
+	/**
 	 * Old Status.
 	 *
 	 * @var string
@@ -179,6 +186,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			add_action( 'admin_init', array( $this, 'event_admin_init' ) );
 		}
 		add_action( 'pre_post_update', array( $this, 'get_before_post_edit_data' ), 10, 2 );
+
 		add_action( 'save_post', array( $this, 'EventChanged' ), 10, 3 );
 		add_action( 'delete_post', array( $this, 'EventDeleted' ), 10, 1 );
 		add_action( 'wp_trash_post', array( $this, 'EventTrashed' ), 10, 1 );
@@ -210,6 +218,12 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		add_action( 'woocommerce_before_shipping_zone_object_save', array( $this, 'detect_shipping_zone_change' ), 10, 2 );
 		add_action( 'woocommerce_new_webhook', array( $this, 'webhook_added' ), 10, 2 );
 		add_action( 'woocommerce_webhook_deleted', array( $this, 'webhook_deleted' ), 10, 2 );
+		add_action( 'woocommerce_webhook_updated', array( $this, 'webhook_updated' ), 10 );
+
+		// Orders.
+		add_action( 'woocommerce_new_order_item', array( $this, 'event_order_items_added' ), 10, 3 );
+		add_action( 'woocommerce_before_delete_order_item', array( $this, 'event_order_items_removed' ), 10, 1 );
+		add_action( 'woocommerce_before_save_order_items', array( $this, 'event_order_items_quantity_changed' ), 10, 2 );
 	}
 
 	/**
@@ -456,6 +470,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						'ProductTitle'       => sanitize_text_field( $new_post->post_title ),
 						'ProductUrl'         => get_post_permalink( $new_post->ID ),
 						'PostID'             => esc_attr( $new_post->ID ),
+						'SKU'                => esc_attr( $this->get_product_sku( $new_post->ID ) ),
 						'ProductStatus'      => sanitize_text_field( $new_post->post_status ),
 						$editor_link['name'] => $editor_link['value'],
 					)
@@ -468,6 +483,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						'ProductTitle'       => sanitize_text_field( $new_post->post_title ),
 						'PostID'             => esc_attr( $new_post->ID ),
 						'ProductStatus'      => sanitize_text_field( $new_post->post_status ),
+						'SKU'                => esc_attr( $this->get_product_sku( $new_post->ID ) ),
 						$editor_link['name'] => $editor_link['value'],
 					)
 				);
@@ -479,6 +495,12 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			return 1;
 		}
 		return 0;
+	}
+
+	private function get_product_sku( $product_id ) {
+		$product = wc_get_product( $product_id );
+		$sku     = $product->get_sku();
+		return ( $sku ) ? $sku : __( 'Not provided', 'wsal-woocommerce' );
 	}
 
 	/**
@@ -543,6 +565,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					'ProductTitle'       => sanitize_text_field( $newpost->post_title ),
 					'ProductStatus'      => sanitize_text_field( $newpost->post_status ),
 					'PostID'             => esc_attr( $newpost->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $newpost->ID ) ),
 					'OldCategories'      => $old_cats ? sanitize_text_field( $old_cats ) : __( 'no categories', 'wsal-woocommerce' ),
 					'NewCategories'      => $new_cats ? sanitize_text_field( $new_cats ) : __( 'no categories', 'wsal-woocommerce' ),
 					$editor_link['name'] => $editor_link['value'],
@@ -572,6 +595,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					9004,
 					array(
 						'PostID'             => esc_attr( $oldpost->ID ),
+						'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 						'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 						'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 						'OldDescription'     => $oldpost->post_excerpt,
@@ -608,6 +632,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9005,
 				array(
 					'PostID'             => esc_attr( $oldpost->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 					'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 					'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 					$editor_link['name'] => $editor_link['value'],
@@ -633,6 +658,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9006,
 				array(
 					'PostID'             => esc_attr( $post->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $post->ID ) ),
 					'ProductTitle'       => sanitize_text_field( $post->post_title ),
 					'ProductStatus'      => sanitize_text_field( $post->post_status ),
 					'OldUrl'             => $old_link,
@@ -662,6 +688,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9007,
 				array(
 					'PostID'             => esc_attr( $post->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $post->ID ) ),
 					'ProductTitle'       => sanitize_text_field( $post->post_title ),
 					'ProductStatus'      => sanitize_text_field( $post->post_status ),
 					'OldType'            => $old_type,
@@ -695,6 +722,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9008,
 				array(
 					'PostID'             => esc_attr( $oldpost->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 					'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 					'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 					'OldDate'            => $oldpost->post_date,
@@ -744,6 +772,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9009,
 				array(
 					'PostID'             => esc_attr( $oldpost->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 					'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 					'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 					'OldVisibility'      => $old_visibility,
@@ -792,6 +821,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9077,
 				array(
 					'PostID'             => esc_attr( $newpost->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $newpost->ID ) ),
 					'PostType'           => sanitize_text_field( $newpost->post_type ),
 					'ProductStatus'      => sanitize_text_field( $newpost->post_status ),
 					'ProductTitle'       => sanitize_text_field( $newpost->post_title ),
@@ -828,6 +858,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9042,
 				array(
 					'PostID'             => esc_attr( $post->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $post->ID ) ),
 					'ProductTitle'       => sanitize_text_field( $post->post_title ),
 					'ProductStatus'      => sanitize_text_field( $post->post_status ),
 					'OldVisibility'      => isset( $wc_visibilities[ $old_visibility ] ) ? $wc_visibilities[ $old_visibility ] : false,
@@ -894,6 +925,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9044,
 				array(
 					'PostID'             => esc_attr( $oldpost->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 					'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 					'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 					'OldStatus'          => $old_backorder,
@@ -943,6 +975,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					array(
 						'EventType'          => 'added',
 						'PostID'             => esc_attr( $oldpost->ID ),
+						'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 						'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 						'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 						'UpsellTitle'        => sanitize_text_field( $upsell_title ),
@@ -1012,6 +1045,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					array(
 						'EventType'          => 'added',
 						'PostID'             => esc_attr( $oldpost->ID ),
+						'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 						'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 						'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 						'CrossSellTitle'     => sanitize_text_field( $cross_sell_title ),
@@ -1081,6 +1115,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			9010,
 			array(
 				'PostID'             => esc_attr( $oldpost->ID ),
+				'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 				'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 				'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 				'ProductUrl'         => get_post_permalink( $oldpost->ID ),
@@ -1118,6 +1153,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9012,
 				array(
 					'PostID'        => esc_attr( $post->ID ),
+					'SKU'           => esc_attr( $this->get_product_sku( $post->ID ) ),
 					'ProductTitle'  => sanitize_text_field( $post->post_title ),
 					'ProductStatus' => sanitize_text_field( $post->post_status ),
 					'ProductUrl'    => get_post_permalink( $post->ID ),
@@ -1151,6 +1187,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9013,
 				array(
 					'PostID'       => esc_attr( $post->ID ),
+					'SKU'          => esc_attr( $this->get_product_sku( $post->ID ) ),
 					'ProductTitle' => sanitize_text_field( $post->post_title ),
 				)
 			);
@@ -1176,6 +1213,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9014,
 				array(
 					'PostID'             => esc_attr( $post->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $post->ID ) ),
 					'ProductTitle'       => sanitize_text_field( $post->post_title ),
 					'ProductStatus'      => sanitize_text_field( $post->post_status ),
 					$editor_link['name'] => $editor_link['value'],
@@ -1226,6 +1264,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					9073,
 					array(
 						'PostID'             => esc_attr( $product->ID ),
+						'SKU'                => esc_attr( $this->get_product_sku( $product->ID ) ),
 						'PostType'           => sanitize_text_field( $product->post_type ),
 						'ProductStatus'      => sanitize_text_field( $product->post_status ),
 						'ProductTitle'       => sanitize_text_field( $product->post_title ),
@@ -1256,6 +1295,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						9015,
 						array(
 							'PostID'             => esc_attr( $oldpost->ID ),
+							'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 							'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 							'OldStatus'          => sanitize_text_field( $oldpost->post_status ),
 							'NewStatus'          => sanitize_text_field( $newpost->post_status ),
@@ -1317,6 +1357,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			9016,
 			array(
 				'PostID'             => esc_attr( $post->ID ),
+				'SKU'                => esc_attr( $this->get_product_sku( $post->ID ) ),
 				'ProductTitle'       => sanitize_text_field( $post->post_title ),
 				'ProductStatus'      => sanitize_text_field( $post->post_status ),
 				'PriceType'          => $type,
@@ -1348,6 +1389,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9017,
 				array(
 					'PostID'             => esc_attr( $oldpost->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 					'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 					'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 					'OldSku'             => ! empty( $old_sku ) ? $old_sku : 0,
@@ -1380,6 +1422,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9018,
 				array(
 					'PostID'             => esc_attr( $oldpost->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 					'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 					'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 					'OldStatus'          => sanitize_text_field( $this->GetStockStatusName( $old_status ) ),
@@ -1475,6 +1518,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9020,
 				array(
 					'PostID'             => esc_attr( $oldpost->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 					'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 					'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 					'OldType'            => 'yes' === $old_virtual ? 'Virtual' : 'Non-Virtual',
@@ -1491,6 +1535,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9020,
 				array(
 					'PostID'             => esc_attr( $oldpost->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 					'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 					'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 					'OldType'            => ( 'yes' === $old_download ) ? 'Downloadable' : 'Non-Downloadable',
@@ -1524,6 +1569,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9021,
 				array(
 					'PostID'             => esc_attr( $oldpost->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 					'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 					'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 					'OldWeight'          => ! empty( $old_weight ) ? $old_weight . ' ' . $weight_unit : 0,
@@ -1611,6 +1657,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			9022,
 			array(
 				'PostID'             => esc_attr( $oldpost->ID ),
+				'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 				'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 				'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 				'DimensionType'      => $type,
@@ -1667,6 +1714,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						9023,
 						array(
 							'PostID'             => esc_attr( $oldpost->ID ),
+							'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 							'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 							'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 							'FileName'           => sanitize_text_field( $new_file_names[ $key ] ),
@@ -1690,6 +1738,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						9024,
 						array(
 							'PostID'             => esc_url( $oldpost->ID ),
+							'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 							'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 							'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 							'FileName'           => sanitize_text_field( $old_file_names[ $key ] ),
@@ -1710,6 +1759,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						9025,
 						array(
 							'PostID'             => esc_attr( $oldpost->ID ),
+							'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 							'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 							'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 							'OldName'            => sanitize_text_field( $old_file_names[ $key ] ),
@@ -1728,6 +1778,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					9026,
 					array(
 						'PostID'             => esc_attr( $oldpost->ID ),
+						'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 						'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 						'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 						'FileName'           => sanitize_text_field( $new_file_names[ $key ] ),
@@ -2692,6 +2743,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						$event,
 						array(
 							'PostID'             => esc_attr( $product->ID ),
+							'SKU'                => esc_attr( $this->get_product_sku( $product->ID ) ),
 							'PostType'           => sanitize_text_field( $product->post_type ),
 							'ProductStatus'      => sanitize_text_field( $product->post_status ),
 							'ProductTitle'       => sanitize_text_field( $product->post_title ),
@@ -2943,7 +2995,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$user  = get_user_by( 'id', $order->get_customer_id() );
 			$buyer = ucwords( $user->display_name );
 		}
-		return '#' . $order->get_order_number() . ' ' . $buyer;
+		return ( ! empty( $buyer ) ) ? '#' . $order->get_order_number() . ' ' . $buyer : '#' . $order->get_order_number();
 	}
 
 	/**
@@ -2980,19 +3032,69 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 */
 	public function event_order_items_added( $item_id, $item, $order_id ) {
 
-		$product    = $item->get_product();
-		$order      = wc_get_order( $order_id );
-		$order_post = get_post( $order_id );
-		$edit_link  = $this->GetEditorLink( $order_post );
-		$event_data = array(
-			'OrderID'          => esc_attr( $order_id ),
-			'OrderTitle'       => $this->get_order_title( $order ),
-			'ProductTitle'     => $product->get_name(),
-			'OrderStatus'      => $order_post->post_status,
-			'EventType'        => 'added',
-			$edit_link['name'] => $edit_link['value'],
-		);
-		$this->plugin->alerts->Trigger( 9120, $event_data );
+		if ( $item instanceof WC_Order_Item_Product ) {
+			$product    = $item->get_product();
+			$order      = wc_get_order( $order_id );
+			$order_post = get_post( $order_id );
+			$edit_link  = $this->GetEditorLink( $order_post );
+			$event_data = array(
+				'OrderID'          => esc_attr( $order_id ),
+				'OrderTitle'       => $this->get_order_title( $order ),
+				'ProductTitle'     => $product->get_name(),
+				'ProductID'        => $product->get_id(),
+				'SKU'              => $this->get_product_sku( $product->get_id() ),
+				'OrderStatus'      => $order_post->post_status,
+				'EventType'        => 'added',
+				$edit_link['name'] => $edit_link['value'],
+			);
+			$this->plugin->alerts->Trigger( 9130, $event_data );
+		}
+
+		if ( $item instanceof WC_Order_Item_Fee ) {
+			$order      = wc_get_order( $order_id );
+			$order_post = get_post( $order_id );
+			$edit_link  = $this->GetEditorLink( $order_post );
+			$event_data = array(
+				'OrderID'          => esc_attr( $order_id ),
+				'OrderTitle'       => $this->get_order_title( $order ),
+				'FeeAmount'        => $item->get_amount(),
+				'OrderStatus'      => $order_post->post_status,
+				'EventType'        => 'added',
+				$edit_link['name'] => $edit_link['value'],
+			);
+			$this->plugin->alerts->Trigger( 9132, $event_data );
+		}
+
+		if ( $item instanceof WC_Order_Item_Coupon ) {
+			$order      = wc_get_order( $order_id );
+			$order_post = get_post( $order_id );
+			$edit_link  = $this->GetEditorLink( $order_post );
+			$event_data = array(
+				'OrderID'          => esc_attr( $order_id ),
+				'OrderTitle'       => $this->get_order_title( $order ),
+				'CouponName'       => $item->get_name(),
+				'CouponValue'      => $item->get_discount(),
+				'OrderStatus'      => $order_post->post_status,
+				'EventType'        => 'added',
+				$edit_link['name'] => $edit_link['value'],
+			);
+			$this->plugin->alerts->Trigger( 9134, $event_data );
+		}
+
+		if ( $item instanceof WC_Order_Item_Tax ) {
+			$order      = wc_get_order( $order_id );
+			$order_post = get_post( $order_id );
+			$edit_link  = $this->GetEditorLink( $order_post );
+			$event_data = array(
+				'OrderID'          => esc_attr( $order_id ),
+				'OrderTitle'       => $this->get_order_title( $order ),
+				'TaxName'          => $item->get_name(),
+				'OrderStatus'      => $order_post->post_status,
+				'EventType'        => 'added',
+				$edit_link['name'] => $edit_link['value'],
+			);
+			$this->plugin->alerts->Trigger( 9135, $event_data );
+		}
 	}
 
 	/**
@@ -3004,20 +3106,138 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	public function event_order_items_removed( $item_id ) {
 		$order_id = wc_get_order_id_by_order_item_id( $item_id );
 		$order    = wc_get_order( $order_id );
-		$item     = $order->get_items()[ $item_id ];
-		$product  = $item->get_product();
 
-		$order_post = get_post( $order_id );
-		$edit_link  = $this->GetEditorLink( $order_post );
-		$event_data = array(
-			'OrderID'          => esc_attr( $order_id ),
-			'OrderTitle'       => $this->get_order_title( $order ),
-			'ProductTitle'     => $product->get_name(),
-			'OrderStatus'      => $order_post->post_status,
-			'EventType'        => 'removed',
-			$edit_link['name'] => $edit_link['value'],
-		);
-		$this->plugin->alerts->Trigger( 9120, $event_data );
+		if ( isset( $order->get_items()[ $item_id ] ) ) {
+			$item    = $order->get_items()[ $item_id ];
+			$product = $item->get_product();
+
+			$order_post = get_post( $order_id );
+			$edit_link  = $this->GetEditorLink( $order_post );
+			$event_data = array(
+				'OrderID'          => esc_attr( $order_id ),
+				'OrderTitle'       => $this->get_order_title( $order ),
+				'ProductTitle'     => $product->get_name(),
+				'ProductID'        => $product->get_id(),
+				'SKU'              => $this->get_product_sku( $product->get_id() ),
+				'OrderStatus'      => $order_post->post_status,
+				'EventType'        => 'removed',
+				$edit_link['name'] => $edit_link['value'],
+			);
+			$this->plugin->alerts->Trigger( 9130, $event_data );
+		}
+
+		if ( isset( $order->get_fees()[ $item_id ] ) ) {
+			$item = $order->get_fees()[ $item_id ];
+
+			$order_post = get_post( $order_id );
+			$edit_link  = $this->GetEditorLink( $order_post );
+			$event_data = array(
+				'OrderID'          => esc_attr( $order_id ),
+				'OrderTitle'       => $this->get_order_title( $order ),
+				'FeeAmount'        => $item->get_amount(),
+				'OrderStatus'      => $order_post->post_status,
+				'EventType'        => 'removed',
+				$edit_link['name'] => $edit_link['value'],
+			);
+			$this->plugin->alerts->Trigger( 9132, $event_data );
+		}
+
+		if ( isset( $order->get_coupons()[ $item_id ] ) ) {
+			$item = $order->get_coupons()[ $item_id ];
+
+			$order_post = get_post( $order_id );
+			$edit_link  = $this->GetEditorLink( $order_post );
+			$event_data = array(
+				'OrderID'          => esc_attr( $order_id ),
+				'OrderTitle'       => $this->get_order_title( $order ),
+				'CouponName'       => $item->get_name(),
+				'CouponValue'      => $item->get_discount(),
+				'OrderStatus'      => $order_post->post_status,
+				'EventType'        => 'removed',
+				$edit_link['name'] => $edit_link['value'],
+			);
+			$this->plugin->alerts->Trigger( 9134, $event_data );
+		}
+
+		if ( isset( $order->get_taxes()[ $item_id ] ) ) {
+			$item = $order->get_taxes()[ $item_id ];
+
+			$order_post = get_post( $order_id );
+			$edit_link  = $this->GetEditorLink( $order_post );
+			$event_data = array(
+				'OrderID'          => esc_attr( $order_id ),
+				'OrderTitle'       => $this->get_order_title( $order ),
+				'TaxName'          => $item->get_name(),
+				'OrderStatus'      => $order_post->post_status,
+				'EventType'        => 'removed',
+				$edit_link['name'] => $edit_link['value'],
+			);
+			$this->plugin->alerts->Trigger( 9135, $event_data );
+		}
+	}
+
+	/**
+	 * Detect changes within a WC order.
+	 *
+	 * @param int   $order_id - Order ID being changed.
+	 * @param array $items - Items being changed.
+	 * @return void
+	 */
+	public function event_order_items_quantity_changed( $order_id, $items ) {
+		$order = wc_get_order( $order_id );
+
+		$output = array();
+
+		if ( ! isset( $_POST['items'] ) ) {
+			return;
+		}
+
+		$posted = parse_str( $_POST['items'], $output );
+		foreach ( $items['order_item_id'] as $item_id ) {
+			if ( isset( $order->get_items()[ $item_id ] ) ) {
+				$item = $order->get_items()[ $item_id ];
+				if ( $item instanceof WC_Order_Item_Product ) {
+					$product      = $item->get_product();
+					$old_quantity = $item->get_quantity();
+					$order        = wc_get_order( $order_id );
+					$order_post   = get_post( $order_id );
+					$edit_link    = $this->GetEditorLink( $order_post );
+					if ( intval( $output['order_item_qty'][ $item_id ] ) !== intval( $old_quantity ) ) {
+						$event_data = array(
+							'OrderID'          => esc_attr( $order_id ),
+							'OrderTitle'       => $this->get_order_title( $order ),
+							'ProductID'        => $product->get_id(),
+							'SKU'              => $this->get_product_sku( $product->get_id() ),
+							'NewQuantity'      => $output['order_item_qty'][ $item_id ],
+							'OldQuantity'      => $old_quantity,
+							'ProductTitle'     => $product->get_name(),
+							'OrderStatus'      => $order_post->post_status,
+							$edit_link['name'] => $edit_link['value'],
+						);
+						$this->plugin->alerts->Trigger( 9131, $event_data );
+					}
+				}
+			}
+			if ( isset( $order->get_fees()[ $item_id ] ) ) {
+				$item = $order->get_fees()[ $item_id ];
+				if ( $item instanceof WC_Order_Item_Fee ) {
+					$order      = wc_get_order( $order_id );
+					$order_post = get_post( $order_id );
+					$edit_link  = $this->GetEditorLink( $order_post );
+					if ( intval( $output['line_total'][ $item_id ] ) !== intval( $item->get_amount() ) ) {
+						$event_data = array(
+							'OrderID'          => esc_attr( $order_id ),
+							'OrderTitle'       => $this->get_order_title( $order ),
+							'FeeAmount'        => $output['line_total'][ $item_id ],
+							'OldFeeAmount'     => $item->get_amount(),
+							'OrderStatus'      => $order_post->post_status,
+							$edit_link['name'] => $edit_link['value'],
+						);
+						$this->plugin->alerts->Trigger( 9133, $event_data );
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -3058,6 +3278,24 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		if ( $manager->WillOrHasTriggered( 9120 ) ) {
 			return false;
 		}
+		if ( $manager->WillOrHasTriggered( 9120 ) ) {
+			return false;
+		}
+		if ( $manager->WillOrHasTriggered( 9134 ) ) {
+			return false;
+		}
+		if ( $manager->WillOrHasTriggered( 9130 ) ) {
+			return false;
+		}
+		if ( $manager->WillOrHasTriggered( 9131 ) ) {
+			return false;
+		}
+		if ( $manager->WillOrHasTriggered( 9132 ) ) {
+			return false;
+		}
+		if ( $manager->WillOrHasTriggered( 9133 ) ) {
+			return false;
+		}
 		return true;
 	}
 
@@ -3087,7 +3325,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		);
 
 		// Dont fire if we know an item was added/removed recently.
-		if ( $this->was_triggered_recently( 9120 ) ) {
+		if ( $this->was_triggered_recently( 9120 ) || $this->was_triggered_recently( 9130 ) || $this->was_triggered_recently( 9131 ) || $this->was_triggered_recently( 9132 ) | $this->was_triggered_recently( 9133 ) || $this->was_triggered_recently( 9134 ) || $this->was_triggered_recently( 9135 ) ) {
 			return;
 		}
 
@@ -3456,6 +3694,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								'AttributeName'      => sanitize_text_field( $added_attribute['name'] ),
 								'AttributeValue'     => sanitize_text_field( $added_attribute['value'] ),
 								'ProductID'          => esc_attr( $oldpost->ID ),
+								'SKU'                => $this->get_product_sku( $oldpost->ID ),
 								'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 								'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 								$editor_link['name'] => $editor_link['value'],
@@ -3479,6 +3718,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							'AttributeName'      => sanitize_text_field( $deleted_attribute['name'] ),
 							'AttributeValue'     => sanitize_text_field( $deleted_attribute['value'] ),
 							'ProductID'          => esc_attr( $oldpost->ID ),
+							'SKU'                => $this->get_product_sku( $oldpost->ID ),
 							'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 							'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 							'ProductUrl'         => get_permalink( $oldpost->ID ),
@@ -3517,6 +3757,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								'OldValue'           => sanitize_text_field( $old_name ),
 								'NewValue'           => sanitize_text_field( $new_name ),
 								'ProductID'          => esc_attr( $oldpost->ID ),
+								'SKU'                => $this->get_product_sku( $oldpost->ID ),
 								'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 								'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 								'ProductUrl'         => get_permalink( $oldpost->ID ),
@@ -3568,6 +3809,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								'OldValue'           => sanitize_text_field( $old_value ),
 								'NewValue'           => sanitize_text_field( $new_value ),
 								'ProductID'          => esc_attr( $oldpost->ID ),
+								'SKU'                => $this->get_product_sku( $oldpost->ID ),
 								'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 								'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 								$editor_link['name'] => $editor_link['value'],
@@ -3585,6 +3827,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								'AttributeVisiblilty'    => 1 === $new_visible ? __( 'Visible', 'wsal-woocommerce' ) : __( 'Non-Visible', 'wsal-woocommerce' ),
 								'OldAttributeVisiblilty' => 1 === $old_visible ? __( 'Visible', 'wsal-woocommerce' ) : __( 'Non-Visible', 'wsal-woocommerce' ),
 								'ProductID'              => esc_attr( $oldpost->ID ),
+								'SKU'                    => $this->get_product_sku( $oldpost->ID ),
 								'ProductTitle'           => sanitize_text_field( $oldpost->post_title ),
 								'ProductStatus'          => sanitize_text_field( $oldpost->post_status ),
 								$editor_link['name']     => $editor_link['value'],
@@ -3636,6 +3879,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$event_data['PostID']        = $oldpost->ID;
 		$event_data['ProductTitle']  = sanitize_text_field( $oldpost->post_title );
 		$event_data['ProductStatus'] = sanitize_text_field( $oldpost->post_status );
+		$event_data['SKU']           = $this->get_product_sku( $oldpost->ID );
 
 		// Featued image added.
 		if ( empty( $old_attachment_metadata ) && ! empty( $attachment_metadata ) ) {
@@ -3727,6 +3971,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$event_id                     = 9097;
 			$event_data['previous_value'] = $oldpost['_download_limit'][0];
 			$event_data['new_value']      = $data['_download_limit'];
+			$event_data['SKU']            = $this->get_product_sku( $data['post_ID'] );
 			$this->plugin->alerts->Trigger( $event_id, $event_data );
 
 			$alert_needed = true;
@@ -3744,6 +3989,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$event_id                     = 9098;
 			$event_data['previous_value'] = $old_value;
 			$event_data['new_value']      = $data['_download_expiry'];
+			$event_data['SKU']            = $this->get_product_sku( $data['post_ID'] );
 			$this->plugin->alerts->Trigger( $event_id, $event_data );
 
 			$alert_needed = true;
@@ -3776,6 +4022,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9113,
 				array(
 					'PostID'             => $product->ID,
+					'SKU'                => esc_attr( $this->get_product_sku( $product->ID ) ),
 					'ProductTitle'       => $product->post_title,
 					'ProductStatus'      => $product->post_status,
 					'old_tax_status'     => $old_status,
@@ -3795,6 +4042,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9114,
 				array(
 					'PostID'             => $product->ID,
+					'SKU'                => esc_attr( $this->get_product_sku( $product->ID ) ),
 					'ProductTitle'       => $product->post_title,
 					'ProductStatus'      => $product->post_status,
 					'old_tax_class'      => $old_class,
@@ -3824,6 +4072,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9119,
 				array(
 					'PostID'               => $product->ID,
+					'SKU'                  => esc_attr( $this->get_product_sku( $product->ID ) ),
 					'ProductTitle'         => $product->post_title,
 					'ProductStatus'        => $product->post_status,
 					'old_low_stock_amount' => $old_status,
@@ -4607,6 +4856,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9106,
 				array(
 					'PostID'             => $post->ID,
+					'SKU'                => esc_attr( $this->get_product_sku( $post->ID ) ),
 					'ProductTitle'       => $post->post_title,
 					'ProductStatus'      => ! $product_status ? $post->post_status : $product_status,
 					'OldValue'           => $old_stock,
@@ -4680,6 +4930,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9043,
 				array(
 					'PostID'             => esc_attr( $product->get_id() ),
+					'SKU'                => esc_attr( $this->get_product_sku( $product_id ) ),
 					'ProductTitle'       => sanitize_text_field( $product_post->post_title ),
 					'ProductStatus'      => sanitize_text_field( $product_post->post_status ),
 					'EventType'          => $product->get_featured() ? 'enabled' : 'disabled',

@@ -8,7 +8,7 @@
 
 $custom_alerts = array(
 	esc_html__( 'WooCommerce', 'wsal-woocommerce' ) => array(
-		esc_html__( 'Products', 'wsal-woocommerce' )         => array(
+		esc_html__( 'Products', 'wsal-woocommerce' )      => array(
 			array(
 				9000,
 				WSAL_LOW,
@@ -16,6 +16,7 @@ $custom_alerts = array(
 				esc_html__( 'Created a new product called %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
@@ -31,6 +32,7 @@ $custom_alerts = array(
 				esc_html__( 'Published the product called %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
@@ -46,6 +48,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the category(ies) of the product %ProductTitle% to %NewCategories%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous categories', 'wsal-woocommerce' ) => '%OldCategories%',
 				),
@@ -62,6 +65,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the short description of the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
@@ -77,6 +81,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the text of the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
@@ -92,6 +97,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the URL of the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous URL', 'wsal-woocommerce' ) => '%OldUrl%',
 					esc_html__( 'New URL', 'wsal-woocommerce' )    => '%NewUrl%',
@@ -109,6 +115,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the type of the product %ProductTitle% to %NewType%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous type', 'wsal-woocommerce' ) => '%OldType%',
 				),
@@ -125,6 +132,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the date of the product %ProductTitle% to %NewDate%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous date', 'wsal-woocommerce' ) => '%OldDate%',
 				),
@@ -141,6 +149,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the visibility of the product %ProductTitle% to %NewVisibility%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous visibility', 'wsal-woocommerce' ) => '%OldVisibility%',
 				),
@@ -157,6 +166,7 @@ $custom_alerts = array(
 				esc_html__( 'Modified the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
@@ -169,6 +179,7 @@ $custom_alerts = array(
 				9011,
 				E_NOTICE,
 				esc_html__( 'User modified the draft product', 'wsal-woocommerce' ),
+				esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 				esc_html__( 'Modified the draft product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(),
 				array(
@@ -181,6 +192,7 @@ $custom_alerts = array(
 				9012,
 				WSAL_HIGH,
 				esc_html__( 'User moved a product to trash', 'wsal-woocommerce' ),
+				esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 				esc_html__( 'Moved the product %ProductTitle% to trash.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
@@ -194,6 +206,7 @@ $custom_alerts = array(
 				9013,
 				WSAL_MEDIUM,
 				esc_html__( 'User permanently deleted a product', 'wsal-woocommerce' ),
+				esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 				esc_html__( 'Permanently deleted the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
@@ -206,6 +219,7 @@ $custom_alerts = array(
 				9014,
 				WSAL_HIGH,
 				esc_html__( 'User restored a product from the trash', 'wsal-woocommerce' ),
+				esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 				esc_html__( 'Restored the product %ProductTitle% from trash.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
@@ -224,6 +238,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the status of the product %ProductTitle% to %NewStatus%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Previous status', 'wsal-woocommerce' ) => '%OldStatus%',
 				),
 				array(
@@ -239,6 +254,7 @@ $custom_alerts = array(
 				esc_html__( 'Opened the product %ProductTitle% in the editor.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
@@ -254,6 +270,7 @@ $custom_alerts = array(
 				esc_html__( 'Viewed the product %ProductTitle% page.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
@@ -269,6 +286,7 @@ $custom_alerts = array(
 				esc_html__( 'Renamed the product %OldTitle% to %NewTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
@@ -285,6 +303,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the %PriceType% price of the product %ProductTitle% to %NewPrice%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous price', 'wsal-woocommerce' ) => '%OldPrice%',
 				),
@@ -301,6 +320,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the SKU of the product %ProductTitle% to %NewSku%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous SKU', 'wsal-woocommerce' ) => '%OldSku%',
 				),
@@ -317,6 +337,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the stock status of the product %ProductTitle% to %NewStatus%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous stock status', 'wsal-woocommerce' ) => '%OldStatus%',
 				),
@@ -333,6 +354,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the type of the product %ProductTitle% to %NewType%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous type', 'wsal-woocommerce' ) => '%OldType%',
 				),
@@ -349,6 +371,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the weight of the product %ProductTitle% to %NewWeight%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous weight', 'wsal-woocommerce' ) => '%OldWeight%',
 				),
@@ -365,6 +388,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the %DimensionType% dimensions of the product %ProductTitle% to %NewDimension%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous value', 'wsal-woocommerce' ) => '%OldDimension%',
 				),
@@ -381,6 +405,7 @@ $custom_alerts = array(
 				esc_html__( 'Added the downloadable file %FileName% to the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'File URL', 'wsal-woocommerce' )   => '%FileUrl%',
 				),
@@ -397,6 +422,7 @@ $custom_alerts = array(
 				esc_html__( 'Removed the downloadable file %FileName% from the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'File URL', 'wsal-woocommerce' )   => '%FileUrl%',
 				),
@@ -413,6 +439,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the name of the downloadable file %OldName% to %NewName% in the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous file name', 'wsal-woocommerce' ) => '%OldName%',
 				),
@@ -429,6 +456,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the URL of the downloadable file to the product %ProductTitle%', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'File name', 'wsal-woocommerce' )  => '%FileName%',
 					esc_html__( 'Previous URL', 'wsal-woocommerce' ) => '%OldUrl%',
@@ -447,6 +475,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the product visibility of the product %ProductTitle% to %NewVisibility%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous visibility setting', 'wsal-woocommerce' ) => '%OldVisibility%',
 				),
@@ -463,6 +492,7 @@ $custom_alerts = array(
 				__( 'Changed the status of the setting <strong>Featured Product</strong> for the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
@@ -478,6 +508,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the Allow Backorders setting for the product %ProductTitle% to %NewStatus%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous status', 'wsal-woocommerce' ) => '%OldStatus%',
 				),
@@ -494,6 +525,7 @@ $custom_alerts = array(
 				esc_html__( 'Products to the Upsell setting in product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'New product in Upsells', 'wsal-woocommerce' ) => '%UpsellTitle%',
 				),
@@ -510,6 +542,7 @@ $custom_alerts = array(
 				esc_html__( 'Products to the Cross-sell setting in product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'New product in Cross-sells', 'wsal-woocommerce' ) => '%CrossSellTitle%',
 				),
@@ -527,6 +560,7 @@ $custom_alerts = array(
 				esc_html__( 'The product image of the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Image name', 'wsal-woocommerce' ) => '%name%',
 					esc_html__( 'Image path', 'wsal-woocommerce' ) => '%path%',
@@ -544,6 +578,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the product image of the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous image name', 'wsal-woocommerce' ) => '%old_name%',
 					esc_html__( 'Previous image path', 'wsal-woocommerce' ) => '%old_path%',
@@ -563,6 +598,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the download limit of the product %product_name% to %new_value%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous value', 'wsal-woocommerce' ) => '%previous_value%',
 				),
@@ -579,6 +615,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the download expire setting of the product %product_name% to %new_value%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous value', 'wsal-woocommerce' ) => '%previous_value%',
 				),
@@ -595,6 +632,7 @@ $custom_alerts = array(
 				esc_html__( 'Downloaded the product %product_name%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'User email', 'wsal-woocommerce' ) => '%email_address%',
 				),
 				array(),
@@ -609,6 +647,7 @@ $custom_alerts = array(
 				esc_html__( 'The stock quantity of the product %ProductTitle% was changed to %NewValue% due to a purchase.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'User name', 'wsal-woocommerce' )  => '%Username%',
 					esc_html__( 'Order name', 'wsal-woocommerce' ) => '%StockOrderID%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
@@ -627,6 +666,7 @@ $custom_alerts = array(
 				esc_html__( 'The stock quantity of the product %ProductTitle% was changed to %NewValue% via third party system.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous quantity', 'wsal-woocommerce' ) => '%OldValue%',
 				),
@@ -643,6 +683,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the Tax status of the product %ProductTitle% to %new_tax_status%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous tax status', 'wsal-woocommerce' ) => '%old_tax_status%',
 				),
@@ -659,6 +700,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the Tax class of the product %ProductTitle% to %new_tax_class%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous tax class', 'wsal-woocommerce' ) => '%old_tax_class%',
 				),
@@ -676,6 +718,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the Low stock threshold of the product %ProductTitle% to %new_low_stock_amount%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous Low stock treshold value', 'wsal-woocommerce' ) => '%old_low_stock_amount%',
 				),
@@ -764,6 +807,7 @@ $custom_alerts = array(
 				esc_html__( 'Added a new attribute caled %AttributeName% to the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Attribute value', 'wsal-woocommerce' ) => '%AttributeValue%',
 				),
@@ -780,6 +824,7 @@ $custom_alerts = array(
 				esc_html__( 'Modified the value of the attribute %AttributeName$ in the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous attribute value', 'wsal-woocommerce' ) => '%OldValue%',
 					esc_html__( 'New attribute value', 'wsal-woocommerce' ) => '%NewValue%',
@@ -797,6 +842,7 @@ $custom_alerts = array(
 				esc_html__( 'Renamed the attribute %OldValue% to %NewValue% in the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
@@ -812,6 +858,7 @@ $custom_alerts = array(
 				esc_html__( 'Deleted the attribute %AttributeName% from the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Attribute value', 'wsal-woocommerce' ) => '%AttributeValue%',
 				),
@@ -828,6 +875,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the visibility of the attribute %AttributeName% to %AttributeVisiblilty% in the the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous visibility', 'wsal-woocommerce' ) => '%OldAttributeVisiblilty%',
 				),
@@ -839,7 +887,7 @@ $custom_alerts = array(
 			),
 		),
 
-		esc_html__( 'Store', 'wsal-woocommerce' )            => array(
+		esc_html__( 'Store', 'wsal-woocommerce' )         => array(
 			array(
 				9027,
 				WSAL_HIGH,
@@ -1211,7 +1259,7 @@ $custom_alerts = array(
 			),
 		),
 
-		esc_html__( 'Tax Settings', 'wsal-woocommerce' )     => array(
+		esc_html__( 'Tax Settings', 'wsal-woocommerce' )  => array(
 			array(
 				9078,
 				WSAL_LOW,
@@ -1264,7 +1312,7 @@ $custom_alerts = array(
 			),
 		),
 
-		esc_html__( 'WC Categories', 'wsal-woocommerce' )    => array(
+		esc_html__( 'WC Categories', 'wsal-woocommerce' ) => array(
 			array(
 				9002,
 				WSAL_INFORMATIONAL,
@@ -1353,7 +1401,7 @@ $custom_alerts = array(
 			),
 		),
 
-		esc_html__( 'WC Tags', 'wsal-woocommerce' )          => array(
+		esc_html__( 'WC Tags', 'wsal-woocommerce' )       => array(
 			array(
 				9101,
 				WSAL_INFORMATIONAL,
@@ -1410,7 +1458,7 @@ $custom_alerts = array(
 			),
 		),
 
-		esc_html__( 'Attributes', 'wsal-woocommerce' )       => array(
+		esc_html__( 'Attributes', 'wsal-woocommerce' )    => array(
 			array(
 				9057,
 				WSAL_MEDIUM,
@@ -1487,7 +1535,7 @@ $custom_alerts = array(
 			),
 		),
 
-		esc_html__( 'Coupons', 'wsal-woocommerce' )          => array(
+		esc_html__( 'Coupons', 'wsal-woocommerce' )       => array(
 			array(
 				9063,
 				WSAL_LOW,
@@ -1613,7 +1661,7 @@ $custom_alerts = array(
 			),
 		),
 
-		esc_html__( 'Orders', 'wsal-woocommerce' )           => array(
+		esc_html__( 'Orders', 'wsal-woocommerce' )        => array(
 			array(
 				9035,
 				WSAL_LOW,
@@ -1698,9 +1746,95 @@ $custom_alerts = array(
 				'woocommerce-order',
 				'modified',
 			),
+			array(
+				9130,
+				WSAL_HIGH,
+				esc_html__( 'User added/removed a product from an order', 'wsal-woocommerce' ),
+				esc_html__( 'The product %ProductTitle% to/from the order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
+				),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'modified',
+			),
+			array(
+				9131,
+				WSAL_HIGH,
+				esc_html__( 'User modified a quantity in an order', 'wsal-woocommerce' ),
+				esc_html__( 'The quanity of the %ProductTitle% was modified in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(
+					esc_html__( 'New quantity', 'wsal-woocommerce' ) => '%NewQuantity%',
+					esc_html__( 'Previous quantity', 'wsal-woocommerce' ) => '%OldQuantity%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
+				),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'modified',
+			),
+			array(
+				9132,
+				WSAL_HIGH,
+				esc_html__( 'User added/removed a fee from an order', 'wsal-woocommerce' ),
+				esc_html__( 'Added/Removed a fee in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(
+					esc_html__( 'Fee amount', 'wsal-woocommerce' ) => '%FeeAmount%',
+				),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'added',
+			),
+			array(
+				9133,
+				WSAL_HIGH,
+				esc_html__( 'User modified a fee from an order', 'wsal-woocommerce' ),
+				esc_html__( 'User modified a fee in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(
+					esc_html__( 'New fee amount', 'wsal-woocommerce' ) => '%FeeAmount%',
+					esc_html__( 'Previous fee amount', 'wsal-woocommerce' ) => '%OldFeeAmount%',
+				),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'modified',
+			),
+			array(
+				9134,
+				WSAL_HIGH,
+				esc_html__( 'User added/removed a coupon from an order', 'wsal-woocommerce' ),
+				esc_html__( 'Added/Removed a coupon %CouponName% in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'added',
+			),
+
+			array(
+				9135,
+				WSAL_HIGH,
+				esc_html__( 'User added/removed a tax from an order', 'wsal-woocommerce' ),
+				esc_html__( 'Added/Removed a tax %TaxName% in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'added',
+			),
 		),
 
-		esc_html__( 'User Profile', 'wsal-woocommerce' )     => array(
+		esc_html__( 'User Profile', 'wsal-woocommerce' )  => array(
 			array(
 				9083,
 				WSAL_INFORMATIONAL,
