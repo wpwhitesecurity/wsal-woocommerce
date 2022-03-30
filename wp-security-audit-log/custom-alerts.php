@@ -1816,6 +1816,21 @@ $custom_alerts = array(
 				'woocommerce-order',
 				'added',
 			),
+
+            array(
+				9136,
+				WSAL_HIGH,
+				esc_html__( 'User removed a refund from an order', 'wsal-woocommerce' ),
+				esc_html__( 'A refund was reversed in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(
+					esc_html__( 'Order ID', 'wsal-woocommerce' ) => '%OrderID%',
+                ),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'removed',
+			),
 		),
 
 		esc_html__( 'User Profile', 'wsal-woocommerce' )  => array(
