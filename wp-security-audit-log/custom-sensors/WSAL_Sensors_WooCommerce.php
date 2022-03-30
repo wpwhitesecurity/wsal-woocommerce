@@ -3003,6 +3003,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
                 'OrderID'          => esc_attr( $order_id ),
                 'OrderTitle'       => $this->get_order_title( $order ),
                 'ProductTitle'     => $product->get_name(),
+                'ProductID'        => $product->get_id(),
+                'SKU'              => $this->get_product_sku( $product->get_id() ),              
                 'OrderStatus'      => $order_post->post_status,
                 'EventType'        => 'added',
                 $edit_link['name'] => $edit_link['value'],
@@ -3032,7 +3034,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
             $event_data = array(
                 'OrderID'          => esc_attr( $order_id ),
                 'OrderTitle'       => $this->get_order_title( $order ),
-                'CouponTitle'      => $item->get_name(),
+                'CouponName'       => $item->get_name(),
                 'CouponValue'      => $item->get_discount(),
                 'OrderStatus'      => $order_post->post_status,
                 'EventType'        => 'added',
@@ -3048,7 +3050,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
             $event_data = array(
                 'OrderID'          => esc_attr( $order_id ),
                 'OrderTitle'       => $this->get_order_title( $order ),
-                'CouponTitle'      => $item->get_name(),
+                'TaxName'          => $item->get_name(),
                 'OrderStatus'      => $order_post->post_status,
                 'EventType'        => 'added',
                 $edit_link['name'] => $edit_link['value'],
@@ -3077,6 +3079,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
                 'OrderID'          => esc_attr( $order_id ),
                 'OrderTitle'       => $this->get_order_title( $order ),
                 'ProductTitle'     => $product->get_name(),
+                'ProductID'        => $product->get_id(),
+                'SKU'              => $this->get_product_sku( $product->get_id() ),  
                 'OrderStatus'      => $order_post->post_status,
                 'EventType'        => 'removed',
                 $edit_link['name'] => $edit_link['value'],
@@ -3108,7 +3112,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
             $event_data = array(
                 'OrderID'          => esc_attr( $order_id ),
                 'OrderTitle'       => $this->get_order_title( $order ),
-                'CouponTitle'      => $item->get_name(),
+                'CouponName'       => $item->get_name(),
                 'CouponValue'      => $item->get_discount(),
                 'OrderStatus'      => $order_post->post_status,
                 'EventType'        => 'removed',
@@ -3125,7 +3129,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
             $event_data = array(
                 'OrderID'          => esc_attr( $order_id ),
                 'OrderTitle'       => $this->get_order_title( $order ),
-                'CouponTitle'      => $item->get_name(),
+                'TaxName'          => $item->get_name(),
                 'OrderStatus'      => $order_post->post_status,
                 'EventType'        => 'removed',
                 $edit_link['name'] => $edit_link['value'],
@@ -3157,6 +3161,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
                         $event_data = array(
                             'OrderID'          => esc_attr( $order_id ),
                             'OrderTitle'       => $this->get_order_title( $order ),
+                            'ProductID'        => $product->get_id(),
+                            'SKU'              => $this->get_product_sku( $product->get_id() ),
                             'NewQuantity'      => $output['order_item_qty'][ $item_id ],
                             'OldQuantity'      => $old_quantity,
                             'ProductTitle'     => $product->get_name(),
@@ -3227,6 +3233,12 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		if ( $manager->WillOrHasTriggered( 9120 ) ) {
 			return false;
 		}
+        if ( $manager->WillOrHasTriggered( 9120 ) ) {
+			return false;
+		}
+        if ( $manager->WillOrHasTriggered( 9134 ) ) {
+			return false;
+		}
 		return true;
 	}
 
@@ -3256,7 +3268,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		);
 
 		// Dont fire if we know an item was added/removed recently.
-		if ( $this->was_triggered_recently( 9120 ) ) {
+		if ( $this->was_triggered_recently( 9120 ) || $this->was_triggered_recently( 9130 ) || $this->was_triggered_recently( 9131 ) || $this->was_triggered_recently( 9132 ) | $this->was_triggered_recently( 9133 ) || $this->was_triggered_recently( 9134 ) || $this->was_triggered_recently( 9135 ) ) {
 			return;
 		}
 
@@ -3625,6 +3637,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								'AttributeName'      => sanitize_text_field( $added_attribute['name'] ),
 								'AttributeValue'     => sanitize_text_field( $added_attribute['value'] ),
 								'ProductID'          => esc_attr( $oldpost->ID ),
+                                'SKU'                => $this->get_product_sku( $oldpost->ID ),
 								'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 								'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 								$editor_link['name'] => $editor_link['value'],
@@ -3648,6 +3661,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							'AttributeName'      => sanitize_text_field( $deleted_attribute['name'] ),
 							'AttributeValue'     => sanitize_text_field( $deleted_attribute['value'] ),
 							'ProductID'          => esc_attr( $oldpost->ID ),
+                            'SKU'                => $this->get_product_sku( $oldpost->ID ),
 							'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 							'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 							'ProductUrl'         => get_permalink( $oldpost->ID ),
@@ -3686,6 +3700,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								'OldValue'           => sanitize_text_field( $old_name ),
 								'NewValue'           => sanitize_text_field( $new_name ),
 								'ProductID'          => esc_attr( $oldpost->ID ),
+                                'SKU'                => $this->get_product_sku( $oldpost->ID ),
 								'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 								'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 								'ProductUrl'         => get_permalink( $oldpost->ID ),
@@ -3737,6 +3752,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								'OldValue'           => sanitize_text_field( $old_value ),
 								'NewValue'           => sanitize_text_field( $new_value ),
 								'ProductID'          => esc_attr( $oldpost->ID ),
+                                'SKU'                => $this->get_product_sku( $oldpost->ID ),
 								'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 								'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 								$editor_link['name'] => $editor_link['value'],
@@ -3754,6 +3770,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								'AttributeVisiblilty'    => 1 === $new_visible ? __( 'Visible', 'wsal-woocommerce' ) : __( 'Non-Visible', 'wsal-woocommerce' ),
 								'OldAttributeVisiblilty' => 1 === $old_visible ? __( 'Visible', 'wsal-woocommerce' ) : __( 'Non-Visible', 'wsal-woocommerce' ),
 								'ProductID'              => esc_attr( $oldpost->ID ),
+                                'SKU'                    => $this->get_product_sku( $oldpost->ID ),
 								'ProductTitle'           => sanitize_text_field( $oldpost->post_title ),
 								'ProductStatus'          => sanitize_text_field( $oldpost->post_status ),
 								$editor_link['name']     => $editor_link['value'],
