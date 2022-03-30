@@ -786,6 +786,7 @@ $custom_alerts = array(
 				esc_html__( 'Added a new attribute caled %AttributeName% to the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Attribute value', 'wsal-woocommerce' ) => '%AttributeValue%',
 				),
@@ -802,6 +803,7 @@ $custom_alerts = array(
 				esc_html__( 'Modified the value of the attribute %AttributeName$ in the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous attribute value', 'wsal-woocommerce' ) => '%OldValue%',
 					esc_html__( 'New attribute value', 'wsal-woocommerce' ) => '%NewValue%',
@@ -819,6 +821,7 @@ $custom_alerts = array(
 				esc_html__( 'Renamed the attribute %OldValue% to %NewValue% in the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
@@ -834,6 +837,7 @@ $custom_alerts = array(
 				esc_html__( 'Deleted the attribute %AttributeName% from the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Attribute value', 'wsal-woocommerce' ) => '%AttributeValue%',
 				),
@@ -850,6 +854,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the visibility of the attribute %AttributeName% to %AttributeVisiblilty% in the the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous visibility', 'wsal-woocommerce' ) => '%OldAttributeVisiblilty%',
 				),
@@ -1719,6 +1724,92 @@ $custom_alerts = array(
 				),
 				'woocommerce-order',
 				'modified',
+			),
+			array(
+				9130,
+				WSAL_HIGH,
+				esc_html__( 'User added/removed a product from an order', 'wsal-woocommerce' ),
+				esc_html__( 'The product %ProductTitle% to/from the order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
+				),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'modified',
+			),
+			array(
+				9131,
+				WSAL_HIGH,
+				esc_html__( 'User modified a quantity in an order', 'wsal-woocommerce' ),
+				esc_html__( 'The quanity of the %ProductTitle% was modified in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(
+					esc_html__( 'New quantity', 'wsal-woocommerce' ) => '%NewQuantity%',
+					esc_html__( 'Previous quantity', 'wsal-woocommerce' ) => '%OldQuantity%',
+					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%ProductID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
+				),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'modified',
+			),
+			array(
+				9132,
+				WSAL_HIGH,
+				esc_html__( 'User added/removed a fee from an order', 'wsal-woocommerce' ),
+				esc_html__( 'Added/Removed a fee in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(
+					esc_html__( 'Fee amount', 'wsal-woocommerce' ) => '%FeeAmount%',
+				),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'added',
+			),
+			array(
+				9133,
+				WSAL_HIGH,
+				esc_html__( 'User modified a fee from an order', 'wsal-woocommerce' ),
+				esc_html__( 'User modified a fee in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(
+					esc_html__( 'New fee amount', 'wsal-woocommerce' ) => '%FeeAmount%',
+					esc_html__( 'Previous fee amount', 'wsal-woocommerce' ) => '%OldFeeAmount%',
+				),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'modified',
+			),
+			array(
+				9134,
+				WSAL_HIGH,
+				esc_html__( 'User added/removed a coupon from an order', 'wsal-woocommerce' ),
+				esc_html__( 'Added/Removed a coupon %CouponName% in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'added',
+			),
+
+			array(
+				9135,
+				WSAL_HIGH,
+				esc_html__( 'User added/removed a tax from an order', 'wsal-woocommerce' ),
+				esc_html__( 'Added/Removed a tax %TaxName% in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'added',
 			),
 		),
 
