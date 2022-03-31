@@ -3103,6 +3103,20 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			);
 			$this->plugin->alerts->Trigger( 9135, $event_data );
 		}
+
+		if ( $item instanceof WC_Order_Item_Shipping ) {
+			$order      = wc_get_order( $order_id );
+			$order_post = get_post( $order_id );
+			$edit_link  = $this->GetEditorLink( $order_post );
+			$event_data = array(
+				'OrderID'          => esc_attr( $order_id ),
+				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderStatus'      => $order_post->post_status,
+				'EventType'        => 'added',
+				$edit_link['name'] => $edit_link['value'],
+			);
+			$this->plugin->alerts->Trigger( 9137, $event_data );
+		}
 	}
 
 	/**
@@ -3181,6 +3195,21 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				$edit_link['name'] => $edit_link['value'],
 			);
 			$this->plugin->alerts->Trigger( 9135, $event_data );
+		}
+
+		if ( isset( $order->get_shipping_methods()[ $item_id ] ) ) {
+			$item = $order->get_shipping_method()[ $item_id ];
+
+			$order_post = get_post( $order_id );
+			$edit_link  = $this->GetEditorLink( $order_post );
+			$event_data = array(
+				'OrderID'          => esc_attr( $order_id ),
+				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderStatus'      => $order_post->post_status,
+				'EventType'        => 'removed',
+				$edit_link['name'] => $edit_link['value'],
+			);
+			$this->plugin->alerts->Trigger( 9137, $event_data );
 		}
 	}
 
@@ -3304,6 +3333,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		if ( $manager->WillOrHasTriggered( 9133 ) ) {
 			return false;
 		}
+        if ( $manager->WillOrHasTriggered( 9137 ) ) {
+			return false;
+		}
 		return true;
 	}
 
@@ -3333,7 +3365,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		);
 
 		// Dont fire if we know an item was added/removed recently.
-		if ( $this->was_triggered_recently( 9120 ) || $this->was_triggered_recently( 9130 ) || $this->was_triggered_recently( 9131 ) || $this->was_triggered_recently( 9132 ) | $this->was_triggered_recently( 9133 ) || $this->was_triggered_recently( 9134 ) || $this->was_triggered_recently( 9135 ) ) {
+		if ( $this->was_triggered_recently( 9120 ) || $this->was_triggered_recently( 9130 ) || $this->was_triggered_recently( 9131 ) || $this->was_triggered_recently( 9132 ) | $this->was_triggered_recently( 9133 ) || $this->was_triggered_recently( 9134 ) || $this->was_triggered_recently( 9135 ) || $this->was_triggered_recently( 9137 ) ) {
 			return;
 		}
 
