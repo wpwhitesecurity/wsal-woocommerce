@@ -513,13 +513,13 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		return 0;
 	}
 
-    /**
-     * Get a SKU for a given product ID.
-     *
-     * @param  int  $product_id - Id to lookup.
-     *
-     * @return int|string - Result.
-     */
+	/**
+	 * Get a SKU for a given product ID.
+	 *
+	 * @param  int $product_id - Id to lookup.
+	 *
+	 * @return int|string - Result.
+	 */
 	private function get_product_sku( $product_id ) {
 		$product = wc_get_product( $product_id );
 		$sku     = $product->get_sku();
@@ -3352,7 +3352,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$edit_link        = $this->GetEditorLink( $order_obj );
 		$order            = wc_get_order( $order_id );
 		$customer_user_id = $order->get_user_id();
-		$username         = __( 'Guest', 'wsal-woocommerce' );
+		$username         = esc_html__( 'Guest', 'wsal-woocommerce' );
 
 		if ( 0 !== $customer_user_id ) {
 			$user     = get_user_by( 'id', $customer_user_id );
@@ -3374,7 +3374,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				$amount        = $refund_object->get_refund_amount();
 				$refund_amount = ( $amount ) ? $amount : '0.00';
 				$reason        = $refund_object->get_reason();
-				$refund_reason = ( $reason ) ? $reason : __( 'None supplied', 'wsal-woocommerce' );
+				$refund_reason = ( $reason ) ? $reason : esc_html__( 'None supplied', 'wsal-woocommerce' );
 			}
 		}
 
@@ -3408,7 +3408,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$edit_link        = $this->GetEditorLink( $order_obj );
 		$order            = wc_get_order( $order_id );
 		$customer_user_id = $order->get_user_id();
-		$username         = __( 'Guest', 'wsal-woocommerce' );
+		$username         = esc_html__( 'Guest', 'wsal-woocommerce' );
 
 		if ( 0 !== $customer_user_id ) {
 			$user     = get_user_by( 'id', $customer_user_id );
