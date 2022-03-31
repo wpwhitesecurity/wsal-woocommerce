@@ -224,7 +224,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		add_action( 'woocommerce_new_order_item', array( $this, 'event_order_items_added' ), 10, 3 );
 		add_action( 'woocommerce_before_delete_order_item', array( $this, 'event_order_items_removed' ), 10, 1 );
 		add_action( 'woocommerce_before_save_order_items', array( $this, 'event_order_items_quantity_changed' ), 10, 2 );
-        add_action( 'woocommerce_refund_deleted', array( $this, 'event_order_refund_removed' ), 10, 2 );}
+		add_action( 'woocommerce_refund_deleted', array( $this, 'event_order_refund_removed' ), 10, 2 );
+	}
 
 	/**
 	 * Trigger alert when new webhook is added.
