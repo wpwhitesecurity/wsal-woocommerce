@@ -4143,7 +4143,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 */
 	private function check_low_stock_threshold_change( $product, $oldpost, $post ) {
 		$old_status = ( isset( $oldpost['_low_stock_amount'] ) ) ? $oldpost['_low_stock_amount'][0] : __( 'Store Default', 'wsal-woocommerce' );
-		$status     = ( isset( $post['low_stock_amount'] ) ) ? $post['low_stock_amount'] : __( 'Store Default', 'wsal-woocommerce' );
+		$status     = ( isset( $post['low_stock_amount'] ) && ! empty( $post['low_stock_amount'] ) ) ? $post['low_stock_amount'] : __( 'Store Default', 'wsal-woocommerce' );
 
 		if ( $status !== $old_status ) {
 			$editor_link = $this->GetEditorLink( $product );
