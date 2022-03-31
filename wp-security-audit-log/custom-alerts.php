@@ -1852,6 +1852,19 @@ $custom_alerts = array(
 				'woocommerce-order',
 				'removed',
 			),
+
+			array(
+				9137,
+				WSAL_HIGH,
+				esc_html__( 'User added/removed shipping from an order', 'wsal-woocommerce' ),
+				esc_html__( 'Added/Removed shipping in order %OrderTitle%.', 'wsal-woocommerce' ),
+				array(),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'added',
+			),
 		),
 
 		esc_html__( 'User Profile', 'wsal-woocommerce' )  => array(
