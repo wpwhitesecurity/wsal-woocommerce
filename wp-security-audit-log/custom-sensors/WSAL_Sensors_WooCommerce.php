@@ -224,6 +224,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		add_action( 'woocommerce_new_order_item', array( $this, 'event_order_items_added' ), 10, 3 );
 		add_action( 'woocommerce_before_delete_order_item', array( $this, 'event_order_items_removed' ), 10, 1 );
 		add_action( 'woocommerce_before_save_order_items', array( $this, 'event_order_items_quantity_changed' ), 10, 2 );
+		add_action( 'woocommerce_refund_deleted', array( $this, 'event_order_refund_removed' ), 10, 2 );
 	}
 
 	/**
@@ -497,6 +498,13 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		return 0;
 	}
 
+	/**
+	 * Get a SKU for a given product ID.
+	 *
+	 * @param  int $product_id - Id to lookup.
+	 *
+	 * @return int|string - Result.
+	 */
 	private function get_product_sku( $product_id ) {
 		$product = wc_get_product( $product_id );
 		$sku     = $product->get_sku();
@@ -3378,14 +3386,85 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 */
 	public function event_order_refunded( $order_id, $refund_id ) {
 		// Get order post object.
-		$order_obj = get_post( $order_id );
-		$edit_link = $this->GetEditorLink( $order_obj );
+		$order_obj        = get_post( $order_id );
+		$edit_link        = $this->GetEditorLink( $order_obj );
+		$order            = wc_get_order( $order_id );
+		$customer_user_id = $order->get_user_id();
+		$username         = esc_html__( 'Guest', 'wsal-woocommerce' );
+
+		if ( 0 !== $customer_user_id ) {
+			$user     = get_user_by( 'id', $customer_user_id );
+			$username = $user->user_login;
+		}
+
+		$date          = $order->get_date_created();
+		$date_format   = get_option( 'date_format' );
+		$time_format   = get_option( 'time_format' );
+		$created_date  = $date->date( $date_format . ' ' . $time_format );
+		$refund_amount = '';
+		$refund_reason = '';
+		$currency      = get_woocommerce_currency_symbol( $order->get_currency() );
+		$refunds       = $order->get_refunds();
+
+		foreach ( $refunds as $refund_object ) {
+			$id = $refund_object->get_id();
+			if ( $id === $refund_id ) {
+				$amount        = $refund_object->get_refund_amount();
+				$refund_amount = ( $amount ) ? $amount : '0.00';
+				$reason        = $refund_object->get_reason();
+				$refund_reason = ( $reason ) ? $reason : esc_html__( 'None supplied', 'wsal-woocommerce' );
+			}
+		}
 
 		$this->plugin->alerts->Trigger(
 			9041,
 			array(
 				'OrderID'          => esc_attr( $order_id ),
 				'RefundID'         => esc_attr( $refund_id ),
+				'CustomerUser'     => $username,
+				'RefundedAmount'   => $currency . $refund_amount,
+				'Reason'           => $refund_reason,
+				'OrderDate'        => $created_date,
+				'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order_id ) ),
+				'OrderStatus'      => sanitize_text_field( $order_obj->post_status ),
+				$edit_link['name'] => $edit_link['value'],
+			)
+		);
+	}
+
+	/**
+	 * WooCommerce Order Refunded.
+	 *
+	 * @since 3.3.1
+	 *
+	 * @param integer $refund_id – Refund ID.
+	 * @param integer $order_id  – Order ID.
+	 */
+	public function event_order_refund_removed( $refund_id, $order_id ) {
+		// Get order post object.
+		$order_obj        = get_post( $order_id );
+		$edit_link        = $this->GetEditorLink( $order_obj );
+		$order            = wc_get_order( $order_id );
+		$customer_user_id = $order->get_user_id();
+		$username         = esc_html__( 'Guest', 'wsal-woocommerce' );
+
+		if ( 0 !== $customer_user_id ) {
+			$user     = get_user_by( 'id', $customer_user_id );
+			$username = $user->user_login;
+		}
+
+		$date         = $order->get_date_created();
+		$date_format  = get_option( 'date_format' );
+		$time_format  = get_option( 'time_format' );
+		$created_date = $date->date( $date_format . ' ' . $time_format );
+
+		$this->plugin->alerts->Trigger(
+			9136,
+			array(
+				'OrderID'          => esc_attr( $order_id ),
+				'RefundID'         => esc_attr( $refund_id ),
+				'CustomerUser'     => $username,
+				'OrderDate'        => $created_date,
 				'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order_id ) ),
 				'OrderStatus'      => sanitize_text_field( $order_obj->post_status ),
 				$edit_link['name'] => $edit_link['value'],
