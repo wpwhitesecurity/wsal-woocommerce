@@ -3441,7 +3441,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		foreach ( $refunds as $refund_object ) {
 			$id = $refund_object->get_id();
 			if ( $id === $refund_id ) {
-				$amount        = $refund_object->get_refund_amount();
+				$amount        = $refund_object->get_amount();
 				$refund_amount = ( $amount ) ? $amount : '0.00';
 				$reason        = $refund_object->get_reason();
 				$refund_reason = ( $reason ) ? $reason : esc_html__( 'None supplied', 'wsal-woocommerce' );
