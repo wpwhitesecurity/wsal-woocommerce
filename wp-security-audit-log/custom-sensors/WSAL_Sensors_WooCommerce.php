@@ -1463,6 +1463,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9019,
 				array(
 					'PostID'             => esc_attr( $oldpost->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 					'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 					'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 					'OldValue'           => ! empty( $old_value ) ? $old_value : '0',
