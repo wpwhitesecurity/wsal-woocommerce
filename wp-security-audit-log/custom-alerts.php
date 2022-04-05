@@ -179,7 +179,6 @@ $custom_alerts = array(
 				9011,
 				E_NOTICE,
 				esc_html__( 'User modified the draft product', 'wsal-woocommerce' ),
-				esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 				esc_html__( 'Modified the draft product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(),
 				array(
@@ -192,10 +191,10 @@ $custom_alerts = array(
 				9012,
 				WSAL_HIGH,
 				esc_html__( 'User moved a product to trash', 'wsal-woocommerce' ),
-				esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 				esc_html__( 'Moved the product %ProductTitle% to trash.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(),
@@ -206,10 +205,10 @@ $custom_alerts = array(
 				9013,
 				WSAL_MEDIUM,
 				esc_html__( 'User permanently deleted a product', 'wsal-woocommerce' ),
-				esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 				esc_html__( 'Permanently deleted the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 				),
 				array(),
 				'woocommerce-product',
@@ -219,10 +218,10 @@ $custom_alerts = array(
 				9014,
 				WSAL_HIGH,
 				esc_html__( 'User restored a product from the trash', 'wsal-woocommerce' ),
-				esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 				esc_html__( 'Restored the product %ProductTitle% from trash.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
@@ -790,6 +789,7 @@ $custom_alerts = array(
 				esc_html__( 'Changed the stock quantity of the product %ProductTitle% to %NewValue%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 					esc_html__( 'Previous quantity', 'wsal-woocommerce' ) => '%OldValue%',
 				),
@@ -1770,7 +1770,7 @@ $custom_alerts = array(
 				9131,
 				WSAL_HIGH,
 				esc_html__( 'User modified a quantity in an order', 'wsal-woocommerce' ),
-				esc_html__( 'The quanity of the %ProductTitle% was modified in order %OrderTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'The quantity of the %ProductTitle% was modified in order %OrderTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'New quantity', 'wsal-woocommerce' ) => '%NewQuantity%',
 					esc_html__( 'Previous quantity', 'wsal-woocommerce' ) => '%OldQuantity%',

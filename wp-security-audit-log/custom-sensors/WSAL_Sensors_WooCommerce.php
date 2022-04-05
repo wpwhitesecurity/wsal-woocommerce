@@ -1463,6 +1463,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9019,
 				array(
 					'PostID'             => esc_attr( $oldpost->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $oldpost->ID ) ),
 					'ProductTitle'       => sanitize_text_field( $oldpost->post_title ),
 					'ProductStatus'      => sanitize_text_field( $oldpost->post_status ),
 					'OldValue'           => ! empty( $old_value ) ? $old_value : '0',
@@ -3055,7 +3056,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'EventType'        => 'added',
 				$edit_link['name'] => $edit_link['value'],
 			);
-			$this->plugin->alerts->Trigger( 9130, $event_data );
+			$this->plugin->alerts->TriggerIf( 9130, $event_data, array( $this, 'ignore_if_new_order' ) );
 		}
 
 		if ( $item instanceof WC_Order_Item_Fee ) {
@@ -3070,7 +3071,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'EventType'        => 'added',
 				$edit_link['name'] => $edit_link['value'],
 			);
-			$this->plugin->alerts->Trigger( 9132, $event_data );
+			$this->plugin->alerts->TriggerIf( 9132, $event_data, array( $this, 'ignore_if_new_order' ) );
 		}
 
 		if ( $item instanceof WC_Order_Item_Coupon ) {
@@ -3086,7 +3087,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'EventType'        => 'added',
 				$edit_link['name'] => $edit_link['value'],
 			);
-			$this->plugin->alerts->Trigger( 9134, $event_data );
+			$this->plugin->alerts->TriggerIf( 9134, $event_data, array( $this, 'ignore_if_new_order' ) );
 		}
 
 		if ( $item instanceof WC_Order_Item_Tax ) {
@@ -3101,7 +3102,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'EventType'        => 'added',
 				$edit_link['name'] => $edit_link['value'],
 			);
-			$this->plugin->alerts->Trigger( 9135, $event_data );
+			$this->plugin->alerts->TriggerIf( 9135, $event_data, array( $this, 'ignore_if_new_order' ) );
 		}
 
 		if ( $item instanceof WC_Order_Item_Shipping ) {
@@ -3115,7 +3116,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'EventType'        => 'added',
 				$edit_link['name'] => $edit_link['value'],
 			);
-			$this->plugin->alerts->Trigger( 9137, $event_data );
+			$this->plugin->alerts->TriggerIf( 9137, $event_data, array( $this, 'ignore_if_new_order' ) );
 		}
 	}
 
@@ -3294,6 +3295,22 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	}
 
 	/**
+	 * Checks if event 9035 has triggered or if it will
+	 * trigger.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @param WSAL_AlertManager $manager - Alert manager instance.
+	 * @return boolean
+	 */
+	public function ignore_if_new_order( WSAL_AlertManager $manager ) {
+		if ( $manager->WillOrHasTriggered( 9035 ) ) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Checks if event 9041 or 9036 has triggered or if it will
 	 * trigger.
 	 *
@@ -3318,22 +3335,22 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		if ( $manager->WillOrHasTriggered( 9120 ) ) {
 			return false;
 		}
-		if ( $manager->WillOrHasTriggered( 9134 ) ) {
+		if ( $manager->WillOrHasTriggered( 9130 ) || $this->was_triggered_recently( 9130 ) ) {
 			return false;
 		}
-		if ( $manager->WillOrHasTriggered( 9130 ) ) {
+		if ( $manager->WillOrHasTriggered( 9131 ) || $this->was_triggered_recently( 9131 ) ) {
 			return false;
 		}
-		if ( $manager->WillOrHasTriggered( 9131 ) ) {
+		if ( $manager->WillOrHasTriggered( 9132 ) || $this->was_triggered_recently( 9132 ) ) {
 			return false;
 		}
-		if ( $manager->WillOrHasTriggered( 9132 ) ) {
+		if ( $manager->WillOrHasTriggered( 9133 ) || $this->was_triggered_recently( 9133 ) ) {
 			return false;
 		}
-		if ( $manager->WillOrHasTriggered( 9133 ) ) {
+		if ( $manager->WillOrHasTriggered( 9134 ) || $this->was_triggered_recently( 9134 ) ) {
 			return false;
 		}
-        if ( $manager->WillOrHasTriggered( 9137 ) ) {
+		if ( $manager->WillOrHasTriggered( 9137 ) || $this->was_triggered_recently( 9137 ) ) {
 			return false;
 		}
 		return true;
