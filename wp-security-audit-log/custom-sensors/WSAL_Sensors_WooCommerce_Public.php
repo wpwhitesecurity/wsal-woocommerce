@@ -388,4 +388,17 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 			return __( 'On backorder', 'wp-security-audit-log' );
 		}
 	}
+
+    /**
+	 * Get a SKU for a given product ID.
+	 *
+	 * @param  int $product_id - Id to lookup.
+	 *
+	 * @return int|string - Result.
+	 */
+	private function get_product_sku( $product_id ) {
+		$product = wc_get_product( $product_id );
+		$sku     = $product->get_sku();
+		return ( $sku ) ? $sku : __( 'Not provided', 'wsal-woocommerce' );
+	}
 }
