@@ -194,7 +194,7 @@ $custom_alerts = array(
 				esc_html__( 'Moved the product %ProductTitle% to trash.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-                    esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(),
@@ -208,7 +208,7 @@ $custom_alerts = array(
 				esc_html__( 'Permanently deleted the product %ProductTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-                    esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 				),
 				array(),
 				'woocommerce-product',
@@ -221,7 +221,7 @@ $custom_alerts = array(
 				esc_html__( 'Restored the product %ProductTitle% from trash.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'Product ID', 'wsal-woocommerce' ) => '%PostID%',
-                    esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
+					esc_html__( 'Product SKU', 'wsal-woocommerce' ) => '%SKU%',
 					esc_html__( 'Product status', 'wsal-woocommerce' ) => '%ProductStatus%',
 				),
 				array(
