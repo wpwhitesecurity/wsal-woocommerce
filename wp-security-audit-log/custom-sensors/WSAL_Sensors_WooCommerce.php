@@ -3055,7 +3055,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'EventType'        => 'added',
 				$edit_link['name'] => $edit_link['value'],
 			);
-			$this->plugin->alerts->Trigger( 9130, $event_data );
+            if ( ! $this->plugin->alerts->WillOrHasTriggered( 9035 ) ) {
+                $this->plugin->alerts->Trigger( 9130, $event_data );
+            }
 		}
 
 		if ( $item instanceof WC_Order_Item_Fee ) {
@@ -3070,7 +3072,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'EventType'        => 'added',
 				$edit_link['name'] => $edit_link['value'],
 			);
-			$this->plugin->alerts->Trigger( 9132, $event_data );
+            if ( ! $this->plugin->alerts->WillOrHasTriggered( 9035 ) ) {
+                $this->plugin->alerts->Trigger( 9132, $event_data );
+            }
 		}
 
 		if ( $item instanceof WC_Order_Item_Coupon ) {
@@ -3086,7 +3090,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'EventType'        => 'added',
 				$edit_link['name'] => $edit_link['value'],
 			);
-			$this->plugin->alerts->Trigger( 9134, $event_data );
+            if ( ! $this->plugin->alerts->WillOrHasTriggered( 9035 ) ) {
+                $this->plugin->alerts->Trigger( 9134, $event_data );
+                }
 		}
 
 		if ( $item instanceof WC_Order_Item_Tax ) {
@@ -3101,7 +3107,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'EventType'        => 'added',
 				$edit_link['name'] => $edit_link['value'],
 			);
-			$this->plugin->alerts->Trigger( 9135, $event_data );
+            if ( ! $this->plugin->alerts->WillOrHasTriggered( 9035 ) ) {
+			    $this->plugin->alerts->Trigger( 9135, $event_data );
+            }
 		}
 
 		if ( $item instanceof WC_Order_Item_Shipping ) {
@@ -3115,7 +3123,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'EventType'        => 'added',
 				$edit_link['name'] => $edit_link['value'],
 			);
-			$this->plugin->alerts->Trigger( 9137, $event_data );
+            if ( ! $this->plugin->alerts->WillOrHasTriggered( 9035 ) ) {
+                $this->plugin->alerts->Trigger( 9137, $event_data );
+            }
 		}
 	}
 
