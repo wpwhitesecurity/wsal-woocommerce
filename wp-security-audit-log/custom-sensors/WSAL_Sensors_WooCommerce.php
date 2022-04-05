@@ -3318,22 +3318,22 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		if ( $manager->WillOrHasTriggered( 9120 ) ) {
 			return false;
 		}
-		if ( $manager->WillOrHasTriggered( 9134 ) ) {
+		if ( $manager->WillOrHasTriggered( 9130 ) || $this->was_triggered_recently( 9130 ) ) {
 			return false;
 		}
-		if ( $manager->WillOrHasTriggered( 9130 ) ) {
+		if ( $manager->WillOrHasTriggered( 9131 ) || $this->was_triggered_recently( 9131 ) ) {
 			return false;
 		}
-		if ( $manager->WillOrHasTriggered( 9131 ) ) {
+		if ( $manager->WillOrHasTriggered( 9132 ) || $this->was_triggered_recently( 9132 ) ) {
 			return false;
 		}
-		if ( $manager->WillOrHasTriggered( 9132 ) ) {
+		if ( $manager->WillOrHasTriggered( 9133 ) || $this->was_triggered_recently( 9133 ) ) {
 			return false;
 		}
-		if ( $manager->WillOrHasTriggered( 9133 ) ) {
+		if ( $manager->WillOrHasTriggered( 9134 ) || $this->was_triggered_recently( 9134 ) ) {
 			return false;
 		}
-        if ( $manager->WillOrHasTriggered( 9137 ) ) {
+        if ( $manager->WillOrHasTriggered( 9137 ) || $this->was_triggered_recently( 9137 ) ) {
 			return false;
 		}
 		return true;
