@@ -1770,7 +1770,7 @@ $custom_alerts = array(
 				9131,
 				WSAL_HIGH,
 				esc_html__( 'User modified a quantity in an order', 'wsal-woocommerce' ),
-				esc_html__( 'The quanity of the %ProductTitle% was modified in order %OrderTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'The quantity of the %ProductTitle% was modified in order %OrderTitle%.', 'wsal-woocommerce' ),
 				array(
 					esc_html__( 'New quantity', 'wsal-woocommerce' ) => '%NewQuantity%',
 					esc_html__( 'Previous quantity', 'wsal-woocommerce' ) => '%OldQuantity%',
