@@ -381,11 +381,11 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 	 */
 	private function get_stock_status( $slug ) {
 		if ( 'instock' === $slug ) {
-			return esc_html__( 'In stock', 'wp-security-audit-log' );
+			return esc_html__( 'In stock', 'wsal-woocommerce' );
 		} elseif ( 'outofstock' === $slug ) {
-			return esc_html__( 'Out of stock', 'wp-security-audit-log' );
+			return esc_html__( 'Out of stock', 'wsal-woocommerce' );
 		} elseif ( 'onbackorder' === $slug ) {
-			return esc_html__( 'On backorder', 'wp-security-audit-log' );
+			return esc_html__( 'On backorder', 'wsal-woocommerce' );
 		}
 	}
 
