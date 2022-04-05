@@ -219,8 +219,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		add_action( 'woocommerce_new_webhook', array( $this, 'webhook_added' ), 10, 2 );
 		add_action( 'woocommerce_webhook_deleted', array( $this, 'webhook_deleted' ), 10, 2 );
 		add_action( 'woocommerce_webhook_updated', array( $this, 'webhook_updated' ), 10 );
+    add_action( "woocommerce_before_shipping_zone_object_save", array( $this, 'detect_shipping_zone_change' ), 10, 2 ); 
 
-		// Orders.
+    // Orders.
 		add_action( 'woocommerce_new_order_item', array( $this, 'event_order_items_added' ), 10, 3 );
 		add_action( 'woocommerce_before_delete_order_item', array( $this, 'event_order_items_removed' ), 10, 1 );
 		add_action( 'woocommerce_before_save_order_items', array( $this, 'event_order_items_quantity_changed' ), 10, 2 );
@@ -267,7 +268,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			)
 		);
 		return $webhook_id;
-	}
+  }
 
 	/**
 	 * Trigger 9082 when a shipping zone is created or modified.
