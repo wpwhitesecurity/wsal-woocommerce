@@ -149,7 +149,7 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 			return false;
 		}
 
-        $buyer = '';
+		$buyer = '';
 
 		if ( $order->get_billing_first_name() || $order->get_billing_last_name() ) {
 			$buyer = trim( sprintf( '%1$s %2$s', $order->get_billing_first_name(), $order->get_billing_last_name() ) );
@@ -357,7 +357,7 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 				9105,
 				array(
 					'PostID'             => $post->ID,
-                    'SKU'                => esc_attr( $this->get_product_sku( $post->ID ) ),
+					'SKU'                => esc_attr( $this->get_product_sku( $post->ID ) ),
 					'ProductTitle'       => $product_title,
 					'ProductStatus'      => ! $product_status ? $post->post_status : $product_status,
 					'OldValue'           => ! empty( $old_stock ) ? $old_stock : 0,
@@ -381,15 +381,15 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 	 */
 	private function get_stock_status( $slug ) {
 		if ( 'instock' === $slug ) {
-			return __( 'In stock', 'wp-security-audit-log' );
+			return esc_html__( 'In stock', 'wp-security-audit-log' );
 		} elseif ( 'outofstock' === $slug ) {
-			return __( 'Out of stock', 'wp-security-audit-log' );
+			return esc_html__( 'Out of stock', 'wp-security-audit-log' );
 		} elseif ( 'onbackorder' === $slug ) {
-			return __( 'On backorder', 'wp-security-audit-log' );
+			return esc_html__( 'On backorder', 'wp-security-audit-log' );
 		}
 	}
 
-    /**
+	/**
 	 * Get a SKU for a given product ID.
 	 *
 	 * @param  int $product_id - Id to lookup.
@@ -399,6 +399,6 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 	private function get_product_sku( $product_id ) {
 		$product = wc_get_product( $product_id );
 		$sku     = $product->get_sku();
-		return ( $sku ) ? $sku : __( 'Not provided', 'wsal-woocommerce' );
+		return ( $sku ) ? $sku : esc_html__( 'Not provided', 'wsal-woocommerce' );
 	}
 }
