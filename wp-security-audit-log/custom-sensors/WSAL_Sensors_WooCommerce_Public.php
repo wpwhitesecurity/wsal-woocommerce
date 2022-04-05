@@ -1,4 +1,5 @@
-<?php
+<?php // phpcs:disable WordPress.Files.FileName.NotHyphenatedLowercase
+
 /**
  * Sensor: Public WooCommerce Activity
  *
@@ -46,7 +47,7 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 	 */
 	public function HookEvents() {
 		$settings        = WpSecurityAuditLog::GetInstance()->settings();
-    $frontend_events = $settings::get_frontend_events();
+		$frontend_events = $settings::get_frontend_events();
 		if ( is_user_logged_in() || ! is_user_logged_in() && ( isset( $frontend_events['woocommerce'] ) && $frontend_events['woocommerce'] ) ) {
 			add_action( 'woocommerce_new_order', array( $this, 'event_new_order' ), 10, 1 );
 			add_filter( 'woocommerce_order_item_quantity', array( $this, 'set_old_stock' ), 10, 3 );
@@ -147,6 +148,8 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 		if ( ! $order instanceof WC_Order ) {
 			return false;
 		}
+
+		$buyer = '';
 
 		if ( $order->get_billing_first_name() || $order->get_billing_last_name() ) {
 			$buyer = trim( sprintf( '%1$s %2$s', $order->get_billing_first_name(), $order->get_billing_last_name() ) );
@@ -334,7 +337,7 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 			$query->addOrderBy( 'created_on', true );
 			$query->setLimit( 1 );
 			$last_occurence = $query->getAdapter()->Execute( $query );
-			if ( isset( $last_occurence[0] ) &&  9035 === $last_occurence[0]->alert_id ) {
+			if ( isset( $last_occurence[0] ) && 9035 === $last_occurence[0]->alert_id ) {
 				$latest_event = $this->plugin->alerts->get_latest_events();
 				$latest_event = isset( $latest_event[0] ) ? $latest_event[0] : false;
 				$event_meta   = $latest_event ? $latest_event->GetMetaArray() : false;
@@ -354,6 +357,7 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 				9105,
 				array(
 					'PostID'             => $post->ID,
+					'SKU'                => esc_attr( $this->get_product_sku( $post->ID ) ),
 					'ProductTitle'       => $product_title,
 					'ProductStatus'      => ! $product_status ? $post->post_status : $product_status,
 					'OldValue'           => ! empty( $old_stock ) ? $old_stock : 0,
@@ -377,11 +381,24 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 	 */
 	private function get_stock_status( $slug ) {
 		if ( 'instock' === $slug ) {
-			return __( 'In stock', 'wp-security-audit-log' );
+			return esc_html__( 'In stock', 'wsal-woocommerce' );
 		} elseif ( 'outofstock' === $slug ) {
-			return __( 'Out of stock', 'wp-security-audit-log' );
+			return esc_html__( 'Out of stock', 'wsal-woocommerce' );
 		} elseif ( 'onbackorder' === $slug ) {
-			return __( 'On backorder', 'wp-security-audit-log' );
+			return esc_html__( 'On backorder', 'wsal-woocommerce' );
 		}
+	}
+
+	/**
+	 * Get a SKU for a given product ID.
+	 *
+	 * @param  int $product_id - Id to lookup.
+	 *
+	 * @return int|string - Result.
+	 */
+	private function get_product_sku( $product_id ) {
+		$product = wc_get_product( $product_id );
+		$sku     = $product->get_sku();
+		return ( $sku ) ? $sku : esc_html__( 'Not provided', 'wsal-woocommerce' );
 	}
 }

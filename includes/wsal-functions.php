@@ -1,4 +1,9 @@
-<?php
+<?php // phpcs:disable WordPress.Security.NonceVerification.Recommended
+/**
+ * Add our filters.
+ *
+ * @package WsalWooCommerce
+ */
 
 /**
  * Add our filters.
@@ -17,11 +22,17 @@ add_filter( 'wsal_togglealerts_obsolete_events', 'wsal_woocommerce_extension_tog
 // Special events.
 add_action( 'woocommerce_download_product', 'wsal_woocommerce_extension_detect_file_download', 10, 6 );
 
+/**
+ * Ensures our appended setting gets saved when updating via ToggleEvents screen.
+ *
+ * @param  array $post_data - POSTed settings data.
+ * @return void
+ */
 function wsal_woocommerce_extension_togglealerts_process_save_settings( $post_data ) {
-  $wsal = WpSecurityAuditLog::GetInstance();
-  if ( isset( $post_data['wc_all_stock_changes'] ) && ! empty( $post_data['wc_all_stock_changes'] ) ) {
-    $wsal->SetGlobalBooleanSetting( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
-  }
+	$wsal = WpSecurityAuditLog::GetInstance();
+	if ( isset( $post_data['wc_all_stock_changes'] ) && ! empty( $post_data['wc_all_stock_changes'] ) ) {
+		$wsal->SetGlobalBooleanSetting( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
+	}
 }
 
 /**
@@ -36,71 +47,77 @@ function wsal_woocommerce_extension_togglealerts_process_save_settings( $post_da
  * @param  string $download_get_order_id    Order ID.
  */
 function wsal_woocommerce_extension_detect_file_download( $download_get_user_email, $download_get_order_key, $download_get_product_id, $download_get_user_id, $download_get_download_id, $download_get_order_id ) {
-  $product       = wc_get_product( $download_get_product_id );
-  $product_title = $product->get_title();
+	$product       = wc_get_product( $download_get_product_id );
+	$product_title = $product->get_title();
 
-  $wsal = WpSecurityAuditLog::GetInstance();
+	$wsal = WpSecurityAuditLog::GetInstance();
 
-  if ( ! isset( $wsal->alerts ) ) {
-    $wsal->alerts = new WSAL_AlertManager( $wsal );
-  }
+	if ( ! isset( $wsal->alerts ) ) {
+		$wsal->alerts = new WSAL_AlertManager( $wsal );
+	}
 
-  $wsal->alerts->Trigger(
-  	9099,
-  	array(
-  		'product_name'  => $product_title,
-  		'ID'            => $download_get_product_id,
-  		'email_address' => $download_get_user_email,
-  	)
-  );
+	$sku = $product->get_sku();
+
+	$wsal->alerts->Trigger(
+		9099,
+		array(
+			'product_name'  => $product_title,
+			'ID'            => $download_get_product_id,
+			'SKU'           => ( $sku ) ? $sku : __( 'Not provided', 'wsal-woocommerce' ),
+			'email_address' => $download_get_user_email,
+		)
+	);
 }
 
 /**
  * Append some extra content below an event in the ToggleAlerts view.
+ *
+ * @param  int $alert_id - WSAL alert ID.
+ * @return void
  */
 function wsal_woocommerce_extension_append_content_to_toggle( $alert_id ) {
 
-  if ( 9035 === $alert_id ) {
-    $settings               = WpSecurityAuditLog::GetInstance()->settings();
-    $frontend_events        = $settings::get_frontend_events();
-    $enable_wc_for_visitors = ( isset( $frontend_events['woocommerce'] ) && $frontend_events['woocommerce'] ) ? true : false;
-    ?>
-    <tr>
-      <td></td>
-      <td>
-        <input name="frontend-events[woocommerce]" type="checkbox" id="frontend-events[woocommerce]" value="1" <?php checked( $enable_wc_for_visitors ); ?> />
-      </td>
-      <td colspan="2"><?php esc_html_e( 'Keep a log of visitor orders, stock changes and other public events?', 'wsal-woocommerce' ); ?></td>
-    </tr>
-    <?php
-  }
+	if ( 9035 === $alert_id ) {
+		$settings               = WpSecurityAuditLog::GetInstance()->settings();
+		$frontend_events        = $settings::get_frontend_events();
+		$enable_wc_for_visitors = ( isset( $frontend_events['woocommerce'] ) && $frontend_events['woocommerce'] ) ? true : false;
+		?>
+		<tr>
+		<td></td>
+		<td>
+		<input name="frontend-events[woocommerce]" type="checkbox" id="frontend-events[woocommerce]" value="1" <?php checked( $enable_wc_for_visitors ); ?> />
+		</td>
+		<td colspan="2"><?php esc_html_e( 'Keep a log of visitor orders, stock changes and other public events?', 'wsal-woocommerce' ); ?></td>
+		</tr>
+		<?php
+	}
 
-  if ( 9019 === $alert_id ) {
-    $wsal = WpSecurityAuditLog::GetInstance();
-    $wc_all_stock_changes = $wsal->GetGlobalBooleanSetting( 'wc-all-stock-changes', true );
-    ?>
-    <tr>
-      <td></td>
-      <td>
-        <input name="wc_all_stock_changes" type="checkbox" id="wc_all_stock_changes" value="1" <?php checked( $wc_all_stock_changes ); ?> />
-      </td>
-      <td colspan="2"><?php esc_html_e( 'Log all stock changes. Disable this setting to only keep a log of stock changes done manually via the WooCommerce dashboard. Therefore automated stock changes typically done via customers placing orders or via other plugins will not be logged.', 'wsal-woocommerce' ); ?></td>
-    </tr>
-    <script type="text/javascript">
-    jQuery(document).ready(function(){
-      // Specific for alert 9019
-      jQuery("input[value=9019]").on("change", function(){
-        var check = jQuery("input[value=9019]").is(":checked");
-        if(check) {
-          jQuery("#wc_all_stock_changes").attr ( "checked" ,"checked" );
-        } else {
-          jQuery("#wc_all_stock_changes").removeAttr('checked');
-        }
-      });
-    });
-    </script>
-    <?php
-  }
+	if ( 9019 === $alert_id ) {
+		$wsal                 = WpSecurityAuditLog::GetInstance();
+		$wc_all_stock_changes = $wsal->GetGlobalBooleanSetting( 'wc-all-stock-changes', true );
+		?>
+		<tr>
+			<td></td>
+			<td>
+				<input name="wc_all_stock_changes" type="checkbox" id="wc_all_stock_changes" value="1" <?php checked( $wc_all_stock_changes ); ?> />
+			</td>
+			<td colspan="2"><?php esc_html_e( 'Log all stock changes. Disable this setting to only keep a log of stock changes done manually via the WooCommerce dashboard. Therefore automated stock changes typically done via customers placing orders or via other plugins will not be logged.', 'wsal-woocommerce' ); ?></td>
+		</tr>
+		<script type="text/javascript">
+		jQuery(document).ready(function(){
+			// Specific for alert 9019
+			jQuery("input[value=9019]").on("change", function(){
+				var check = jQuery("input[value=9019]").is(":checked");
+				if(check) {
+					jQuery("#wc_all_stock_changes").attr ( "checked" ,"checked" );
+				} else {
+					jQuery("#wc_all_stock_changes").removeAttr('checked');
+				}
+			});
+		});
+		</script>
+		<?php
+	}
 }
 
 /**
@@ -112,14 +129,14 @@ function wsal_woocommerce_extension_append_content_to_toggle( $alert_id ) {
  * @return array
  */
 function wsal_woocommerce_extension_add_custom_event_type( $types ) {
- $new_types = array(
-   'downloaded'   => __( 'Downloaded', 'wsal-woocommerce' ),
- );
+	$new_types = array(
+		'downloaded' => __( 'Downloaded', 'wsal-woocommerce' ),
+	);
 
- // combine the two arrays.
- $types = array_merge( $types, $new_types );
+	// combine the two arrays.
+	$types = array_merge( $types, $new_types );
 
- return $types;
+	return $types;
 }
 
 /**
@@ -174,21 +191,21 @@ function wsal_woocommerce_extension_add_custom_ignored_cpt( $post_types ) {
  *
  * @method wsal_woocommerce_extension_add_custom_meta_format
  *
- * @param string $value Meta value.
- * @param string $expression Meta expression including the surrounding percentage chars.
+ * @param string              $value Meta value.
+ * @param string              $expression  Meta expression including the surrounding percentage chars.
  * @param WSAL_AlertFormatter $alert_formatter Alert formatter class.
- * @param int|null $occurrence_id Occurrence ID. Only present if the event was already written to the database. Default null.
- * 
+ * @param int|null            $occurrence_id Occurrence ID. Only present if the event was already written to the database. Default null.
+ *
  * @return string
- * 
+ *
  * @since  1.0.0
  */
 function wsal_woocommerce_extension_add_custom_meta_format( $value, $expression, $alert_formatter, $occurrence_id ) {
 	if ( '%StockOrderID%' === $expression ) {
 		$check_value = (string) $value;
 		if ( 'NULL' !== $check_value ) {
-			$order     = get_post( $value );
-			$new_order = new WC_Order( $value );
+			$order        = get_post( $value );
+			$new_order    = new WC_Order( $value );
 			$editor_title = wsal_woocommerce_extension_get_order_title( $new_order );
 			$editor_link  = wsal_woocommerce_extension_get_editor_link( $order );
 			return $editor_link['value'];
@@ -200,110 +217,129 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $expression,
 	return $value;
 }
 
- function wsal_woocommerce_extension_load_public_sensors( $value ) {
+/**
+ * Add our sensor to the available public sensors within WSAL.
+ *
+ * @param  array $value - Current public sensors.
+ * @return array $value - Appended array of sensors.
+ */
+function wsal_woocommerce_extension_load_public_sensors( $value ) {
 	$value[] = 'WooCommerce_Public';
- 	return $value;
- }
+	return $value;
+}
 
- /**
-	* Get editor link.
-	*
-	* @param WP_Post $post        - Product post object.
-	* @return array  $editor_link - Name and value link.
-	*/
+/**
+ * Get editor link.
+ *
+ * @param WP_Post $post        - Product post object.
+ * @return array  $editor_link - Name and value link.
+ */
 function wsal_woocommerce_extension_get_editor_link( $post ) {
-	 // Meta value key.
-	 if ( 'shop_order' === $post->post_type ) {
-		 $name = 'EditorLinkOrder';
-	 } else {
-		 $name = 'EditorLinkProduct';
-	 }
+	// Meta value key.
+	if ( 'shop_order' === $post->post_type ) {
+		$name = 'EditorLinkOrder';
+	} else {
+		$name = 'EditorLinkProduct';
+	}
 
-	 // Get editor post link URL.
-	 $value = get_edit_post_link( $post->ID );
+	// Get editor post link URL.
+	$value = get_edit_post_link( $post->ID );
 
-	 // If the URL is not empty then set values.
-	 if ( ! empty( $value ) ) {
-		 $editor_link = array(
-			 'name'  => $name, // Meta key.
-			 'value' => $value, // Meta value.
-		 );
-	 } else {
-		 // Get post object.
-		 $post = get_post( $post->ID );
+	// If the URL is not empty then set values.
+	if ( ! empty( $value ) ) {
+		$editor_link = array(
+			'name'  => $name, // Meta key.
+			'value' => $value, // Meta value.
+		);
+	} else {
+		// Get post object.
+		$post = get_post( $post->ID );
 
-		 // Set URL action.
-		 if ( 'revision' === $post->post_type ) {
-			 $action = '';
-		 } else {
-			 $action = '&action=edit';
-		 }
+		// Set URL action.
+		if ( 'revision' === $post->post_type ) {
+			$action = '';
+		} else {
+			$action = '&action=edit';
+		}
 
-		 // Get and check post type object.
-		 $post_type_object = get_post_type_object( $post->post_type );
-		 if ( ! $post_type_object ) {
-			 return;
-		 }
+		// Get and check post type object.
+		$post_type_object = get_post_type_object( $post->post_type );
+		if ( ! $post_type_object ) {
+			return;
+		}
 
-		 // Set editor link manually.
-		 if ( $post_type_object->_edit_link ) {
-			 $link = admin_url( sprintf( $post_type_object->_edit_link . $action, $post->ID ) );
-		 } else {
-			 $link = '';
-		 }
+		// Set editor link manually.
+		if ( $post_type_object->_edit_link ) {
+			$link = admin_url( sprintf( $post_type_object->_edit_link . $action, $post->ID ) );
+		} else {
+			$link = '';
+		}
 
-		 $editor_link = array(
-			 'name'  => $name, // Meta key.
-			 'value' => $link, // Meta value.
-		 );
-	 }
+		$editor_link = array(
+			'name'  => $name, // Meta key.
+			'value' => $link, // Meta value.
+		);
+	}
 
-	 return $editor_link;
- }
+	return $editor_link;
+}
 
- function wsal_woocommerce_extension_get_order_title( $order ) {
-	 if ( ! $order ) {
-		 return false;
-	 }
-	 if ( is_int( $order ) ) {
-		 $order = new WC_Order( $order );
-	 }
-	 if ( ! $order instanceof WC_Order ) {
-		 return false;
-	 }
+/**
+ * Get order title from order object.
+ *
+ * @param  WC_Order $order - WC Order object.
+ * @return string - Order title.
+ */
+function wsal_woocommerce_extension_get_order_title( $order ) {
+	if ( ! $order ) {
+		return false;
+	}
+	if ( is_int( $order ) ) {
+		$order = new WC_Order( $order );
+	}
+	if ( ! $order instanceof WC_Order ) {
+		return false;
+	}
 
-	 if ( $order->get_billing_first_name() || $order->get_billing_last_name() ) {
-		 $buyer = trim( sprintf( '%1$s %2$s', $order->get_billing_first_name(), $order->get_billing_last_name() ) );
-	 } elseif ( $order->get_billing_company() ) {
-		 $buyer = trim( $order->get_billing_company() );
-	 } elseif ( $order->get_customer_id() ) {
-		 $user  = get_user_by( 'id', $order->get_customer_id() );
-		 $buyer = ucwords( $user->display_name );
-	 }
-	 return '#' . $order->get_order_number() . ' ' . $buyer;
- }
+	if ( $order->get_billing_first_name() || $order->get_billing_last_name() ) {
+		$buyer = trim( sprintf( '%1$s %2$s', $order->get_billing_first_name(), $order->get_billing_last_name() ) );
+	} elseif ( $order->get_billing_company() ) {
+		$buyer = trim( $order->get_billing_company() );
+	} elseif ( $order->get_customer_id() ) {
+		$user  = get_user_by( 'id', $order->get_customer_id() );
+		$buyer = ucwords( $user->display_name );
+	}
+	return '#' . $order->get_order_number() . ' ' . $buyer;
+}
 
- /**
+/**
  * Add sub cateogry titles to ToggleView page in WSAL.
+ *
+ * @param  string $title - String on which to append our title.
+ * @param  string $alert_id - WSAL alert ID.
+ * @return string - Our cuetom title.
  */
 function wsal_woocommerce_extension_togglealerts_sub_category_titles( $title = '', $alert_id = '' ) {
-  if ( 9105 === $alert_id ) {
+	if ( 9105 === $alert_id ) {
 		$title = esc_html__( 'Product stock changes:', 'wsal-woocommerce' );
 	}
-  if ( 9007 === $alert_id ) {
-    $title = esc_html__( 'Product admin:', 'wsal-woocommerce' );
-  }
-  if ( 9015 === $alert_id ) {
-    $title = esc_html__( 'Product changes:', 'wsal-woocommerce' );
-  }
-  if ( 9047 === $alert_id ) {
-    $title = esc_html__( 'Product attributes:', 'wsal-woocommerce' );
-  }
+	if ( 9007 === $alert_id ) {
+		$title = esc_html__( 'Product admin:', 'wsal-woocommerce' );
+	}
+	if ( 9015 === $alert_id ) {
+		$title = esc_html__( 'Product changes:', 'wsal-woocommerce' );
+	}
+	if ( 9047 === $alert_id ) {
+		$title = esc_html__( 'Product attributes:', 'wsal-woocommerce' );
+	}
 	return $title;
 }
 
 /**
  * Add specific events so we can use them for category titles.
+ *
+ * @param  array $sub_category_events - Current events with a sub-title.
+ * @return array $sub_category_events - Array with our items appended.
  */
 function wsal_woocommerce_extension_togglealerts_sub_category_events( $sub_category_events ) {
 	$new_events          = array( 9105, 9007, 9015, 9047 );
@@ -317,35 +353,38 @@ function wsal_woocommerce_extension_togglealerts_sub_category_events( $sub_categ
  * always able to check/uncheck WC events as normal regardless of WSAL version.
  */
 function wsal_woocommerce_extension_togglealerts_js_code() {
-  global $current_screen;
-  // Only dequeue on our admin pages.
-  if ( isset( $current_screen->base ) && strpos( $current_screen->base, 'wsal-togglealerts' ) !== false ) {
-    ?>
-        <script type="text/javascript">
-        jQuery(document).ready(function(){
-          jQuery( '#tab-woocommerce [type="checkbox"]' ).removeAttr( 'disabled' );
-        });
-        </script>
-    <?php
-  }
-  if ( isset( $_REQUEST['page'] ) && 'wsal-togglealerts' === $_REQUEST['page'] ) {
-    ?>
-    <style type="text/css">
-      #tab-payment-gateways tr:nth-of-type(2), #tab-products tr:nth-of-type(12), #tab-coupons tr:nth-of-type(8) {
-        display: none;
-      }
-    </style>
-    <?php
-  }
+	global $current_screen;
+	// Only dequeue on our admin pages.
+	if ( isset( $current_screen->base ) && strpos( $current_screen->base, 'wsal-togglealerts' ) !== false ) {
+		?>
+		<script type="text/javascript">
+		jQuery(document).ready(function(){
+			jQuery( '#tab-woocommerce [type="checkbox"]' ).removeAttr( 'disabled' );
+		});
+		</script>
+		<?php
+	}
+	if ( isset( $_REQUEST['page'] ) && 'wsal-togglealerts' === $_REQUEST['page'] ) {
+		?>
+		<style type="text/css">
+			#tab-payment-gateways tr:nth-of-type(2), #tab-products tr:nth-of-type(12), #tab-coupons tr:nth-of-type(8) {
+			display: none;
+			}
+		</style>
+		<?php
+	}
 }
 
 add_action( 'admin_footer', 'wsal_woocommerce_extension_togglealerts_js_code' );
 
 /**
  * Add obsolete events to the togglealerts view.
+ *
+ * @param  array $obsolete_events - Currently obselete events.
+ * @return array $obsolete_events - Appended events.
  */
 function wsal_woocommerce_extension_togglealerts_obsolete_events( $obsolete_events ) {
-	$new_events      = [ 9011, 9070, 9075 ];
+	$new_events      = array( 9011, 9070, 9075 );
 	$obsolete_events = array_merge( $obsolete_events, $new_events );
 	return $obsolete_events;
 }
