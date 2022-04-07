@@ -220,42 +220,56 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		add_action( 'woocommerce_new_webhook', array( $this, 'webhook_added' ), 10, 2 );
 		add_action( 'woocommerce_webhook_deleted', array( $this, 'webhook_deleted' ), 10, 2 );
 		add_action( 'woocommerce_webhook_updated', array( $this, 'webhook_updated' ), 10 );
-        add_action( "woocommerce_before_shipping_zone_object_save", array( $this, 'detect_shipping_zone_change' ), 10, 2 ); 
+		add_action( 'woocommerce_before_shipping_zone_object_save', array( $this, 'detect_shipping_zone_change' ), 10, 2 );
 
-    // Orders.
+		// Orders.
 		add_action( 'woocommerce_new_order_item', array( $this, 'event_order_items_added' ), 10, 3 );
 		add_action( 'woocommerce_before_delete_order_item', array( $this, 'event_order_items_removed' ), 10, 1 );
 		add_action( 'woocommerce_before_save_order_items', array( $this, 'event_order_items_quantity_changed' ), 10, 2 );
 		add_action( 'woocommerce_refund_deleted', array( $this, 'event_order_refund_removed' ), 10, 2 );
 	}
 
-    public function check_product_changes_after_save( $product ) {
+	/**
+	 * Detect changes made directly to WC product data.
+	 *
+	 * @param  WC_Product $product - WC porduct object.
+	 * @return void
+	 */
+	public function check_product_changes_after_save( $product ) {
+		// We know this hook is only fired when updating, but we need to be sure this is an automatic (not post edit etc) change.
+		if ( ! isset( $_POST['action'] ) ) {
+			$product_data     = $this->GetProductData( $product );
+			$this->new_data   = $product_data;
+			$old_product_data = $this->_old_data;
+			$values_to_lookup = array(
+				'sku',
+				'stock_status',
+				'stock',
+				'tax_status',
+				'weight',
+				'regular_price',
+				'sales_price',
+			);
 
-        if ( ! isset( $_POST['action'] ) ) {
-            $product_data     = $this->GetProductData( $product );
-            $this->new_data   = $product_data;
-            $old_product_data = $this->_old_data;
-            $values_to_lookup = array(
-                'sku',
-                'stock_status',
-                'stock',
-                'tax_status',
-                'weight',
-                'regular_price',
-                'sales_price',
-            );
-            $changes_detected = false;
-    
-            foreach ( $values_to_lookup as $lookup_key ) {
-                if ( $old_product_data[ $lookup_key ] !== $this->new_data[ $lookup_key ] ) {
-                    $changes_detected = true;
-                    if ( 'regular_price' === $lookup_key || 'sales_price' === $lookup_key ) {
-                        $this->CheckPriceChange( $this->_old_post );
-                    }
-                }
-            }
-        }
-    }
+			foreach ( $values_to_lookup as $lookup_key ) {
+				if ( $old_product_data[ $lookup_key ] !== $this->new_data[ $lookup_key ] ) {
+					if ( 'regular_price' === $lookup_key || 'sales_price' === $lookup_key ) {
+						$this->CheckPriceChange( $this->_old_post );
+					} elseif ( 'stock_status' === $lookup_key ) {
+						$this->CheckStockStatusChange( $this->_old_post );
+					} elseif ( 'stock' === $lookup_key ) {
+						$this->CheckStockQuantityChange( $this->_old_post );
+					} elseif ( 'sku' === $lookup_key ) {
+						$this->CheckSKUChange( $this->_old_post );
+					} elseif ( 'weight' === $lookup_key ) {
+						$this->CheckWeightChange( $this->_old_post );
+					} elseif ( 'tax_status' === $lookup_key ) {
+						$this->check_tax_status_change( $this->_old_post, $this->_old_meta_data, $this->new_data );
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * Trigger alert when new webhook is added.
@@ -297,7 +311,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			)
 		);
 		return $webhook_id;
-  }
+	}
 
 	/**
 	 * Trigger 9082 when a shipping zone is created or modified.
@@ -387,9 +401,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			return;
 		}
 
-        if ( ! isset( $post ) ) {
-            return;
-        }
+		if ( ! isset( $post ) ) {
+			return;
+		}
 
 		if ( 'product' === $post->post_type ) {
 			if (
@@ -5074,16 +5088,16 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param WC_Product $product - WooCommerce product object.
 	 */
 	public function check_product_changes_before_save( $product, $data_store ) {
-        // If we reach here without any POST data, the change is beong done directly so lets update the old item data in case anything changes.
-        if ( ! isset( $_POST['action'] ) ) {
-            // Update held data.
-            $product_id           = $product->get_id();
-            $this->old_product    = wc_get_product( $product_id );
-            $this->_old_post      = get_post( $product_id );
-            $this->_old_data      = $this->GetProductData( $this->old_product );
-            $this->_old_meta_data = get_post_meta( $product_id, '', false );
-        }
-        
+		// If we reach here without any POST data, the change is beong done directly so lets update the old item data in case anything changes.
+		if ( ! isset( $_POST['action'] ) ) {
+			// Update held data.
+			$product_id           = $product->get_id();
+			$this->old_product    = wc_get_product( $product_id );
+			$this->_old_post      = get_post( $product_id );
+			$this->_old_data      = $this->GetProductData( $this->old_product );
+			$this->_old_meta_data = get_post_meta( $product_id, '', false );
+		}
+
 		if ( isset( $_POST['_ajax_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_ajax_nonce'] ) ), 'ac-ajax' ) || isset( $_REQUEST['rest_route'] ) && ( '/wc/v3/products/batch' === $_REQUEST['rest_route'] ) ) {
 			// Get product data.
 			$product_id       = $product->get_id();
