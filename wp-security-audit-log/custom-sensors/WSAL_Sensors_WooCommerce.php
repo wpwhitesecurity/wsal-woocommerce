@@ -1224,7 +1224,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9037,
 				array(
 					'OrderID'     => esc_attr( $post->ID ),
-					'OrderTitle'  => sanitize_text_field( $this->get_order_title( $post->ID ) ),
+					'OrderTitle'  => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post->ID ) ),
 					'OrderStatus' => sanitize_text_field( $post->post_status ),
 				)
 			);
@@ -1252,7 +1252,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				)
 			);
 		} elseif ( 'shop_order' === $post->post_type ) {
-			$this->plugin->alerts->Trigger( 9039, array( 'OrderTitle' => sanitize_text_field( $this->get_order_title( $post_id ) ) ) );
+			$this->plugin->alerts->Trigger( 9039, array( 'OrderTitle' => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post_id ) ) ) );
 		}
 	}
 
@@ -1285,7 +1285,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9038,
 				array(
 					'OrderID'            => esc_attr( $post->ID ),
-					'OrderTitle'         => sanitize_text_field( $this->get_order_title( $post_id ) ),
+					'OrderTitle'         => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post_id ) ),
 					'OrderStatus'        => sanitize_text_field( $post->post_status ),
 					$editor_link['name'] => $editor_link['value'],
 				)
@@ -3027,39 +3027,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	}
 
 	/**
-	 * Formulate Order Title as done by WooCommerce.
-	 *
-	 * @since 3.3.1
-	 *
-	 * @param int|WC_Order $order_id - Order id or WC Order object.
-	 * @return string
-	 */
-	private function get_order_title( $order_id ) {
-		if ( ! $order_id ) {
-			return false;
-		}
-		if ( is_a( $order_id, 'WC_Order' ) ) {
-			$order = $order_id;
-		} else {
-			$order = wc_get_order( $order_id );
-		}
-		if ( ! $order ) {
-			return false;
-		}
-
-		$buyer = '';
-		if ( $order->get_billing_first_name() || $order->get_billing_last_name() ) {
-			$buyer = trim( sprintf( '%1$s %2$s', $order->get_billing_first_name(), $order->get_billing_last_name() ) );
-		} elseif ( $order->get_billing_company() ) {
-			$buyer = trim( $order->get_billing_company() );
-		} elseif ( $order->get_customer_id() ) {
-			$user  = get_user_by( 'id', $order->get_customer_id() );
-			$buyer = ucwords( $user->display_name );
-		}
-		return ( ! empty( $buyer ) ) ? '#' . $order->get_order_number() . ' ' . $buyer : '#' . $order->get_order_number();
-	}
-
-	/**
 	 * WooCommerce Order Status Changed Event.
 	 *
 	 * @since 3.3.1
@@ -3076,7 +3043,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$edit_link   = $this->GetEditorLink( $order_post );
 		$event_data  = array(
 			'OrderID'          => esc_attr( $order_id ),
-			'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order ) ),
+			'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order ) ),
 			'OrderStatus'      => sanitize_text_field( $status_to ),
 			$edit_link['name'] => $edit_link['value'],
 		);
@@ -3100,7 +3067,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link  = $this->GetEditorLink( $order_post );
 			$event_data = array(
 				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 				'ProductTitle'     => $product->get_name(),
 				'ProductID'        => $product->get_id(),
 				'SKU'              => $this->get_product_sku( $product->get_id() ),
@@ -3117,7 +3084,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link  = $this->GetEditorLink( $order_post );
 			$event_data = array(
 				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 				'FeeAmount'        => $item->get_amount(),
 				'OrderStatus'      => $order_post->post_status,
 				'EventType'        => 'added',
@@ -3132,7 +3099,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link  = $this->GetEditorLink( $order_post );
 			$event_data = array(
 				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 				'CouponName'       => $item->get_name(),
 				'CouponValue'      => $item->get_discount(),
 				'OrderStatus'      => $order_post->post_status,
@@ -3148,7 +3115,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link  = $this->GetEditorLink( $order_post );
 			$event_data = array(
 				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 				'TaxName'          => $item->get_name(),
 				'OrderStatus'      => $order_post->post_status,
 				'EventType'        => 'added',
@@ -3163,7 +3130,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link  = $this->GetEditorLink( $order_post );
 			$event_data = array(
 				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 				'OrderStatus'      => $order_post->post_status,
 				'EventType'        => 'added',
 				$edit_link['name'] => $edit_link['value'],
@@ -3190,7 +3157,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link  = $this->GetEditorLink( $order_post );
 			$event_data = array(
 				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 				'ProductTitle'     => $product->get_name(),
 				'ProductID'        => $product->get_id(),
 				'SKU'              => $this->get_product_sku( $product->get_id() ),
@@ -3208,7 +3175,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link  = $this->GetEditorLink( $order_post );
 			$event_data = array(
 				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 				'FeeAmount'        => $item->get_amount(),
 				'OrderStatus'      => $order_post->post_status,
 				'EventType'        => 'removed',
@@ -3224,7 +3191,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link  = $this->GetEditorLink( $order_post );
 			$event_data = array(
 				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 				'CouponName'       => $item->get_name(),
 				'CouponValue'      => $item->get_discount(),
 				'OrderStatus'      => $order_post->post_status,
@@ -3241,7 +3208,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link  = $this->GetEditorLink( $order_post );
 			$event_data = array(
 				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 				'TaxName'          => $item->get_name(),
 				'OrderStatus'      => $order_post->post_status,
 				'EventType'        => 'removed',
@@ -3257,7 +3224,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link  = $this->GetEditorLink( $order_post );
 			$event_data = array(
 				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 				'OrderStatus'      => $order_post->post_status,
 				'EventType'        => 'removed',
 				$edit_link['name'] => $edit_link['value'],
@@ -3295,7 +3262,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					if ( intval( $output['order_item_qty'][ $item_id ] ) !== intval( $old_quantity ) ) {
 						$event_data = array(
 							'OrderID'          => esc_attr( $order_id ),
-							'OrderTitle'       => $this->get_order_title( $order ),
+							'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 							'ProductID'        => $product->get_id(),
 							'SKU'              => $this->get_product_sku( $product->get_id() ),
 							'NewQuantity'      => $output['order_item_qty'][ $item_id ],
@@ -3317,7 +3284,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					if ( intval( $output['line_total'][ $item_id ] ) !== intval( $item->get_amount() ) ) {
 						$event_data = array(
 							'OrderID'          => esc_attr( $order_id ),
-							'OrderTitle'       => $this->get_order_title( $order ),
+							'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 							'FeeAmount'        => $output['line_total'][ $item_id ],
 							'OldFeeAmount'     => $item->get_amount(),
 							'OrderStatus'      => $order_post->post_status,
@@ -3428,7 +3395,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		// Set event data.
 		$event_data = array(
 			'OrderID'          => esc_attr( $order_id ),
-			'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order_id ) ),
+			'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order_id ) ),
 			'OrderStatus'      => sanitize_text_field( $neworder->post_status ),
 			$edit_link['name'] => $edit_link['value'],
 		);
@@ -3466,7 +3433,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					9040,
 					array(
 						'OrderID'          => esc_attr( $order_id ),
-						'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order_id ) ),
+						'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order_id ) ),
 						'OrderStatus'      => sanitize_text_field( $order_post->post_status ),
 						$edit_link['name'] => $edit_link['value'],
 					),
@@ -3526,7 +3493,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'RefundedAmount'   => $currency . $refund_amount,
 				'Reason'           => $refund_reason,
 				'OrderDate'        => $created_date,
-				'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order_id ) ),
+				'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order_id ) ),
 				'OrderStatus'      => sanitize_text_field( $order_obj->post_status ),
 				$edit_link['name'] => $edit_link['value'],
 			)
@@ -3566,7 +3533,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'RefundID'         => esc_attr( $refund_id ),
 				'CustomerUser'     => $username,
 				'OrderDate'        => $created_date,
-				'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order_id ) ),
+				'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order_id ) ),
 				'OrderStatus'      => sanitize_text_field( $order_obj->post_status ),
 				$edit_link['name'] => $edit_link['value'],
 			)
@@ -3778,7 +3745,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9040,
 				array(
 					'OrderID'          => esc_attr( $order_id ),
-					'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order_id ) ),
+					'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order_id ) ),
 					'OrderStatus'      => isset( $order->post_status ) ? sanitize_text_field( $order->post_status ) : false,
 					$edit_link['name'] => $edit_link['value'],
 				),

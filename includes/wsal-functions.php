@@ -290,26 +290,33 @@ function wsal_woocommerce_extension_get_editor_link( $post ) {
  * @param  WC_Order $order - WC Order object.
  * @return string - Order title.
  */
-function wsal_woocommerce_extension_get_order_title( $order ) {
-	if ( ! $order ) {
-		return false;
-	}
-	if ( is_int( $order ) ) {
-		$order = new WC_Order( $order );
-	}
-	if ( ! $order instanceof WC_Order ) {
-		return false;
-	}
+function wsal_woocommerce_extension_get_order_title( $order_id ) {
+    if ( ! $order_id ) {
+        return false;
+    }
+    if ( is_a( $order_id, 'WC_Order' ) ) {
+        $order = $order_id;
+    } elseif ( is_int( $order ) ) {
+        $order = new WC_Order( $order );
+    } else {
+        $order = wc_get_order( $order_id );
+    }
 
-	if ( $order->get_billing_first_name() || $order->get_billing_last_name() ) {
-		$buyer = trim( sprintf( '%1$s %2$s', $order->get_billing_first_name(), $order->get_billing_last_name() ) );
-	} elseif ( $order->get_billing_company() ) {
-		$buyer = trim( $order->get_billing_company() );
-	} elseif ( $order->get_customer_id() ) {
-		$user  = get_user_by( 'id', $order->get_customer_id() );
-		$buyer = ucwords( $user->display_name );
-	}
-	return '#' . $order->get_order_number() . ' ' . $buyer;
+    // Final check.
+    if ( ! $order || ! $order instanceof WC_Order || ! method_exists( $order, 'get_billing_first_name' ) ) {
+        return false;
+    }
+
+    $buyer = '';
+    if ( $order->get_billing_first_name() || $order->get_billing_last_name() ) {
+        $buyer = trim( sprintf( '%1$s %2$s', $order->get_billing_first_name(), $order->get_billing_last_name() ) );
+    } elseif ( $order->get_billing_company() ) {
+        $buyer = trim( $order->get_billing_company() );
+    } elseif ( $order->get_customer_id() ) {
+        $user  = get_user_by( 'id', $order->get_customer_id() );
+        $buyer = ucwords( $user->display_name );
+    }
+    return ( ! empty( $buyer ) ) ? '#' . $order->get_order_number() . ' ' . $buyer : '#' . $order->get_order_number();
 }
 
 /**
