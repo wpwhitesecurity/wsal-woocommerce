@@ -2692,7 +2692,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 */
 	private function GetConfig( $option_name ) {
 		// If this is multisite AND we have some kind of value, we can return it.
-		if ( $this->is_multisite() && ! empty( get_site_option( 'woocommerce_' . $option_name ) ) ) {
+		if ( is_multisite() && ! empty( get_site_option( 'woocommerce_' . $option_name ) ) ) {
 			// get_site_option is not empty, so lets return it.
 			return get_site_option( 'woocommerce_' . $option_name );
 		} else {
