@@ -83,6 +83,7 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 	
 * **Bug fixes**
 	* Ensure SKU request can only be performed on relevant object during events.
+    * Ensure "order name" is only attempted if method exists.
 
 = 1.4.0 (2022-04-06) = 
 

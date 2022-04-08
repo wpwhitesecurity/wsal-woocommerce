@@ -3062,80 +3062,90 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 		if ( $item instanceof WC_Order_Item_Product ) {
 			$product    = $item->get_product();
-			$order      = wc_get_order( $order_id );
-			$order_post = get_post( $order_id );
-			$edit_link  = $this->GetEditorLink( $order_post );
-			$event_data = array(
-				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
-				'ProductTitle'     => $product->get_name(),
-				'ProductID'        => $product->get_id(),
-				'SKU'              => $this->get_product_sku( $product->get_id() ),
-				'OrderStatus'      => $order_post->post_status,
-				'EventType'        => 'added',
-				$edit_link['name'] => $edit_link['value'],
-			);
-			$this->plugin->alerts->TriggerIf( 9130, $event_data, array( $this, 'ignore_if_new_order' ) );
+            if ( $product ) {
+                $order      = wc_get_order( $order_id );
+                $order_post = get_post( $order_id );
+                $edit_link  = $this->GetEditorLink( $order_post );
+                $event_data = array(
+                    'OrderID'          => esc_attr( $order_id ),
+                    'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
+                    'ProductTitle'     => $product->get_name(),
+                    'ProductID'        => $product->get_id(),
+                    'SKU'              => $this->get_product_sku( $product->get_id() ),
+                    'OrderStatus'      => $order_post->post_status,
+                    'EventType'        => 'added',
+                    $edit_link['name'] => $edit_link['value'],
+                );
+                $this->plugin->alerts->TriggerIf( 9130, $event_data, array( $this, 'ignore_if_new_order' ) );
+            }
 		}
 
 		if ( $item instanceof WC_Order_Item_Fee ) {
 			$order      = wc_get_order( $order_id );
-			$order_post = get_post( $order_id );
-			$edit_link  = $this->GetEditorLink( $order_post );
-			$event_data = array(
-				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
-				'FeeAmount'        => $item->get_amount(),
-				'OrderStatus'      => $order_post->post_status,
-				'EventType'        => 'added',
-				$edit_link['name'] => $edit_link['value'],
-			);
-			$this->plugin->alerts->TriggerIf( 9132, $event_data, array( $this, 'ignore_if_new_order' ) );
+            if ( $order ) {
+                $order_post = get_post( $order_id );
+                $edit_link  = $this->GetEditorLink( $order_post );
+                $event_data = array(
+                    'OrderID'          => esc_attr( $order_id ),
+                    'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
+                    'FeeAmount'        => $item->get_amount(),
+                    'OrderStatus'      => $order_post->post_status,
+                    'EventType'        => 'added',
+                    $edit_link['name'] => $edit_link['value'],
+                );
+                $this->plugin->alerts->TriggerIf( 9132, $event_data, array( $this, 'ignore_if_new_order' ) );
+            }
 		}
 
 		if ( $item instanceof WC_Order_Item_Coupon ) {
 			$order      = wc_get_order( $order_id );
-			$order_post = get_post( $order_id );
-			$edit_link  = $this->GetEditorLink( $order_post );
-			$event_data = array(
-				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
-				'CouponName'       => $item->get_name(),
-				'CouponValue'      => $item->get_discount(),
-				'OrderStatus'      => $order_post->post_status,
-				'EventType'        => 'added',
-				$edit_link['name'] => $edit_link['value'],
-			);
-			$this->plugin->alerts->TriggerIf( 9134, $event_data, array( $this, 'ignore_if_new_order' ) );
+            if ( $order ) {
+                $order_post = get_post( $order_id );
+                $edit_link  = $this->GetEditorLink( $order_post );
+                $event_data = array(
+                    'OrderID'          => esc_attr( $order_id ),
+                    'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
+                    'CouponName'       => $item->get_name(),
+                    'CouponValue'      => $item->get_discount(),
+                    'OrderStatus'      => $order_post->post_status,
+                    'EventType'        => 'added',
+                    $edit_link['name'] => $edit_link['value'],
+                );
+                $this->plugin->alerts->TriggerIf( 9134, $event_data, array( $this, 'ignore_if_new_order' ) );
+            }
 		}
 
 		if ( $item instanceof WC_Order_Item_Tax ) {
 			$order      = wc_get_order( $order_id );
-			$order_post = get_post( $order_id );
-			$edit_link  = $this->GetEditorLink( $order_post );
-			$event_data = array(
-				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
-				'TaxName'          => $item->get_name(),
-				'OrderStatus'      => $order_post->post_status,
-				'EventType'        => 'added',
-				$edit_link['name'] => $edit_link['value'],
-			);
-			$this->plugin->alerts->TriggerIf( 9135, $event_data, array( $this, 'ignore_if_new_order' ) );
+            if ( $order ) {
+                $order_post = get_post( $order_id );
+                $edit_link  = $this->GetEditorLink( $order_post );
+                $event_data = array(
+                    'OrderID'          => esc_attr( $order_id ),
+                    'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
+                    'TaxName'          => $item->get_name(),
+                    'OrderStatus'      => $order_post->post_status,
+                    'EventType'        => 'added',
+                    $edit_link['name'] => $edit_link['value'],
+                );
+                $this->plugin->alerts->TriggerIf( 9135, $event_data, array( $this, 'ignore_if_new_order' ) );
+            }
 		}
 
 		if ( $item instanceof WC_Order_Item_Shipping ) {
 			$order      = wc_get_order( $order_id );
-			$order_post = get_post( $order_id );
-			$edit_link  = $this->GetEditorLink( $order_post );
-			$event_data = array(
-				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
-				'OrderStatus'      => $order_post->post_status,
-				'EventType'        => 'added',
-				$edit_link['name'] => $edit_link['value'],
-			);
-			$this->plugin->alerts->TriggerIf( 9137, $event_data, array( $this, 'ignore_if_new_order' ) );
+            if ( $order ) {
+                $order_post = get_post( $order_id );
+                $edit_link  = $this->GetEditorLink( $order_post );
+                $event_data = array(
+                    'OrderID'          => esc_attr( $order_id ),
+                    'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
+                    'OrderStatus'      => $order_post->post_status,
+                    'EventType'        => 'added',
+                    $edit_link['name'] => $edit_link['value'],
+                );
+                $this->plugin->alerts->TriggerIf( 9137, $event_data, array( $this, 'ignore_if_new_order' ) );
+            }
 		}
 	}
 
