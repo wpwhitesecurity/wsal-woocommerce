@@ -252,7 +252,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			);
 
 			foreach ( $values_to_lookup as $lookup_key ) {
-				if ( $old_product_data[ $lookup_key ] !== $this->new_data[ $lookup_key ] ) {
+				if ( isset( $this->new_data[ $lookup_key ] ) && $old_product_data[ $lookup_key ] !== $this->new_data[ $lookup_key ] ) {
 					if ( 'regular_price' === $lookup_key || 'sales_price' === $lookup_key ) {
 						$this->CheckPriceChange( $this->_old_post );
 					} elseif ( 'stock_status' === $lookup_key ) {
