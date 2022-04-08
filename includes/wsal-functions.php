@@ -297,7 +297,7 @@ function wsal_woocommerce_extension_get_order_title( $order_id ) {
 	if ( is_a( $order_id, 'WC_Order' ) ) {
 		$order = $order_id;
 	} elseif ( is_int( $order ) ) {
-		$order = new WC_Order( $order );
+		$order = new WC_Order( $order_id );
 	} else {
 		$order = wc_get_order( $order_id );
 	}
