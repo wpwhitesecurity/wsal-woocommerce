@@ -131,38 +131,6 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 	}
 
 	/**
-	 * Formulate Order Title as done by WooCommerce.
-	 *
-	 * @since 3.3.1
-	 *
-	 * @param int|WC_Order $order - Order id or WC Order object.
-	 * @return string
-	 */
-	private function get_order_title( $order ) {
-		if ( ! $order ) {
-			return false;
-		}
-		if ( is_int( $order ) ) {
-			$order = new WC_Order( $order );
-		}
-		if ( ! $order instanceof WC_Order ) {
-			return false;
-		}
-
-		$buyer = '';
-
-		if ( $order->get_billing_first_name() || $order->get_billing_last_name() ) {
-			$buyer = trim( sprintf( '%1$s %2$s', $order->get_billing_first_name(), $order->get_billing_last_name() ) );
-		} elseif ( $order->get_billing_company() ) {
-			$buyer = trim( $order->get_billing_company() );
-		} elseif ( $order->get_customer_id() ) {
-			$user  = get_user_by( 'id', $order->get_customer_id() );
-			$buyer = ucwords( $user->display_name );
-		}
-		return '#' . $order->get_order_number() . ' ' . $buyer;
-	}
-
-	/**
 	 * New WooCommerce Order Event.
 	 *
 	 * @since 3.3.1
@@ -185,7 +153,7 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 				9035,
 				array(
 					'OrderID'            => $order_id,
-					'OrderTitle'         => $this->get_order_title( $new_order ),
+					'OrderTitle'         => wsal_woocommerce_extension_get_order_title( $order_id ),
 					'OrderStatus'        => $new_order->get_status(),
 					$editor_link['name'] => $editor_link['value'],
 				)
@@ -398,7 +366,11 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 	 */
 	private function get_product_sku( $product_id ) {
 		$product = wc_get_product( $product_id );
-		$sku     = $product->get_sku();
+		// If this is not an object, return.
+		if ( ! is_object( $product ) ) {
+			return;
+		}
+		$sku = $product->get_sku();
 		return ( $sku ) ? $sku : esc_html__( 'Not provided', 'wsal-woocommerce' );
 	}
 }

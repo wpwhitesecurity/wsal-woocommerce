@@ -210,7 +210,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		add_action( 'update_user_meta', array( $this, 'before_wc_user_meta_update' ), 10, 3 );
 		add_action( 'added_user_meta', array( $this, 'wc_user_meta_updated' ), 10, 4 );
 		add_action( 'updated_user_meta', array( $this, 'wc_user_meta_updated' ), 10, 4 );
-		add_action( 'woocommerce_before_product_object_save', array( $this, 'check_product_changes_before_save' ), 10, 1 );
+		add_action( 'woocommerce_before_product_object_save', array( $this, 'check_product_changes_before_save' ), 10, 2 );
+		add_action( 'woocommerce_after_product_object_save', array( $this, 'check_product_changes_after_save' ), 10, 1 );
 		add_action( 'woocommerce_product_quick_edit_save', array( $this, 'inline_product_changed' ), 10, 1 );
 		add_action( 'updated_option', array( $this, 'settings_updated' ), 10, 3 );
 		add_action( 'create_product_tag', array( $this, 'EventTagCreation' ), 10, 1 );
@@ -219,13 +220,55 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		add_action( 'woocommerce_new_webhook', array( $this, 'webhook_added' ), 10, 2 );
 		add_action( 'woocommerce_webhook_deleted', array( $this, 'webhook_deleted' ), 10, 2 );
 		add_action( 'woocommerce_webhook_updated', array( $this, 'webhook_updated' ), 10 );
-    add_action( "woocommerce_before_shipping_zone_object_save", array( $this, 'detect_shipping_zone_change' ), 10, 2 ); 
+		add_action( 'woocommerce_before_shipping_zone_object_save', array( $this, 'detect_shipping_zone_change' ), 10, 2 );
 
-    // Orders.
+		// Orders.
 		add_action( 'woocommerce_new_order_item', array( $this, 'event_order_items_added' ), 10, 3 );
 		add_action( 'woocommerce_before_delete_order_item', array( $this, 'event_order_items_removed' ), 10, 1 );
 		add_action( 'woocommerce_before_save_order_items', array( $this, 'event_order_items_quantity_changed' ), 10, 2 );
 		add_action( 'woocommerce_refund_deleted', array( $this, 'event_order_refund_removed' ), 10, 2 );
+	}
+
+	/**
+	 * Detect changes made directly to WC product data.
+	 *
+	 * @param  WC_Product $product - WC porduct object.
+	 * @return void
+	 */
+	public function check_product_changes_after_save( $product ) {
+		// We know this hook is only fired when updating, but we need to be sure this is an automatic (not post edit etc) change.
+		if ( ! isset( $_POST['action'] ) ) {
+			$product_data     = $this->GetProductData( $product );
+			$this->new_data   = $product_data;
+			$old_product_data = $this->_old_data;
+			$values_to_lookup = array(
+				'sku',
+				'stock_status',
+				'stock',
+				'tax_status',
+				'weight',
+				'regular_price',
+				'sales_price',
+			);
+
+			foreach ( $values_to_lookup as $lookup_key ) {
+				if ( isset( $this->new_data[ $lookup_key ] ) && $old_product_data[ $lookup_key ] !== $this->new_data[ $lookup_key ] ) {
+					if ( 'regular_price' === $lookup_key || 'sales_price' === $lookup_key ) {
+						$this->CheckPriceChange( $this->_old_post );
+					} elseif ( 'stock_status' === $lookup_key ) {
+						$this->CheckStockStatusChange( $this->_old_post );
+					} elseif ( 'stock' === $lookup_key ) {
+						$this->CheckStockQuantityChange( $this->_old_post );
+					} elseif ( 'sku' === $lookup_key ) {
+						$this->CheckSKUChange( $this->_old_post );
+					} elseif ( 'weight' === $lookup_key ) {
+						$this->CheckWeightChange( $this->_old_post );
+					} elseif ( 'tax_status' === $lookup_key ) {
+						$this->check_tax_status_change( $this->_old_post, $this->_old_meta_data, $this->new_data );
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -268,7 +311,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			)
 		);
 		return $webhook_id;
-  }
+	}
 
 	/**
 	 * Trigger 9082 when a shipping zone is created or modified.
@@ -358,11 +401,15 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			return;
 		}
 
+		if ( ! isset( $post ) ) {
+			return;
+		}
+
 		if ( 'product' === $post->post_type ) {
 			if (
-				( 'auto-draft' === $this->_old_post->post_status && 'draft' === $post->post_status ) // Saving draft.
-					|| ( 'draft' === $this->_old_post->post_status && 'publish' === $post->post_status ) // Publishing post.
-					|| ( 'auto-draft' === $this->_old_post->post_status && 'publish' === $post->post_status )
+				( isset( $this->_old_post ) && 'auto-draft' === $this->_old_post->post_status && 'draft' === $post->post_status ) // Saving draft.
+					|| isset( $this->_old_post ) && ( 'draft' === $this->_old_post->post_status && 'publish' === $post->post_status ) // Publishing post.
+					|| isset( $this->_old_post ) && ( 'auto-draft' === $this->_old_post->post_status && 'publish' === $post->post_status )
 				) {
 				$this->EventCreation( $this->_old_post, $post );
 			} else {
@@ -508,7 +555,11 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 */
 	private function get_product_sku( $product_id ) {
 		$product = wc_get_product( $product_id );
-		$sku     = $product->get_sku();
+		// If this is not an object, return.
+		if ( ! is_object( $product ) ) {
+			return;
+		}
+		$sku = $product->get_sku();
 		return ( $sku ) ? $sku : __( 'Not provided', 'wsal-woocommerce' );
 	}
 
@@ -1173,7 +1224,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9037,
 				array(
 					'OrderID'     => esc_attr( $post->ID ),
-					'OrderTitle'  => sanitize_text_field( $this->get_order_title( $post->ID ) ),
+					'OrderTitle'  => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post->ID ) ),
 					'OrderStatus' => sanitize_text_field( $post->post_status ),
 				)
 			);
@@ -1201,7 +1252,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				)
 			);
 		} elseif ( 'shop_order' === $post->post_type ) {
-			$this->plugin->alerts->Trigger( 9039, array( 'OrderTitle' => sanitize_text_field( $this->get_order_title( $post_id ) ) ) );
+			$this->plugin->alerts->Trigger( 9039, array( 'OrderTitle' => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post_id ) ) ) );
 		}
 	}
 
@@ -1234,7 +1285,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9038,
 				array(
 					'OrderID'            => esc_attr( $post->ID ),
-					'OrderTitle'         => sanitize_text_field( $this->get_order_title( $post_id ) ),
+					'OrderTitle'         => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post_id ) ),
 					'OrderStatus'        => sanitize_text_field( $post->post_status ),
 					$editor_link['name'] => $editor_link['value'],
 				)
@@ -2641,7 +2692,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 */
 	private function GetConfig( $option_name ) {
 		// If this is multisite AND we have some kind of value, we can return it.
-		if ( $this->is_multisite() && ! empty( get_site_option( 'woocommerce_' . $option_name ) ) ) {
+		if ( is_multisite() && ! empty( get_site_option( 'woocommerce_' . $option_name ) ) ) {
 			// get_site_option is not empty, so lets return it.
 			return get_site_option( 'woocommerce_' . $option_name );
 		} else {
@@ -2976,39 +3027,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	}
 
 	/**
-	 * Formulate Order Title as done by WooCommerce.
-	 *
-	 * @since 3.3.1
-	 *
-	 * @param int|WC_Order $order_id - Order id or WC Order object.
-	 * @return string
-	 */
-	private function get_order_title( $order_id ) {
-		if ( ! $order_id ) {
-			return false;
-		}
-		if ( is_a( $order_id, 'WC_Order' ) ) {
-			$order = $order_id;
-		} else {
-			$order = wc_get_order( $order_id );
-		}
-		if ( ! $order ) {
-			return false;
-		}
-
-		$buyer = '';
-		if ( $order->get_billing_first_name() || $order->get_billing_last_name() ) {
-			$buyer = trim( sprintf( '%1$s %2$s', $order->get_billing_first_name(), $order->get_billing_last_name() ) );
-		} elseif ( $order->get_billing_company() ) {
-			$buyer = trim( $order->get_billing_company() );
-		} elseif ( $order->get_customer_id() ) {
-			$user  = get_user_by( 'id', $order->get_customer_id() );
-			$buyer = ucwords( $user->display_name );
-		}
-		return ( ! empty( $buyer ) ) ? '#' . $order->get_order_number() . ' ' . $buyer : '#' . $order->get_order_number();
-	}
-
-	/**
 	 * WooCommerce Order Status Changed Event.
 	 *
 	 * @since 3.3.1
@@ -3025,7 +3043,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$edit_link   = $this->GetEditorLink( $order_post );
 		$event_data  = array(
 			'OrderID'          => esc_attr( $order_id ),
-			'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order ) ),
+			'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order ) ),
 			'OrderStatus'      => sanitize_text_field( $status_to ),
 			$edit_link['name'] => $edit_link['value'],
 		);
@@ -3043,81 +3061,91 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	public function event_order_items_added( $item_id, $item, $order_id ) {
 
 		if ( $item instanceof WC_Order_Item_Product ) {
-			$product    = $item->get_product();
-			$order      = wc_get_order( $order_id );
-			$order_post = get_post( $order_id );
-			$edit_link  = $this->GetEditorLink( $order_post );
-			$event_data = array(
-				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
-				'ProductTitle'     => $product->get_name(),
-				'ProductID'        => $product->get_id(),
-				'SKU'              => $this->get_product_sku( $product->get_id() ),
-				'OrderStatus'      => $order_post->post_status,
-				'EventType'        => 'added',
-				$edit_link['name'] => $edit_link['value'],
-			);
-			$this->plugin->alerts->TriggerIf( 9130, $event_data, array( $this, 'ignore_if_new_order' ) );
+			$product = $item->get_product();
+			if ( $product ) {
+				$order      = wc_get_order( $order_id );
+				$order_post = get_post( $order_id );
+				$edit_link  = $this->GetEditorLink( $order_post );
+				$event_data = array(
+					'OrderID'          => esc_attr( $order_id ),
+					'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
+					'ProductTitle'     => $product->get_name(),
+					'ProductID'        => $product->get_id(),
+					'SKU'              => $this->get_product_sku( $product->get_id() ),
+					'OrderStatus'      => $order_post->post_status,
+					'EventType'        => 'added',
+					$edit_link['name'] => $edit_link['value'],
+				);
+				$this->plugin->alerts->TriggerIf( 9130, $event_data, array( $this, 'ignore_if_new_order' ) );
+			}
 		}
 
 		if ( $item instanceof WC_Order_Item_Fee ) {
-			$order      = wc_get_order( $order_id );
-			$order_post = get_post( $order_id );
-			$edit_link  = $this->GetEditorLink( $order_post );
-			$event_data = array(
-				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
-				'FeeAmount'        => $item->get_amount(),
-				'OrderStatus'      => $order_post->post_status,
-				'EventType'        => 'added',
-				$edit_link['name'] => $edit_link['value'],
-			);
-			$this->plugin->alerts->TriggerIf( 9132, $event_data, array( $this, 'ignore_if_new_order' ) );
+			$order = wc_get_order( $order_id );
+			if ( $order ) {
+				$order_post = get_post( $order_id );
+				$edit_link  = $this->GetEditorLink( $order_post );
+				$event_data = array(
+					'OrderID'          => esc_attr( $order_id ),
+					'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
+					'FeeAmount'        => $item->get_amount(),
+					'OrderStatus'      => $order_post->post_status,
+					'EventType'        => 'added',
+					$edit_link['name'] => $edit_link['value'],
+				);
+				$this->plugin->alerts->TriggerIf( 9132, $event_data, array( $this, 'ignore_if_new_order' ) );
+			}
 		}
 
 		if ( $item instanceof WC_Order_Item_Coupon ) {
-			$order      = wc_get_order( $order_id );
-			$order_post = get_post( $order_id );
-			$edit_link  = $this->GetEditorLink( $order_post );
-			$event_data = array(
-				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
-				'CouponName'       => $item->get_name(),
-				'CouponValue'      => $item->get_discount(),
-				'OrderStatus'      => $order_post->post_status,
-				'EventType'        => 'added',
-				$edit_link['name'] => $edit_link['value'],
-			);
-			$this->plugin->alerts->TriggerIf( 9134, $event_data, array( $this, 'ignore_if_new_order' ) );
+			$order = wc_get_order( $order_id );
+			if ( $order ) {
+				$order_post = get_post( $order_id );
+				$edit_link  = $this->GetEditorLink( $order_post );
+				$event_data = array(
+					'OrderID'          => esc_attr( $order_id ),
+					'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
+					'CouponName'       => $item->get_name(),
+					'CouponValue'      => $item->get_discount(),
+					'OrderStatus'      => $order_post->post_status,
+					'EventType'        => 'added',
+					$edit_link['name'] => $edit_link['value'],
+				);
+				$this->plugin->alerts->TriggerIf( 9134, $event_data, array( $this, 'ignore_if_new_order' ) );
+			}
 		}
 
 		if ( $item instanceof WC_Order_Item_Tax ) {
-			$order      = wc_get_order( $order_id );
-			$order_post = get_post( $order_id );
-			$edit_link  = $this->GetEditorLink( $order_post );
-			$event_data = array(
-				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
-				'TaxName'          => $item->get_name(),
-				'OrderStatus'      => $order_post->post_status,
-				'EventType'        => 'added',
-				$edit_link['name'] => $edit_link['value'],
-			);
-			$this->plugin->alerts->TriggerIf( 9135, $event_data, array( $this, 'ignore_if_new_order' ) );
+			$order = wc_get_order( $order_id );
+			if ( $order ) {
+				$order_post = get_post( $order_id );
+				$edit_link  = $this->GetEditorLink( $order_post );
+				$event_data = array(
+					'OrderID'          => esc_attr( $order_id ),
+					'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
+					'TaxName'          => $item->get_name(),
+					'OrderStatus'      => $order_post->post_status,
+					'EventType'        => 'added',
+					$edit_link['name'] => $edit_link['value'],
+				);
+				$this->plugin->alerts->TriggerIf( 9135, $event_data, array( $this, 'ignore_if_new_order' ) );
+			}
 		}
 
 		if ( $item instanceof WC_Order_Item_Shipping ) {
-			$order      = wc_get_order( $order_id );
-			$order_post = get_post( $order_id );
-			$edit_link  = $this->GetEditorLink( $order_post );
-			$event_data = array(
-				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
-				'OrderStatus'      => $order_post->post_status,
-				'EventType'        => 'added',
-				$edit_link['name'] => $edit_link['value'],
-			);
-			$this->plugin->alerts->TriggerIf( 9137, $event_data, array( $this, 'ignore_if_new_order' ) );
+			$order = wc_get_order( $order_id );
+			if ( $order ) {
+				$order_post = get_post( $order_id );
+				$edit_link  = $this->GetEditorLink( $order_post );
+				$event_data = array(
+					'OrderID'          => esc_attr( $order_id ),
+					'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
+					'OrderStatus'      => $order_post->post_status,
+					'EventType'        => 'added',
+					$edit_link['name'] => $edit_link['value'],
+				);
+				$this->plugin->alerts->TriggerIf( 9137, $event_data, array( $this, 'ignore_if_new_order' ) );
+			}
 		}
 	}
 
@@ -3139,7 +3167,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link  = $this->GetEditorLink( $order_post );
 			$event_data = array(
 				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 				'ProductTitle'     => $product->get_name(),
 				'ProductID'        => $product->get_id(),
 				'SKU'              => $this->get_product_sku( $product->get_id() ),
@@ -3157,7 +3185,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link  = $this->GetEditorLink( $order_post );
 			$event_data = array(
 				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 				'FeeAmount'        => $item->get_amount(),
 				'OrderStatus'      => $order_post->post_status,
 				'EventType'        => 'removed',
@@ -3173,7 +3201,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link  = $this->GetEditorLink( $order_post );
 			$event_data = array(
 				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 				'CouponName'       => $item->get_name(),
 				'CouponValue'      => $item->get_discount(),
 				'OrderStatus'      => $order_post->post_status,
@@ -3190,7 +3218,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link  = $this->GetEditorLink( $order_post );
 			$event_data = array(
 				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 				'TaxName'          => $item->get_name(),
 				'OrderStatus'      => $order_post->post_status,
 				'EventType'        => 'removed',
@@ -3206,7 +3234,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			$edit_link  = $this->GetEditorLink( $order_post );
 			$event_data = array(
 				'OrderID'          => esc_attr( $order_id ),
-				'OrderTitle'       => $this->get_order_title( $order ),
+				'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 				'OrderStatus'      => $order_post->post_status,
 				'EventType'        => 'removed',
 				$edit_link['name'] => $edit_link['value'],
@@ -3244,7 +3272,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					if ( intval( $output['order_item_qty'][ $item_id ] ) !== intval( $old_quantity ) ) {
 						$event_data = array(
 							'OrderID'          => esc_attr( $order_id ),
-							'OrderTitle'       => $this->get_order_title( $order ),
+							'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 							'ProductID'        => $product->get_id(),
 							'SKU'              => $this->get_product_sku( $product->get_id() ),
 							'NewQuantity'      => $output['order_item_qty'][ $item_id ],
@@ -3266,7 +3294,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					if ( intval( $output['line_total'][ $item_id ] ) !== intval( $item->get_amount() ) ) {
 						$event_data = array(
 							'OrderID'          => esc_attr( $order_id ),
-							'OrderTitle'       => $this->get_order_title( $order ),
+							'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 							'FeeAmount'        => $output['line_total'][ $item_id ],
 							'OldFeeAmount'     => $item->get_amount(),
 							'OrderStatus'      => $order_post->post_status,
@@ -3377,7 +3405,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		// Set event data.
 		$event_data = array(
 			'OrderID'          => esc_attr( $order_id ),
-			'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order_id ) ),
+			'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order_id ) ),
 			'OrderStatus'      => sanitize_text_field( $neworder->post_status ),
 			$edit_link['name'] => $edit_link['value'],
 		);
@@ -3415,7 +3443,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					9040,
 					array(
 						'OrderID'          => esc_attr( $order_id ),
-						'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order_id ) ),
+						'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order_id ) ),
 						'OrderStatus'      => sanitize_text_field( $order_post->post_status ),
 						$edit_link['name'] => $edit_link['value'],
 					),
@@ -3475,7 +3503,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'RefundedAmount'   => $currency . $refund_amount,
 				'Reason'           => $refund_reason,
 				'OrderDate'        => $created_date,
-				'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order_id ) ),
+				'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order_id ) ),
 				'OrderStatus'      => sanitize_text_field( $order_obj->post_status ),
 				$edit_link['name'] => $edit_link['value'],
 			)
@@ -3515,7 +3543,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'RefundID'         => esc_attr( $refund_id ),
 				'CustomerUser'     => $username,
 				'OrderDate'        => $created_date,
-				'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order_id ) ),
+				'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order_id ) ),
 				'OrderStatus'      => sanitize_text_field( $order_obj->post_status ),
 				$edit_link['name'] => $edit_link['value'],
 			)
@@ -3727,7 +3755,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				9040,
 				array(
 					'OrderID'          => esc_attr( $order_id ),
-					'OrderTitle'       => sanitize_text_field( $this->get_order_title( $order_id ) ),
+					'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order_id ) ),
 					'OrderStatus'      => isset( $order->post_status ) ? sanitize_text_field( $order->post_status ) : false,
 					$edit_link['name'] => $edit_link['value'],
 				),
@@ -5040,8 +5068,18 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 *
 	 * @param WC_Product $product - WooCommerce product object.
 	 */
-	public function check_product_changes_before_save( $product ) {
-		if ( isset( $_POST['_ajax_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_ajax_nonce'] ) ), 'ac-ajax' ) ) {
+	public function check_product_changes_before_save( $product, $data_store ) {
+		// If we reach here without any POST data, the change is beong done directly so lets update the old item data in case anything changes.
+		if ( ! isset( $_POST['action'] ) ) {
+			// Update held data.
+			$product_id           = $product->get_id();
+			$this->old_product    = wc_get_product( $product_id );
+			$this->_old_post      = get_post( $product_id );
+			$this->_old_data      = $this->GetProductData( $this->old_product );
+			$this->_old_meta_data = get_post_meta( $product_id, '', false );
+		}
+
+		if ( isset( $_POST['_ajax_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_ajax_nonce'] ) ), 'ac-ajax' ) || isset( $_REQUEST['rest_route'] ) && ( '/wc/v3/products/batch' === $_REQUEST['rest_route'] ) ) {
 			// Get product data.
 			$product_id       = $product->get_id();
 			$old_product      = wc_get_product( $product_id );

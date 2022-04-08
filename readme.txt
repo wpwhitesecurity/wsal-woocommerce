@@ -6,7 +6,7 @@ License URI: https://www.gnu.org/licenses/gpl.html
 Tags: activity log for WooCommerce, WP Activity Log extension, activity logs
 Requires at least: 4.5
 Tested up to: 5.8.3
-Stable tag: 1.2.4
+Stable tag: 1.4.1
 Requires PHP: 7.0
 
 Keep a detailed log of your team's changes in the WooCommerce store, products, orders & more.
@@ -75,6 +75,86 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 1. Changes in WooCommerce, products and more reported in the WordPress activity log.
 
 == Changelog ==
+
+= 1.4.1 (2022-04-08) = 
+
+* **Improvement**
+	* Now we can capture almost any change done by third party plugins.
+	
+* **Bug fixes**
+	* Ensure SKU request can only be performed on relevant object during events.
+    * Ensure "order name" is only attempted if method exists.
+    * Added further conditional checks to order events to ensure they only run when applicable.
+    * Corrected multisite function check name.
+
+= 1.4.0 (2022-04-06) = 
+
+Release notes: [Announcing Activity log for WooCommerce 1.4.0](https://wpactivitylog.com/activity-log-woocommerce-1-4-0/)
+
+* **New event IDs for WooCommerce orders changes**
+	* 9130: Added / removed a product from an order
+	* 9131: Modified the quantity of a product in an order
+	* 9132: Added / removed a fee from an order
+	* 9133: Changed the amount of a fee in an order
+	* 9134: Added / removed a coupon from an order
+	* 9135: Added / removed tax from an order
+	* 9136: Refund reversed on an order
+	* 9137: Added / removed shipping from an order
+	
+
+* **New event IDs for changes in Currency settings**
+	* 9115: Changed the Currency position
+	* 9116: Changed the currency Thousand separator
+	* 9117: Changed the currency Decimal separator
+	* 9118: Changed the currency's number of decimals
+	
+* **New event IDs for WooCommerce webhook changes**
+	* 9120: Added a new webhook
+	* 9121: Deleted a webhook
+	* 9122: Modified a webhook
+	
+* **New event IDs for WooCommerce product changes**
+	* 9119: Changed the Low stock treshhold of a product
+	
+* **Improvement**
+	* All code is now inline with the WordPress coding standard.
+	* Product SKU is now added to every WooCommerce product activity log event.
+	* Event ID 9029 now only correctly logged when the store's address is changed.
+	* Added the reported "further details" to Event ID 9041, which reports an order refund.
+	
+* **Bug fixes**
+	* Addressed error which occurs when updating a user profile for the first time.
+	* Removed the "invalid offset" PHP errors.
+	* Handled the exception when there is no "_tax_status" in a product.
+	* Fixed: event ID 2001 triiggered when a coupon is created.
+	
+= 1.3.1 (2021-09-03) = 
+
+Reversed the new feature "detection of when products are added to existing order" until some issues are addressed.
+
+= 1.3.0 (2021-09-02) = 
+
+Release notes: [Activity log extensions for Yoast SEO, WooCommerce & WPForms get a maintenance update](https://wpactivitylog.com/extensions-september-2021-update/)
+
+* **New event IDs**
+	* 9100: User allowed / disallowed reviews on WooCommerce store (changed the status of the Allow reviews setting).
+	* 9107: User enabled/disabled the "Show verified owner label on reviews" setting in the WooCommerce store.
+	* 9108: User changed the status of the "Reviews can only be left by verified owners" setting in the WooCommerce store.
+	* 9109: User changed the status of the "Star rating on reviews" setting in the WooCommerce store.
+	* 9110: User changed the status of the Star ratings should be required setting in the store.
+	* 9111: Changed a Checkout endpoint on the WooCommerce store.
+	* 9112: Changed an Account endpoint on the WooCommerce store.
+	* 9113: The Tax status of a product was changed.
+	* 9114: The Tax class of a product was changed.
+	
+* **Improvement**
+	* Extension is now fully translatable.
+	* WooCommerce orders sensor now can detect and keep a log of products added to an existing order.
+	
+* **Bug fixes**
+	* Fixed: Plugin reports a number of incorrect events when the sale price of a product is changed.
+	* Fixed: Plugin reported product page status instead of stock state in event ID 9018.
+	* Fixed: Plugin reported wrong Event Type for event ID 9082 (WooCommerce shipping zone changes).
 
 = 1.2.4 (2021-09-03) = 
 
