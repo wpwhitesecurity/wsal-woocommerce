@@ -366,11 +366,11 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 	 */
 	private function get_product_sku( $product_id ) {
 		$product = wc_get_product( $product_id );
-        // If this is not an object, return.
-        if ( ! is_object( $product ) ) {
-            return;
-        }
-		$sku     = $product->get_sku();
+		// If this is not an object, return.
+		if ( ! is_object( $product ) ) {
+			return;
+		}
+		$sku = $product->get_sku();
 		return ( $sku ) ? $sku : esc_html__( 'Not provided', 'wsal-woocommerce' );
 	}
 }

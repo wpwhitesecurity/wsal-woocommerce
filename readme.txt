@@ -85,6 +85,7 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 	* Ensure SKU request can only be performed on relevant object during events.
     * Ensure "order name" is only attempted if method exists.
     * Added further conditional checks to order events to ensure they only run when applicable.
+    * Corrected multisite function check name.
 
 = 1.4.0 (2022-04-06) = 
 
