@@ -238,7 +238,11 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	public function check_product_changes_after_save( $product ) {
 		// We know this hook is only fired when updating, but we need to be sure this is an automatic (not post edit etc) change.
 		if ( ! isset( $_POST['action'] ) ) {
-			$product_data     = $this->GetProductData( $product );
+			$product_data = $this->GetProductData( $product );
+			if ( empty( $product_data ) ) {
+				return;
+			}
+
 			$this->new_data   = $product_data;
 			$old_product_data = $this->_old_data;
 			$values_to_lookup = array(
@@ -421,6 +425,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				// Get new woocommerce product object.
 				$new_product    = wc_get_product( $post->ID );
 				$this->new_data = $this->GetProductData( $new_product );
+				if ( empty( $this->new_data ) ) {
+					return;
+				}
 
 				$changes = 0;
 				$changes = $this->CheckCategoriesChange( $this->_old_cats, $this->GetProductCategories( $post ), $this->_old_post, $post )
@@ -445,10 +452,11 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					+ $this->check_upsells_change( $this->_old_post )
 					+ $this->check_cross_sell_change( $this->_old_post )
 					+ $this->check_attributes_change( $this->_old_post )
-					+ $this->check_image_change( $this->_old_post );
-					+ $this->check_download_limit_change( $this->_old_meta_data );
-					+ $this->check_tax_status_change( $this->_old_post, $this->_old_meta_data, $this->new_data );
+					+ $this->check_image_change( $this->_old_post )
+					+ $this->check_download_limit_change( $this->_old_meta_data )
+					+ $this->check_tax_status_change( $this->_old_post, $this->_old_meta_data, $this->new_data )
 					+ $this->check_low_stock_threshold_change( $this->_old_post, $this->_old_meta_data, $this->new_data );
+
 
 				if ( ! $changes ) {
 					// Change Permalink.
@@ -2649,9 +2657,14 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * 19. File URLs.
 	 *
 	 * @param WC_Product $product - Product post object.
-	 * @return array
+	 *
+	 * @return array Product data as array. Empty if the argument is not a valid WooCommerce product.
 	 */
 	protected function GetProductData( $product ) {
+		if ( ! is_a( $product, 'WC_Product' ) ) {
+			return array();
+		}
+
 		$product_data = array(
 			'type'               => $product->get_type(),
 			'catalog_visibility' => $product->get_catalog_visibility(),
@@ -3037,11 +3050,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param WC_Order $order       – WooCommerce order object.
 	 */
 	public function event_order_status_changed( $order_id, $status_from, $status_to, $order ) {
-		$order_post  = get_post( $order_id ); // Get order post object.
-		$order_title = ( null !== $order_post && $order_post instanceof WP_Post ) ? $order_post->post_title : false;
-		$order_post  = get_post( $order_id );
-		$edit_link   = $this->GetEditorLink( $order_post );
-		$event_data  = array(
+		$order_post = get_post( $order_id ); // Get order post object.
+		$edit_link  = $this->GetEditorLink( $order_post );
+		$event_data = array(
 			'OrderID'          => esc_attr( $order_id ),
 			'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order ) ),
 			'OrderStatus'      => sanitize_text_field( $status_to ),
@@ -3062,7 +3073,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 		if ( $item instanceof WC_Order_Item_Product ) {
 			$product = $item->get_product();
-			if ( $product ) {
+			if ( $product instanceof WC_Product ) {
 				$order      = wc_get_order( $order_id );
 				$order_post = get_post( $order_id );
 				$edit_link  = $this->GetEditorLink( $order_post );
