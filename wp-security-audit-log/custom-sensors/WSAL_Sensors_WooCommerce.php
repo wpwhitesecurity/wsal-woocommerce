@@ -239,7 +239,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		// We know this hook is only fired when updating, but we need to be sure this is an automatic (not post edit etc) change.
 		if ( ! isset( $_POST['action'] ) ) {
 			$product_data = $this->GetProductData( $product );
-			if ( is_empty( $product_data ) ) {
+			if ( empty( $product_data ) ) {
 				return;
 			}
 
