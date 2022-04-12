@@ -76,6 +76,12 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 
 == Changelog ==
 
+= 1.4.2 (2022-04-12) =
+
+* **Bug fixes**
+	* Fix fatal error during product duplication.
+	* Fix error related to the subscription renewal process in WooCommerce Subscriptions.
+
 = 1.4.1 (2022-04-08) = 
 
 * **Improvement**
