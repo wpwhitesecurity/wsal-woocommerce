@@ -1829,7 +1829,7 @@ $custom_alerts = array(
 				9135,
 				WSAL_HIGH,
 				esc_html__( 'User added/removed a tax from an order', 'wsal-woocommerce' ),
-				esc_html__( 'Added/Removed a tax %TaxName% in order %OrderTitle%.', 'wsal-woocommerce' ),
+				esc_html__( 'Added/Removed the tax %TaxName% in order %OrderTitle%.', 'wsal-woocommerce' ),
 				array(),
 				array(
 					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',

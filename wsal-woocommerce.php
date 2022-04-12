@@ -6,19 +6,19 @@
  * Text Domain: wsal-woocommerce
  * Author: WP White Security
  * Author URI: http://www.wpwhitesecurity.com/
- * Version: 1.4.1
+ * Version: 1.4.2
  * License: GPL2
  * Network: true
  *
  * WC requires at least: 4.8
- * WC tested up to: 5.6.0
+ * WC tested up to: 6.3.1
  *
  * @package Wsal
  * @subpackage Wsal Custom Events Loader
  */
 
 /*
-	Copyright(c) 2021  WP White Security  (email : info@wpwhitesecurity.com)
+	Copyright(c) 2022  WP White Security  (email : info@wpwhitesecurity.com)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License, version 2, as
