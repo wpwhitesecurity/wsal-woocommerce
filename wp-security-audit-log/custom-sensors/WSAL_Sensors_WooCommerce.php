@@ -456,7 +456,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					+ $this->check_tax_status_change( $this->_old_post, $this->_old_meta_data, $this->new_data )
 					+ $this->check_low_stock_threshold_change( $this->_old_post, $this->_old_meta_data, $this->new_data );
 
-
 				if ( ! $changes ) {
 					// Change Permalink.
 					$changes = $this->CheckPermalinkChange( $this->_old_link, get_post_permalink( $post_id, false, true ), $post );
@@ -2501,21 +2500,21 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				// Get a current copy of the soon to be "old" version for comparison.
 				$data_store     = \WC_Data_Store::load( 'webhook' );
 				$webhooks       = $data_store->search_webhooks( array( 'limit' => -1 ) );
-                $old_hook_found = false;
-                foreach ( $webhooks as $wc_webkook_key => $lookup_id ) {
-                    $id_we_want = intval( $webhook_id );
-                    if ( $id_we_want === $lookup_id && ! $old_hook_found ) {
-                        $old_hook_found = true;
-                        $old_webhook    = wc_get_webhook( $id_we_want );
-                        continue;
-                    }
-                }
+				$old_hook_found = false;
+				foreach ( $webhooks as $wc_webkook_key => $lookup_id ) {
+					$id_we_want = intval( $webhook_id );
+					if ( $id_we_want === $lookup_id && ! $old_hook_found ) {
+						$old_hook_found = true;
+						$old_webhook    = wc_get_webhook( $id_we_want );
+						continue;
+					}
+				}
 
-                if ( ! $old_hook_found ) {
-                    return;
-                }
+				if ( ! $old_hook_found ) {
+					return;
+				}
 
-				$alert_needed  = false;
+				$alert_needed = false;
 
 				// Tidy up data for comparison.
 				$old_webhook_data = array(
