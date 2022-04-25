@@ -58,7 +58,7 @@ function wsal_woocommerce_extension_detect_file_download( $download_get_user_ema
 
 	$sku = $product->get_sku();
 
-	$wsal->alerts->trigger_event(
+	$wsal->alerts->Trigger(
 		9099,
 		array(
 			'product_name'  => $product_title,
