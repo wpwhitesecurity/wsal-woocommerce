@@ -219,7 +219,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		add_action( 'woocommerce_before_shipping_zone_object_save', array( $this, 'detect_shipping_zone_change' ), 10, 2 );
 		add_action( 'woocommerce_new_webhook', array( $this, 'webhook_added' ), 10, 2 );
 		add_action( 'woocommerce_webhook_deleted', array( $this, 'webhook_deleted' ), 10, 2 );
-		add_action( 'woocommerce_webhook_updated', array( $this, 'webhook_updated' ), 10 );
 		add_action( 'woocommerce_before_shipping_zone_object_save', array( $this, 'detect_shipping_zone_change' ), 10, 2 );
 
 		// Orders.
@@ -2500,11 +2499,22 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				);
 
 				// Get a current copy of the soon to be "old" version for comparison.
-				$data_store    = \WC_Data_Store::load( 'webhook' );
-				$webhooks      = $data_store->search_webhooks( array( 'limit' => -1 ) );
-				$webhook_items = array_map( 'wc_get_webhook', $webhooks );
-				$key           = array_search( $webhook_id, array_column( $webhook_items, 'id' ) );
-				$old_webhook   = $webhook_items[ $key ];
+				$data_store     = \WC_Data_Store::load( 'webhook' );
+				$webhooks       = $data_store->search_webhooks( array( 'limit' => -1 ) );
+                $old_hook_found = false;
+                foreach ( $webhooks as $wc_webkook_key => $lookup_id ) {
+                    $id_we_want = intval( $webhook_id );
+                    if ( $id_we_want === $lookup_id && ! $old_hook_found ) {
+                        $old_hook_found = true;
+                        $old_webhook    = wc_get_webhook( $id_we_want );
+                        continue;
+                    }
+                }
+
+                if ( ! $old_hook_found ) {
+                    return;
+                }
+
 				$alert_needed  = false;
 
 				// Tidy up data for comparison.
