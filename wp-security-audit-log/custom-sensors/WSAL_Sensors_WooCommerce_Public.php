@@ -149,7 +149,7 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 			$order_post  = get_post( $order_id ); // Get order post object.
 			$order_title = ( null !== $order_post && $order_post instanceof WP_Post ) ? $order_post->post_title : false;
 			$editor_link = $this->get_editor_link( $order_post );
-			$this->plugin->alerts->Trigger(
+			$this->plugin->alerts->trigger_event(
 				9035,
 				array(
 					'OrderID'            => $order_id,
@@ -279,7 +279,7 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 		// If stock status has changed then trigger the alert.
 		if ( ( $old_stock_status && $new_stock_status ) && ( $old_stock_status !== $new_stock_status ) ) {
 			$editor_link = $this->get_editor_link( $post );
-			$this->plugin->alerts->Trigger(
+			$this->plugin->alerts->trigger_event(
 				9018,
 				array(
 					'PostID'             => $post->ID,
@@ -321,7 +321,7 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 			 *
 			 * @since 4.0.3
 			 */
-			$this->plugin->alerts->Trigger(
+			$this->plugin->alerts->trigger_event(
 				9105,
 				array(
 					'PostID'             => $post->ID,
