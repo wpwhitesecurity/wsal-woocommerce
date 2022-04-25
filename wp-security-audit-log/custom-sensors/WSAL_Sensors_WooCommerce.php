@@ -456,6 +456,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					+ $this->check_tax_status_change( $this->_old_post, $this->_old_meta_data, $this->new_data )
 					+ $this->check_low_stock_threshold_change( $this->_old_post, $this->_old_meta_data, $this->new_data );
 
+
 				if ( ! $changes ) {
 					// Change Permalink.
 					$changes = $this->CheckPermalinkChange( $this->_old_link, get_post_permalink( $post_id, false, true ), $post );
