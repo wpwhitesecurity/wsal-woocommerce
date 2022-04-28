@@ -1429,7 +1429,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$currency    = $this->GetCurrencySymbol( $this->GetConfig( 'currency' ) );
 		$editor_link = $this->GetEditorLink( $post );
 
-		if ( empty( $this->last_9016_type ) || ! in_array( $type, $this->last_9016_type ) ) {
+		if ( empty( $this->last_9016_type ) || ! in_array( $type, $this->last_9016_type, true ) ) {
 			$this->plugin->alerts->Trigger(
 				9016,
 				array(
