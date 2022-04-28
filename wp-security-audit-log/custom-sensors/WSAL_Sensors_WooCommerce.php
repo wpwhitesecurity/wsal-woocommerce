@@ -158,6 +158,15 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	private $is_9068_logged = false;
 
 	/**
+	 * Is Event 9016 Logged?
+	 *
+	 * @since 3.3.1
+	 *
+	 * @var boolean
+	 */
+	private $last_9016_type = array();
+
+	/**
 	 * Stores $_REQUEST global variable data.
 	 *
 	 * @var array
@@ -255,7 +264,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			);
 
 			foreach ( $values_to_lookup as $lookup_key ) {
-				if ( isset( $this->new_data[ $lookup_key ] ) && $old_product_data[ $lookup_key ] !== $this->new_data[ $lookup_key ] ) {
+				if ( isset( $this->new_data[ $lookup_key ] ) && $old_product_data[ $lookup_key ] !== $this->new_data[ $lookup_key ] || isset( $this->old_data[ $lookup_key ] ) && $this->new_data[ $lookup_key ] !== $old_product_data[ $lookup_key ] ) {
 					if ( 'regular_price' === $lookup_key || 'sale_price' === $lookup_key ) {
 						$this->CheckPriceChange( $this->_old_post );
 					} elseif ( 'stock_status' === $lookup_key ) {
@@ -455,7 +464,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					+ $this->check_download_limit_change( $this->_old_meta_data )
 					+ $this->check_tax_status_change( $this->_old_post, $this->_old_meta_data, $this->new_data )
 					+ $this->check_low_stock_threshold_change( $this->_old_post, $this->_old_meta_data, $this->new_data );
-
 
 				if ( ! $changes ) {
 					// Change Permalink.
@@ -1420,20 +1428,24 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	private function EventPrice( $post, $type, $old_price, $new_price ) {
 		$currency    = $this->GetCurrencySymbol( $this->GetConfig( 'currency' ) );
 		$editor_link = $this->GetEditorLink( $post );
-		$this->plugin->alerts->Trigger(
-			9016,
-			array(
-				'PostID'             => esc_attr( $post->ID ),
-				'SKU'                => esc_attr( $this->get_product_sku( $post->ID ) ),
-				'ProductTitle'       => sanitize_text_field( $post->post_title ),
-				'ProductStatus'      => sanitize_text_field( $post->post_status ),
-				'PriceType'          => $type,
-				'OldPrice'           => ! empty( $old_price ) ? $currency . $old_price : 0,
-				'NewPrice'           => $currency . $new_price,
-				$editor_link['name'] => $editor_link['value'],
-			)
-		);
-		return 1;
+
+		if ( empty( $this->last_9016_type ) || ! in_array( $type, $this->last_9016_type, true ) ) {
+			$this->plugin->alerts->Trigger(
+				9016,
+				array(
+					'PostID'             => esc_attr( $post->ID ),
+					'SKU'                => esc_attr( $this->get_product_sku( $post->ID ) ),
+					'ProductTitle'       => sanitize_text_field( $post->post_title ),
+					'ProductStatus'      => sanitize_text_field( $post->post_status ),
+					'PriceType'          => $type,
+					'OldPrice'           => ! empty( $old_price ) ? $currency . $old_price : 0,
+					'NewPrice'           => $currency . $new_price,
+					$editor_link['name'] => $editor_link['value'],
+				)
+			);
+			array_push( $this->last_9016_type, $type );
+			return 1;
+		}
 	}
 
 	/**
