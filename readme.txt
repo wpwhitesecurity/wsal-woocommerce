@@ -76,7 +76,7 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 
 == Changelog ==
 
-= 1.4.3 (2022-04-12) =
+= 1.4.3 (2022-04-28) =
 
 * **Bug fixes**
 	* Fix PHP error when updating a webhook.
