@@ -1444,7 +1444,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				)
 			);
 			array_push( $this->last_9016_type, $type );
-            return 1;
+			return 1;
 		}
 	}
 
