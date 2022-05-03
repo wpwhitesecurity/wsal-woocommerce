@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
-    /**
+	/**
 	 * Amount of seconds to check back for the given alert occurrence.
 	 *
 	 * @var integer
@@ -5175,9 +5175,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 */
 	protected function was_triggered_recently( $alert_id ) {
 
-        if ( method_exists(  self, 'was_triggered_recently' ) ) {
-            return self::was_triggered_recently();
-         }
+		if ( method_exists( self, 'was_triggered_recently' ) ) {
+			return self::was_triggered_recently();
+		}
 
 		// if we have already checked this don't check again.
 		if ( isset( $this->cached_alert_checks ) && array_key_exists( $alert_id, $this->cached_alert_checks ) && $this->cached_alert_checks[ $alert_id ] ) {
