@@ -83,6 +83,9 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 	* Ensure old webhook data is gathered using correct methods.
 	* Allow plugin to detect changes in "sale price" when changing via Stock Managment for WooCommerce.
 
+* **Improvement**
+	* Updated function names inline with upcoming Activity Log changes.
+
 = 1.4.2 (2022-04-12) =
 
 * **Bug fixes**

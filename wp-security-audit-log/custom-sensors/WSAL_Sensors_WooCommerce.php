@@ -5164,7 +5164,12 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param integer|array $alert_id - Alert code.
 	 * @return boolean
 	 */
-	private function was_triggered_recently( $alert_id ) {
+	protected function was_triggered_recently( $alert_id ) {
+
+		if ( method_exists( 'self', 'was_triggered_recently' ) ) {
+			return self::was_triggered_recently();
+		}
+
 		// if we have already checked this don't check again.
 		if ( isset( $this->cached_alert_checks ) && array_key_exists( $alert_id, $this->cached_alert_checks ) && $this->cached_alert_checks[ $alert_id ] ) {
 			return true;
