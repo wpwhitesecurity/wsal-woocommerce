@@ -4,7 +4,7 @@ Plugin URI: https://wpactivitylog.com
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.html
 Tags: activity log for WooCommerce, WP Activity Log extension, activity logs
-Requires at least: 4.5
+Requires at least: 5.0
 Tested up to: 5.9.3
 Stable tag: 1.4.3
 Requires PHP: 7.0
@@ -78,14 +78,14 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 
 = 1.4.3 (2022-04-28) =
 
-* **Bug fixes**
-	* Fix PHP error when updating a webhook.
-	* Ensure old webhook data is gathered using correct methods.
-	* Allow plugin to detect changes in "sale price" when changing via Stock Managment for WooCommerce.
-
 * **Improvement**
+	* Improved coverage for plugin to detect changes in "sale price" when changing it via Stock Managment for WooCommerce.
 	* Updated function names inline with upcoming Activity Log changes.
 
+* **Bug fixes**
+	* Fixed PHP error triggered when updating a webhook.
+	* Ensured old webhook data is gathered using correct methods.
+	
 = 1.4.2 (2022-04-12) =
 
 * **Bug fixes**
