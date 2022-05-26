@@ -30,9 +30,7 @@ add_action( 'woocommerce_download_product', 'wsal_woocommerce_extension_detect_f
  */
 function wsal_woocommerce_extension_togglealerts_process_save_settings( $post_data ) {
 	$wsal = WpSecurityAuditLog::GetInstance();
-	if ( isset( $post_data['wc_all_stock_changes'] ) && ! empty( $post_data['wc_all_stock_changes'] ) ) {
-		$wsal->SetGlobalBooleanSetting( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
-	}
+	$wsal->SetGlobalBooleanSetting( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
 }
 
 /**
