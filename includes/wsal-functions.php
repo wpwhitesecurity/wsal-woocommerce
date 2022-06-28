@@ -207,7 +207,6 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $expression,
 			return isset( $editor_title ) ? '<strong>' . $editor_title . '</strong>' : '';
 		} else {
 			return '';
-		}n '';
 		}
 	}
 
