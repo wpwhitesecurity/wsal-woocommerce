@@ -76,6 +76,11 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 
 == Changelog ==
 
+= 1.4.4 (2022-007-28) =
+
+* **Improvement**
+	* Maintenance update to improve compatability with WP Activity Log.
+
 = 1.4.3 (2022-04-28) =
 
 * **Improvement**
