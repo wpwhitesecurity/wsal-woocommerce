@@ -202,13 +202,12 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $expression,
 	if ( '%StockOrderID%' === $expression ) {
 		$check_value = (string) $value;
 		if ( 'NULL' !== $check_value ) {
-			$order        = get_post( $value );
-			$new_order    = new WC_Order( $value );
+			$new_order    = new WC_Order( strip_tags( $value ) );
 			$editor_title = wsal_woocommerce_extension_get_order_title( $new_order );
-			$editor_link  = wsal_woocommerce_extension_get_editor_link( $order );
-			return isset( $editor_link['value'] ) ? $editor_link['value'] : '';
+			return isset( $editor_title ) ? '<strong>' . $editor_title . '</strong>' : '';
 		} else {
 			return '';
+		}n '';
 		}
 	}
 
