@@ -80,12 +80,12 @@ function wsal_woocommerce_extension_append_content_to_toggle( $alert_id ) {
 		$frontend_events        = $settings::get_frontend_events();
 		$enable_wc_for_visitors = ( isset( $frontend_events['woocommerce'] ) && $frontend_events['woocommerce'] ) ? true : false;
 		?>
-		<tr>
-		<td></td>
-		<td>
-		<input name="frontend-events[woocommerce]" type="checkbox" id="frontend-events[woocommerce]" value="1" <?php checked( $enable_wc_for_visitors ); ?> />
-		</td>
-		<td colspan="2"><?php esc_html_e( 'Keep a log of visitor orders, stock changes and other public events?', 'wsal-woocommerce' ); ?></td>
+		<tr data-alert-cat="WooCommerce" data-alert-subcat="Products">
+			<td></td>
+			<td>
+			<input name="frontend-events[woocommerce]" type="checkbox" id="frontend-events[woocommerce]" value="1" <?php checked( $enable_wc_for_visitors ); ?> />
+			</td>
+			<td colspan="2"><?php esc_html_e( 'Keep a log of visitor orders, stock changes and other public events?', 'wsal-woocommerce' ); ?></td>
 		</tr>
 		<?php
 	}
@@ -94,7 +94,7 @@ function wsal_woocommerce_extension_append_content_to_toggle( $alert_id ) {
 		$wsal                 = WpSecurityAuditLog::GetInstance();
 		$wc_all_stock_changes = $wsal->GetGlobalBooleanSetting( 'wc-all-stock-changes', true );
 		?>
-		<tr>
+		<tr data-alert-cat="WooCommerce" data-alert-subcat="woocommerce-order">
 			<td></td>
 			<td>
 				<input name="wc_all_stock_changes" type="checkbox" id="wc_all_stock_changes" value="1" <?php checked( $wc_all_stock_changes ); ?> />
