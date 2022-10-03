@@ -262,6 +262,11 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 			$this->new_data   = $product_data;
 			$old_product_data = $this->_old_data;
+
+			if ( empty( $old_product_data ) ) {
+				return;
+			}
+
 			$values_to_lookup = array(
 				'sku',
 				'stock_status',
@@ -270,7 +275,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'weight',
 				'regular_price',
 				'sale_price',
-			);
+			);		
 
 			foreach ( $values_to_lookup as $lookup_key ) {
 				if ( isset( $this->new_data[ $lookup_key ] ) && $old_product_data[ $lookup_key ] !== $this->new_data[ $lookup_key ] || isset( $this->old_data[ $lookup_key ] ) && $this->new_data[ $lookup_key ] !== $old_product_data[ $lookup_key ] ) {
