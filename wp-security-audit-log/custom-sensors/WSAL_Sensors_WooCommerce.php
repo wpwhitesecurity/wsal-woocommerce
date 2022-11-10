@@ -2893,7 +2893,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$query->setLimit( 1 );
 		$last_occurence = $query->getAdapter()->Execute( $query );
 		if ( ! empty( $last_occurence ) ) {
-			if ( $last_occurence[0]->alert_id === $alert_id ) {
+			if ( $last_occurence[0]['alert_id'] === $alert_id ) {
 				return true;
 			}
 		}
@@ -5197,10 +5197,10 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			if ( $known_to_trigger ) {
 				break;
 			}
-			if ( ! empty( $last_occurence ) && ( $last_occurence->created_on + 20 ) > time() ) {
-				if ( ! is_array( $alert_id ) && $last_occurence->alert_id === $alert_id ) {
+			if ( ! empty( $last_occurence ) && ( $last_occurence[ 'created_on' ] + 20 ) > time() ) {
+				if ( ! is_array( $alert_id ) && $last_occurence['alert_id'] === $alert_id ) {
 					$known_to_trigger = true;
-				} elseif ( is_array( $alert_id ) && in_array( $last_occurence[0]->alert_id, $alert_id, true ) ) {
+				} elseif ( is_array( $alert_id ) && in_array( $last_occurence[0]['alert_id'], $alert_id, true ) ) {
 					$known_to_trigger = true;
 				}
 			}
@@ -5223,9 +5223,9 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$last_occurence = $query->getAdapter()->Execute( $query );
 
 		if ( ! empty( $last_occurence ) ) {
-			if ( ! is_array( $alert_id ) && $last_occurence[0]->alert_id === $alert_id ) {
+			if ( ! is_array( $alert_id ) && $last_occurence[0]['alert_id'] === $alert_id ) {
 				return true;
-			} elseif ( is_array( $alert_id ) && in_array( $last_occurence[0]->alert_id, $alert_id, true ) ) {
+			} elseif ( is_array( $alert_id ) && in_array( $last_occurence[0]['alert_id'], $alert_id, true ) ) {
 				return true;
 			}
 		}
