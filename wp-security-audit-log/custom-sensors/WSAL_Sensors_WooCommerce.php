@@ -3160,7 +3160,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			if ( $product instanceof WC_Product ) {
 				$order      = wc_get_order( $order_id );
 				$order_post = get_post( $order_id );
-				$edit_link  = $this->GetEditorLink( $order_post );( empty( $_GET['tab'] ) || 'advanced' === sanitize_text_field( wp_unslash( $_GET['tab'] ) ) );
+				$edit_link  = $this->GetEditorLink( $order_post );
 				$event_data = array(
 					'OrderID'          => esc_attr( $order_id ),
 					'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
