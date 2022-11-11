@@ -1222,6 +1222,52 @@ $custom_alerts = array(
 				'woocommerce-store',
 				'modified',
 			),
+
+			array(
+				9140,
+				WSAL_MEDIUM,
+				esc_html__( 'Changed the status of the Shipping options: Enable the shipping calculator on the cart page setting in the store.', 'wsal-woocommerce' ),
+				__( 'Changed the status of the <strong>Shipping options: Enable the shipping calculator on the cart page</strong> setting in the store.', 'wsal-woocommerce' ),
+				array(),
+				array(),
+				'woocommerce-store',
+				'enabled',
+			),
+			
+			array(
+				9141,
+				WSAL_MEDIUM,
+				esc_html__( 'Changed the status of the Shipping options: Hide shipping costs until an address is entered setting in the store.', 'wsal-woocommerce' ),
+				__( 'Changed the status of the <strong>Shipping options: Hide shipping costs until an address is entered</strong> setting in the store.', 'wsal-woocommerce' ),
+				array(),
+				array(),
+				'woocommerce-store',
+				'enabled',
+			),
+
+			array(
+				9142,
+				WSAL_MEDIUM,
+				esc_html__( 'Changed the setting Shipping options: Shipping destination', 'wsal-woocommerce' ),
+				__( 'Changed the setting Shipping options:Shipping destination to %new_setting%.', 'wsal-woocommerce' ),
+				array(
+					esc_html__( 'Previous setting', 'wsal-woocommerce' ) => '%old_setting%',
+				),
+				array(),
+				'woocommerce-store',
+				'modified',
+			),
+
+			array(
+				9143,
+				WSAL_MEDIUM,
+				esc_html__( 'Changed the status of the Debug mode setting in the store.', 'wsal-woocommerce' ),
+				__( 'Changed the status of the <strong>Debug mode</strong> setting in the store.', 'wsal-woocommerce' ),
+				array(),
+				array(),
+				'woocommerce-store',
+				'enabled',
+			),
 		),
 
 		esc_html__( 'Payment Gateways', 'wsal-woocommerce' ) => array(
