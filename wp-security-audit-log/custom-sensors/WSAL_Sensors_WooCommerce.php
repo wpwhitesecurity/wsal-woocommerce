@@ -2523,6 +2523,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					'delivery_url' => isset( $_POST['webhook_delivery_url'] ) ? $_POST['webhook_delivery_url'] : '',
 					'topic'        => isset( $_POST['webhook_topic'] ) ? $_POST['webhook_topic'] : '',
 					'status'       => isset( $_POST['webhook_status'] ) ? $_POST['webhook_status'] : '',
+					'secret'       => isset( $_POST['webhook_secret'] ) ? $_POST['webhook_secret'] : '',
 				);
 
 				// Get a current copy of the soon to be "old" version for comparison.
@@ -2551,6 +2552,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					'delivery_url' => $old_webhook->get_delivery_url(),
 					'topic'        => $old_webhook->get_topic(),
 					'status'       => $old_webhook->get_status(),
+					'secret'       => $old_webhook->get_secret(),
 				);
 
 				foreach ( $new_webhook_data as $key => $data ) {
@@ -2572,6 +2574,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							'OldTopic'          => $old_webhook_data['topic'],
 							'Status'            => $new_webhook_data['status'],
 							'OldStatus'         => $old_webhook_data['status'],
+							'Secret'            => $new_webhook_data['secret'],
+							'OldSecret'         => $old_webhook_data['secret'],
 							'EditorLinkWebhook' => $editor_link,
 						)
 					);
