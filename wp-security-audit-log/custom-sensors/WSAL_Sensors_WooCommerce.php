@@ -2363,6 +2363,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							}
 						}
 					}
+
 				} elseif ( empty( $_GET['tab'] ) || 'advanced' === sanitize_text_field( wp_unslash( $_GET['tab'] ) ) ) {
 					if ( 'woocommerce_cart_page_id' === $option ) {
 						if ( $old_value !== $value ) {
@@ -2447,6 +2448,52 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							);
 						}
 					}
+				} elseif ( empty( $_GET['tab'] ) || 'shipping' === sanitize_text_field( wp_unslash( $_GET['tab'] ) ) ) {
+					if ( 'woocommerce_enable_shipping_calc' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9140,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_shipping_cost_requires_address' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9141,
+								array(
+									'EventType'  => ( $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_shipping_debug_mode' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9143,
+								array(
+									'EventType'  => ( $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_ship_to_destination' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9142,
+								array(
+									'old_setting' => $old_value,
+									'new_setting' => $value,
+								)
+							);
+						}
+					}
+
 				}
 			}
 		}
