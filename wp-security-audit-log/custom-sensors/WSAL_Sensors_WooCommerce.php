@@ -3354,11 +3354,12 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 		$output = array();
 
-		if ( ! isset( $_POST['items'] ) ) {
-			return;
+		if ( isset( $_POST['items'] ) ) {
+			$posted = parse_str( $_POST['items'], $output );
+		} else {			
+			$output = wp_unslash( $_POST );
 		}
-
-		$posted = parse_str( $_POST['items'], $output );
+		
 		foreach ( $items['order_item_id'] as $item_id ) {
 			if ( isset( $order->get_items()[ $item_id ] ) ) {
 				$item = $order->get_items()[ $item_id ];
@@ -3513,6 +3514,11 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		if ( self::was_triggered_recently( 9120 ) || self::was_triggered_recently( 9130 ) || self::was_triggered_recently( 9131 ) || self::was_triggered_recently( 9132 ) | self::was_triggered_recently( 9133 ) || self::was_triggered_recently( 9134 ) || self::was_triggered_recently( 9135 ) || self::was_triggered_recently( 9137 ) ) {
 			return;
 		}
+
+		$order = wc_get_order( $order_id );
+		$items = $order->get_items(['fee']);
+
+		$this->event_order_items_quantity_changed( $order_id, $items );
 
 		// Log event.
 		$this->plugin->alerts->trigger_event_if( 9040, $event_data, array( $this, 'must_not_contain_refund_or_modification' ) );
