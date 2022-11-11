@@ -774,6 +774,8 @@ $custom_alerts = array(
 					esc_html__( 'Previous Delivery URL', 'wsal-woocommerce' ) => '%OldDeliveryURL%',
 					esc_html__( 'Status', 'wsal-woocommerce' ) => '%Status%',
 					esc_html__( 'Previous Status', 'wsal-woocommerce' ) => '%OldStatus%',
+					esc_html__( 'Secret', 'wsal-woocommerce' ) => '%Secret%',
+					esc_html__( 'Previous Secret', 'wsal-woocommerce' ) => '%OldSecret%',
 				),
 				array(
 					esc_html__( 'View details', 'wsal-woocommerce' ) => '%EditorLinkWebhook%',
