@@ -29,8 +29,7 @@ add_action( 'woocommerce_download_product', 'wsal_woocommerce_extension_detect_f
  * @return void
  */
 function wsal_woocommerce_extension_togglealerts_process_save_settings( $post_data ) {
-	$wsal = WpSecurityAuditLog::GetInstance();
-	$wsal->SetGlobalBooleanSetting( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
+	\WSAL\Helpers\Settings_Helper::set_boolean_option_value( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
 }
 
 /**
@@ -80,7 +79,7 @@ function wsal_woocommerce_extension_append_content_to_toggle( $alert_id ) {
 		$frontend_events        = $settings::get_frontend_events();
 		$enable_wc_for_visitors = ( isset( $frontend_events['woocommerce'] ) && $frontend_events['woocommerce'] ) ? true : false;
 		?>
-		<tr data-alert-cat="WooCommerce" data-alert-subcat="Products">
+		<tr class="alert-wrapper" data-alert-cat="WooCommerce" data-alert-subcat="Products" data-is-attached-to-alert="9035">
 			<td></td>
 			<td>
 			<input name="frontend-events[woocommerce]" type="checkbox" id="frontend-events[woocommerce]" value="1" <?php checked( $enable_wc_for_visitors ); ?> />
@@ -91,10 +90,9 @@ function wsal_woocommerce_extension_append_content_to_toggle( $alert_id ) {
 	}
 
 	if ( 9019 === $alert_id ) {
-		$wsal                 = WpSecurityAuditLog::GetInstance();
-		$wc_all_stock_changes = $wsal->GetGlobalBooleanSetting( 'wc-all-stock-changes', true );
+		$wc_all_stock_changes = \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'wc-all-stock-changes', true );;
 		?>
-		<tr data-alert-cat="WooCommerce" data-alert-subcat="woocommerce-order">
+		<tr class="alert-wrapper" data-alert-cat="WooCommerce" data-alert-subcat="woocommerce-order" data-is-attached-to-alert="9019">
 			<td></td>
 			<td>
 				<input name="wc_all_stock_changes" type="checkbox" id="wc_all_stock_changes" value="1" <?php checked( $wc_all_stock_changes ); ?> />
