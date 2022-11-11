@@ -1328,11 +1328,12 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * Alerts for viewing of product post type for WooCommerce.
 	 */
 	public function viewing_product() {
+		
 		// Retrieve the current post object.
 		$product = get_queried_object();
 
 		// Check product post type.
-		if ( ! empty( $product ) && $product instanceof WP_Post && 'product' !== $product->post_type || ! empty( $product ) && ! isset( $product->post_status ) ) {
+		if ( ! empty( $product ) && $product instanceof WP_Post && 'product' !== $product->post_type || ! empty( $product ) && ! isset( $product->post_status ) || ! function_exists( 'wc_get_product' ) ) {
 			return $product;
 		}
 
