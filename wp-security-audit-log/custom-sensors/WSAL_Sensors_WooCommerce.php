@@ -2128,7 +2128,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						if ( $this->old_location_data !== $this->new_location_data ) {
 							sleep( 0.5 );
 							$this->new_location_data = sanitize_text_field( wp_unslash( $_POST['woocommerce_store_address'] ) ) . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_address_2'] ) ) . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_city'] ) ) . ', ' . WC()->countries->countries[ strtok( sanitize_text_field( wp_unslash( $_POST['woocommerce_default_country'] ) ), ':' ) ] . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_postcode'] ) );
-							if ( ! $this->was_triggered_recently( 9029 ) ) {
+							if ( ! self::was_triggered_recently( 9029 ) ) {
 								$this->plugin->alerts->trigger_event(
 									9029,
 									array(
@@ -2847,7 +2847,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			}
 			if ( ! empty( $product->post_title ) ) {
 				$event = 9072;
-				if ( ! $this->WasTriggered( $event ) && ! $this->WasTriggered( 9001 ) || ! $this->was_triggered_recently( 9000 ) ) {
+				if ( ! $this->WasTriggered( $event ) && ! $this->WasTriggered( 9001 ) || ! self::was_triggered_recently( 9000 ) ) {
 					$editor_link = $this->GetEditorLink( $product );
 					$this->plugin->alerts->trigger_event_if(
 						$event,
@@ -3411,22 +3411,22 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		if ( $manager->will_or_has_triggered( 9120 ) ) {
 			return false;
 		}
-		if ( $manager->will_or_has_triggered( 9130 ) || $this->was_triggered_recently( 9130 ) ) {
+		if ( $manager->will_or_has_triggered( 9130 ) || self::was_triggered_recently( 9130 ) ) {
 			return false;
 		}
-		if ( $manager->will_or_has_triggered( 9131 ) || $this->was_triggered_recently( 9131 ) ) {
+		if ( $manager->will_or_has_triggered( 9131 ) || self::was_triggered_recently( 9131 ) ) {
 			return false;
 		}
-		if ( $manager->will_or_has_triggered( 9132 ) || $this->was_triggered_recently( 9132 ) ) {
+		if ( $manager->will_or_has_triggered( 9132 ) || self::was_triggered_recently( 9132 ) ) {
 			return false;
 		}
-		if ( $manager->will_or_has_triggered( 9133 ) || $this->was_triggered_recently( 9133 ) ) {
+		if ( $manager->will_or_has_triggered( 9133 ) || self::was_triggered_recently( 9133 ) ) {
 			return false;
 		}
-		if ( $manager->will_or_has_triggered( 9134 ) || $this->was_triggered_recently( 9134 ) ) {
+		if ( $manager->will_or_has_triggered( 9134 ) || self::was_triggered_recently( 9134 ) ) {
 			return false;
 		}
-		if ( $manager->will_or_has_triggered( 9137 ) || $this->was_triggered_recently( 9137 ) ) {
+		if ( $manager->will_or_has_triggered( 9137 ) || self::was_triggered_recently( 9137 ) ) {
 			return false;
 		}
 		return true;
@@ -3458,7 +3458,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		);
 
 		// Dont fire if we know an item was added/removed recently.
-		if ( $this->was_triggered_recently( 9120 ) || $this->was_triggered_recently( 9130 ) || $this->was_triggered_recently( 9131 ) || $this->was_triggered_recently( 9132 ) | $this->was_triggered_recently( 9133 ) || $this->was_triggered_recently( 9134 ) || $this->was_triggered_recently( 9135 ) || $this->was_triggered_recently( 9137 ) ) {
+		if ( self::was_triggered_recently( 9120 ) || self::was_triggered_recently( 9130 ) || self::was_triggered_recently( 9131 ) || self::was_triggered_recently( 9132 ) | self::was_triggered_recently( 9133 ) || self::was_triggered_recently( 9134 ) || self::was_triggered_recently( 9135 ) || self::was_triggered_recently( 9137 ) ) {
 			return;
 		}
 
@@ -5168,69 +5168,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			'tag_ID'    => $tag_id,
 		);
 		return ! empty( $tag_id ) ? add_query_arg( $tag_args, admin_url( 'term.php' ) ) : null;
-	}
-
-	/**
-	 * Check if the alert was triggered recently.
-	 *
-	 * Checks last 5 events if they occured less than 20 seconds ago.
-	 *
-	 * @param integer|array $alert_id - Alert code.
-	 * @return boolean
-	 */
-	protected function was_triggered_recently( $alert_id ) {
-
-		if ( method_exists( 'self', 'was_triggered_recently' ) ) {
-			return self::was_triggered_recently();
-		}
-
-		// if we have already checked this don't check again.
-		if ( isset( $this->cached_alert_checks ) && array_key_exists( $alert_id, $this->cached_alert_checks ) && $this->cached_alert_checks[ $alert_id ] ) {
-			return true;
-		}
-		$query = new WSAL_Models_OccurrenceQuery();
-		$query->addOrderBy( 'created_on', true );
-		$query->setLimit( 5 );
-		$last_occurences  = $query->getAdapter()->Execute( $query );
-		$known_to_trigger = false;
-		foreach ( $last_occurences as $last_occurence ) {
-			if ( $known_to_trigger ) {
-				break;
-			}
-			if ( ! empty( $last_occurence ) && ( $last_occurence->created_on + 20 ) > time() ) {
-				if ( ! is_array( $alert_id ) && $last_occurence->alert_id === $alert_id ) {
-					$known_to_trigger = true;
-				} elseif ( is_array( $alert_id ) && in_array( $last_occurence[0]->alert_id, $alert_id, true ) ) {
-					$known_to_trigger = true;
-				}
-			}
-		}
-		// once we know the answer to this don't check again to avoid queries.
-		$this->cached_alert_checks[ $alert_id ] = $known_to_trigger;
-		return $known_to_trigger;
-	}
-
-	/**
-	 * Check if the alert was triggered.
-	 *
-	 * @param integer|array $alert_id - Alert code.
-	 * @return boolean
-	 */
-	private function was_triggered( $alert_id ) {
-		$query = new WSAL_Models_OccurrenceQuery();
-		$query->addOrderBy( 'created_on', true );
-		$query->setLimit( 1 );
-		$last_occurence = $query->getAdapter()->Execute( $query );
-
-		if ( ! empty( $last_occurence ) ) {
-			if ( ! is_array( $alert_id ) && $last_occurence[0]->alert_id === $alert_id ) {
-				return true;
-			} elseif ( is_array( $alert_id ) && in_array( $last_occurence[0]->alert_id, $alert_id, true ) ) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	/**
