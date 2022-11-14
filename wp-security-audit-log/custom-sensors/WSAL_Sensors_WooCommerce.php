@@ -2020,6 +2020,120 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							$this->plugin->alerts->trigger_event( 9033, array( 'EventType' => $status ) );
 						}
 					}
+
+					if ( 'woocommerce_enable_checkout_login_reminder' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9144,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_enable_signup_and_login_from_checkout' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9145,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_enable_myaccount_registration' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9146,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_registration_generate_username' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9147,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_registration_generate_password' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9148,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_erasure_request_removes_order_data' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9149,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+
+					if ( 'woocommerce_erasure_request_removes_download_data' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9150,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_allow_bulk_remove_personal_data' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9151,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_registration_privacy_policy_text' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9152,
+								array(
+									'old_setting' => $old_value,
+									'new_setting' => $value,
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_checkout_privacy_policy_text' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9153,
+								array(
+									'old_setting' => $old_value,
+									'new_setting' => $value,
+								)
+							);
+						}
+					}
+
 				} if ( isset( $_GET['tab'] ) && 'tax' === sanitize_text_field( wp_unslash( $_GET['tab'] ) ) ) {
 					// Check prices entered with tax setting.
 					if ( isset( $_POST['woocommerce_prices_include_tax'] ) && 'woocommerce_prices_include_tax' === $option ) {
