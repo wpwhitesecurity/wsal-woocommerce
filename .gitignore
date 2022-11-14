@@ -2,3 +2,4 @@
 \.vscode/
 
 composer\.phar
+.DS_Store
