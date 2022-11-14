@@ -244,6 +244,82 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		add_action( 'woocommerce_before_delete_order_item', array( $this, 'event_order_items_removed' ), 10, 1 );
 		add_action( 'woocommerce_before_save_order_items', array( $this, 'event_order_items_quantity_changed' ), 10, 2 );
 		add_action( 'woocommerce_refund_deleted', array( $this, 'event_order_refund_removed' ), 10, 2 );
+		add_action( 'admin_action_edit', array( $this, 'order_opened_for_editing' ), 10 );
+	}
+
+	/**
+	 * Alert for Editing of Posts and Custom Post Types in Gutenberg.
+	 *
+	 * @since 3.2.4
+	 */
+	public function order_opened_for_editing() {
+		global $pagenow;
+
+		if ( 'post.php' !== $pagenow ) {
+			return;
+		}
+
+		$post_id = isset( $_GET['post'] ) ? (int) sanitize_text_field( wp_unslash( $_GET['post'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		// Check post id.
+		if ( empty( $post_id ) ) {
+			return;
+		}
+
+		if ( is_user_logged_in() && is_admin() ) {
+			// Get post.
+			$post = get_post( $post_id );
+
+			// Log event.
+			if ( 'shop_order' === $post->post_type ) {
+				$this->order_opened_in_editor( $post );
+			}
+		}
+	}
+
+	/**
+	 * Order Opened for Editing in WP Editors.
+	 *
+	 * @param WP_Post $post – Post object.
+	 */
+	public function order_opened_in_editor( $post ) {
+		if ( empty( $post ) ) {
+			return;
+		}
+
+		$current_path = isset( $_SERVER['SCRIPT_NAME'] ) ? esc_url_raw( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) . '?post=' . $post->ID : false;
+		$referrer     = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : false;
+
+		// Check referrer URL.
+		if ( ! empty( $referrer ) ) {
+			// Parse the referrer.
+			$parsed_url = wp_parse_url( $referrer );
+
+			// If the referrer is post-new then we can ignore this one.
+			if ( isset( $parsed_url['path'] ) && 'post-new' === basename( $parsed_url['path'], '.php' ) ) {
+				return $post;
+			}
+		}
+
+		if ( ! empty( $referrer ) && strpos( $referrer, $current_path ) !== false ) {
+			// Ignore this if we were on the same page so we avoid double audit entries.
+			return $post;
+		}
+
+		if ( ! empty( $post->post_title ) && ! self::was_triggered_recently( 9154 ) ) {
+			$event = 9154;
+			$editor_link = $this->GetEditorLink( $post );
+			$this->plugin->alerts->trigger_event(
+				$event,
+				array(
+					'PostID'             => $post->ID,
+					'PostTitle'          => $post->post_title,
+					'PostStatus'         => $post->post_status,
+					'PostUrl'            => get_permalink( $post->ID ),
+					$editor_link['name'] => $editor_link['value'],
+				)
+			);
+		}
 	}
 
 	/**
