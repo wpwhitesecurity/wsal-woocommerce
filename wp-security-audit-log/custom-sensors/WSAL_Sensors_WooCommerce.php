@@ -307,7 +307,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		}
 
 		if ( ! empty( $post->post_title ) && ! self::was_triggered_recently( 9154 ) ) {
-			$event = 9154;
+			$event       = 9154;
 			$editor_link = $this->GetEditorLink( $post );
 			$this->plugin->alerts->trigger_event(
 				$event,
