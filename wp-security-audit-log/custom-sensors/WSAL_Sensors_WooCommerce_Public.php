@@ -64,9 +64,7 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 			add_filter( 'woocommerce_update_product_stock_query', array( $this, 'set_old_stock_for_orders' ), 10, 3 );
 			add_action( 'woocommerce_product_set_stock', array( $this, 'product_stock_changed' ), 10, 1 );
 			add_action( 'woocommerce_variation_set_stock', array( $this, 'product_stock_changed' ), 10, 1 );
-			add_action( 'woocommerce_update_customer', array( $this, 'woocommerce_update_customer_action' ), 10, 2 );
 			add_action( 'update_user_meta', array( $this, 'before_wc_user_meta_update' ), 10, 3 );
-
 		}
 	}
 
@@ -109,28 +107,6 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Function for `woocommerce_update_customer` action-hook.
-	 * 
-	 * @param  $customer_id 
-	 * @param  $customer    
-	 *
-	 * @return void
-	 */
-	function woocommerce_update_customer_action( $customer_id, $customer ){
-
-		$customer_id = $customer_id;
-		error_log( print_r( $customer_id, true ) );
-
-		$customer = new WC_Customer( $customer_id );
-
-		$posted         = wp_unslash( $_POST );
-		$billing_data   = $customer->get_billing();
-		$shipping_data  = $customer->get_shipping();
-
-		error_log( print_r( $customer_id, true ) );
 	}
 
 	/**
