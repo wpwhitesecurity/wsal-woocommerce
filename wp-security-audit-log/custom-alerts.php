@@ -2018,6 +2018,21 @@ $custom_alerts = array(
 				'woocommerce-order',
 				'added',
 			),
+			array(
+				9154,
+				WSAL_MEDIUM,
+				esc_html__( 'User opened an order in the editor', 'wp-security-audit-log' ),
+				esc_html__( 'Opened the order %PostTitle% in the editor.', 'wp-security-audit-log' ),
+				array(
+					esc_html__( 'Order ID', 'wp-security-audit-log' )     => '%PostID%',
+					esc_html__( 'Order status', 'wp-security-audit-log' ) => '%PostStatus%',
+				),
+				array(
+					esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
+				),
+				'woocommerce-order',
+				'opened',
+			),
 		),
 
 		esc_html__( 'User Profile', 'wsal-woocommerce' )  => array(

@@ -244,6 +244,82 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		add_action( 'woocommerce_before_delete_order_item', array( $this, 'event_order_items_removed' ), 10, 1 );
 		add_action( 'woocommerce_before_save_order_items', array( $this, 'event_order_items_quantity_changed' ), 10, 2 );
 		add_action( 'woocommerce_refund_deleted', array( $this, 'event_order_refund_removed' ), 10, 2 );
+		add_action( 'admin_action_edit', array( $this, 'order_opened_for_editing' ), 10 );
+	}
+
+	/**
+	 * Alert for Editing of Posts and Custom Post Types in Gutenberg.
+	 *
+	 * @since 3.2.4
+	 */
+	public function order_opened_for_editing() {
+		global $pagenow;
+
+		if ( 'post.php' !== $pagenow ) {
+			return;
+		}
+
+		$post_id = isset( $_GET['post'] ) ? (int) sanitize_text_field( wp_unslash( $_GET['post'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		// Check post id.
+		if ( empty( $post_id ) ) {
+			return;
+		}
+
+		if ( is_user_logged_in() && is_admin() ) {
+			// Get post.
+			$post = get_post( $post_id );
+
+			// Log event.
+			if ( 'shop_order' === $post->post_type ) {
+				$this->order_opened_in_editor( $post );
+			}
+		}
+	}
+
+	/**
+	 * Order Opened for Editing in WP Editors.
+	 *
+	 * @param WP_Post $post – Post object.
+	 */
+	public function order_opened_in_editor( $post ) {
+		if ( empty( $post ) ) {
+			return;
+		}
+
+		$current_path = isset( $_SERVER['SCRIPT_NAME'] ) ? esc_url_raw( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) . '?post=' . $post->ID : false;
+		$referrer     = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : false;
+
+		// Check referrer URL.
+		if ( ! empty( $referrer ) ) {
+			// Parse the referrer.
+			$parsed_url = wp_parse_url( $referrer );
+
+			// If the referrer is post-new then we can ignore this one.
+			if ( isset( $parsed_url['path'] ) && 'post-new' === basename( $parsed_url['path'], '.php' ) ) {
+				return $post;
+			}
+		}
+
+		if ( ! empty( $referrer ) && strpos( $referrer, $current_path ) !== false ) {
+			// Ignore this if we were on the same page so we avoid double audit entries.
+			return $post;
+		}
+
+		if ( ! empty( $post->post_title ) && ! self::was_triggered_recently( 9154 ) ) {
+			$event       = 9154;
+			$editor_link = $this->GetEditorLink( $post );
+			$this->plugin->alerts->trigger_event(
+				$event,
+				array(
+					'PostID'             => $post->ID,
+					'PostTitle'          => $post->post_title,
+					'PostStatus'         => $post->post_status,
+					'PostUrl'            => get_permalink( $post->ID ),
+					$editor_link['name'] => $editor_link['value'],
+				)
+			);
+		}
 	}
 
 	/**
@@ -392,6 +468,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		if ( ! empty( $post ) && $post instanceof WP_Post && in_array( $post->post_type, array( 'product', 'shop_order', 'shop_coupon' ), true ) ) {
 			$this->_old_post                = $post;
 			$this->old_product              = 'product' === $post->post_type ? wc_get_product( $post->ID ) : null;
+			$this->_old_order               = 'shop_order' === $post->post_type ? wc_get_order( $post->ID ) : null;
 			$this->old_status               = $post->post_status;
 			$this->_old_link                = get_post_permalink( $post_id, false, true );
 			$this->_old_cats                = 'product' === $post->post_type ? $this->GetProductCategories( $this->_old_post ) : null;
@@ -3473,6 +3550,10 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		} else {			
 			$output = wp_unslash( $_POST );
 		}
+
+		if ( ! isset( $items['order_item_id'] ) ) {
+			return;
+		}
 		
 		foreach ( $items['order_item_id'] as $item_id ) {
 			if ( isset( $order->get_items()[ $item_id ] ) ) {
@@ -3613,17 +3694,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			return 0;
 		}
 
-		// Get editor link.
-		$edit_link = $this->GetEditorLink( $oldorder );
-
-		// Set event data.
-		$event_data = array(
-			'OrderID'          => esc_attr( $order_id ),
-			'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order_id ) ),
-			'OrderStatus'      => sanitize_text_field( $neworder->post_status ),
-			$edit_link['name'] => $edit_link['value'],
-		);
-
 		// Dont fire if we know an item was added/removed recently.
 		if ( self::was_triggered_recently( 9120 ) || self::was_triggered_recently( 9130 ) || self::was_triggered_recently( 9131 ) || self::was_triggered_recently( 9132 ) | self::was_triggered_recently( 9133 ) || self::was_triggered_recently( 9134 ) || self::was_triggered_recently( 9135 ) || self::was_triggered_recently( 9137 ) ) {
 			return;
@@ -3634,9 +3704,57 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 		$this->event_order_items_quantity_changed( $order_id, $items );
 
-		// Log event.
-		$this->plugin->alerts->trigger_event_if( 9040, $event_data, array( $this, 'must_not_contain_refund_or_modification' ) );
+		$difference = $this->order_recursive_array_diff( (array) $this->_old_order, (array) $order );
 
+		if ( ! empty( $difference ) ) {
+			// Get editor link.
+			$edit_link = $this->GetEditorLink( $oldorder );
+
+			// Set event data.
+			$event_data = array(
+				'OrderID'          => esc_attr( $order_id ),
+				'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order_id ) ),
+				'OrderStatus'      => sanitize_text_field( $neworder->post_status ),
+				$edit_link['name'] => $edit_link['value'],
+			);
+
+			// Log event.
+			$this->plugin->alerts->trigger_event_if( 9040, $event_data, array( $this, 'must_not_contain_refund_or_modification' ) );
+		}
+	}
+
+	/**
+	 * Little helper to recursively compare arrays, which is this case is WC order details.
+	 *
+	 * @param [type] $old_details
+	 * @param [type] $new_details
+	 * @return void
+	 */
+	public function order_recursive_array_diff( $old_details, $new_details ) { 
+		$r = array(); 
+		$ignored_keys = array(
+			'date_modified'
+		);
+		foreach ( $old_details as $k => $v ) {
+			if ( in_array( $k, $ignored_keys, true ) ) {
+				continue;
+			}
+			if ( array_key_exists( $k, $new_details )) { 
+				if ( is_array( $v ) ) { 
+					$rad = $this->order_recursive_array_diff( $v, $new_details[$k] ); 
+					if ( count( $rad )) {
+						$r[$k] = $rad;
+					} 
+				} else { 
+					if ( $v != $new_details[$k] ) { 
+						$r[$k] = $v; 
+					}
+				}
+			} else { 
+				$r[$k] = $v; 
+			} 
+		} 
+		return $r; 
 	}
 
 	/**
