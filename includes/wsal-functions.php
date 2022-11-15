@@ -29,7 +29,12 @@ add_action( 'woocommerce_download_product', 'wsal_woocommerce_extension_detect_f
  * @return void
  */
 function wsal_woocommerce_extension_togglealerts_process_save_settings( $post_data ) {
-	\WSAL\Helpers\Settings_Helper::set_boolean_option_value( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
+	if ( class_exists( 'WSAL\Helpers\Settings_Helper' ) ) {
+		\WSAL\Helpers\Settings_Helper::set_boolean_option_value( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
+	} else {
+		$wsal = WpSecurityAuditLog::GetInstance();
+		$wsal->SetGlobalBooleanSetting( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
+	}
 }
 
 /**
