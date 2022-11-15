@@ -357,7 +357,9 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 			$query->addOrderBy( 'created_on', true );
 			$query->setLimit( 1 );
 			$last_occurence = $query->getAdapter()->Execute( $query );
-			if ( isset( $last_occurence[0] ) && 9035 === $last_occurence[0]->alert_id ) {
+
+			$last_occurence_id = ( is_array( $last_occurence[0] ) ) ? $last_occurence[0]['alert_id'] : $last_occurence[0]->alert_id;
+			if ( isset( $last_occurence[0] ) && 9035 === $last_occurence_id ) {
 				$latest_event = $this->plugin->alerts->get_latest_events();
 				$latest_event = isset( $latest_event[0] ) ? $latest_event[0] : false;
 				$event_meta   = $latest_event ? $latest_event->GetMetaArray() : false;

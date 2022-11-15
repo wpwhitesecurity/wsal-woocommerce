@@ -29,7 +29,12 @@ add_action( 'woocommerce_download_product', 'wsal_woocommerce_extension_detect_f
  * @return void
  */
 function wsal_woocommerce_extension_togglealerts_process_save_settings( $post_data ) {
-	\WSAL\Helpers\Settings_Helper::set_boolean_option_value( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
+	if ( class_exists( '\WSAL\Helpers\Settings_Helper' ) ) {
+		\WSAL\Helpers\Settings_Helper::set_boolean_option_value( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
+	} else {
+		$wsal = WpSecurityAuditLog::GetInstance();
+		$wsal->SetGlobalBooleanSetting( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
+	}
 }
 
 /**
@@ -90,7 +95,13 @@ function wsal_woocommerce_extension_append_content_to_toggle( $alert_id ) {
 	}
 
 	if ( 9019 === $alert_id ) {
-		$wc_all_stock_changes = \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'wc-all-stock-changes', true );;
+		if ( class_exists( '\WSAL\Helpers\Settings_Helper' ) ) {
+			$wc_all_stock_changes = \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'wc-all-stock-changes', true );
+		} else {
+			$wsal                 = WpSecurityAuditLog::GetInstance();
+			$wc_all_stock_changes = $wsal->GetGlobalBooleanSetting( 'wc-all-stock-changes', true );
+		}
+
 		?>
 		<tr class="alert-wrapper" data-alert-cat="WooCommerce" data-alert-subcat="woocommerce-order" data-is-attached-to-alert="9019">
 			<td></td>

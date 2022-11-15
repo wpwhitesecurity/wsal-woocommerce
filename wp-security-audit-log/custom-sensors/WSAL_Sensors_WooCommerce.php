@@ -3136,8 +3136,14 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$query->setLimit( 1 );
 		$last_occurence = $query->getAdapter()->Execute( $query );
 		if ( ! empty( $last_occurence ) ) {
-			if ( $last_occurence[0]['alert_id'] === $alert_id ) {
-				return true;
+			if ( is_array( $last_occurence[0] ) ) {
+				if ( $last_occurence[0]['alert_id'] === $alert_id ) {
+					return true;
+				}
+			} else {				
+				if ( $last_occurence[0]->alert_id === $alert_id ) {
+					return true;
+				}
 			}
 		}
 		return false;
