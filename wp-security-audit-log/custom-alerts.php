@@ -1071,7 +1071,7 @@ $custom_alerts = array(
 				'modified',
 			),
 			array(
-				9152,
+				9153,
 				WSAL_MEDIUM,
 				esc_html__( 'Changed the setting Checkout privacy policy message', 'wsal-woocommerce' ),
 				__( 'Changed the store <strong>Checkout privacy policy</strong> message to %new_setting%.', 'wsal-woocommerce' ),
