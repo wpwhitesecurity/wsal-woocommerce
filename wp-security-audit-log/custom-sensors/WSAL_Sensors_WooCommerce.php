@@ -5184,7 +5184,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'key'   => $meta_key,
 				'value' => 'None supplied', // Not translatable as its internal only, we use a translatable string for display later on.
 			);
-			$is_first_edit = true;
+			$is_first_edit                  = true;
 		}
 
 		$current_value = get_user_meta( $user_id, $this->wc_user_meta[ $meta_id ]->key, true );
