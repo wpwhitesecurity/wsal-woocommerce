@@ -6,7 +6,7 @@ License URI: https://www.gnu.org/licenses/gpl.html
 Tags: activity log for WooCommerce, WP Activity Log extension, activity logs
 Requires at least: 5.0
 Tested up to: 5.9.3
-Stable tag: 1.4.3
+Stable tag: 1.5.0
 Requires PHP: 7.0
 
 Keep a detailed log of your team's changes in the WooCommerce store, products, orders & more.
@@ -76,7 +76,25 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 
 == Changelog ==
 
-= 1.4.4 (2022-007-28) =
+= 1.5.0 (2022-11-16) =
+
+* **Improvements**
+	* Ensure compatability with current and upcoming WP Activity Log release.
+	* Remove now obselete function which have been moved to the main WP Activity Log plugin.
+	* Ensure correct positioning and filtering of items under the Enable/Disable Events view.
+	* Shipping/Billing address changes now trigger an event if performs on the 'front-end' my account page.
+	* New event 9154 - User opened an order in the editor
+	* New events 9140 > 9143 - Changes to Shipping options under Store Settings now trigger events when modified.
+	* New events - 9144 > 9153 - Changes to Settings > Accounts & Privacy now provide events when modified.
+
+* **Bug fixes**
+	* PHP Error during creaction of a confirmation.
+	* Event 9040 will now only trigger if a significant change which does not have its own event occurs.
+	* Event 9122 not triggering for certain changes.
+	* PHP Error when cloning/duplicating a product.
+	* Event 9133 would not trigger when changing an order fee.
+
+= 1.4.4 (2022-07-28) =
 
 * **Improvement**
 	* Maintenance update to improve compatability with WP Activity Log.

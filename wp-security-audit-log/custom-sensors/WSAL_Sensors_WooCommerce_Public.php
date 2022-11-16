@@ -43,6 +43,16 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 	protected $_old_stock_status = null;
 
 	/**
+	 * WC User Meta.
+	 *
+	 * @since 3.4
+	 *
+	 * @var array
+	 */
+	private $wc_user_meta = array();
+
+
+	/**
 	 * Listening to events using WP hooks.
 	 */
 	public function HookEvents() {
@@ -54,7 +64,50 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 			add_filter( 'woocommerce_update_product_stock_query', array( $this, 'set_old_stock_for_orders' ), 10, 3 );
 			add_action( 'woocommerce_product_set_stock', array( $this, 'product_stock_changed' ), 10, 1 );
 			add_action( 'woocommerce_variation_set_stock', array( $this, 'product_stock_changed' ), 10, 1 );
+			add_action( 'update_user_meta', array( $this, 'before_wc_user_meta_update' ), 10, 3 );
+			add_action( 'added_user_meta', array( $this, 'before_wc_user_meta_update' ), 10, 3 );
 		}
+	}
+
+	/**
+	 * Get WC User Meta Data before updating.
+	 *
+	 * @since 3.4
+	 *
+	 * @param integer $meta_id  - Meta id.
+	 * @param integer $user_id  - User id.
+	 * @param string  $meta_key - Meta key.
+	 */
+	public function before_wc_user_meta_update( $meta_id, $user_id, $meta_key ) {
+		if ( ! $this->is_woocommerce_user_meta( $meta_key ) ) {
+			return;
+		}
+
+		$this->wc_user_meta[ $meta_id ] = (object) array(
+			'key'   => $meta_key,
+			'value' => get_user_meta( $user_id, $meta_key, true ),
+		);
+	}
+
+	/**
+	 * Check if meta key belongs to WooCommerce user meta.
+	 *
+	 * @since 3.4
+	 *
+	 * @param string $meta_key - Meta key.
+	 * @return boolean
+	 */
+	private function is_woocommerce_user_meta( $meta_key ) {
+		// Remove the prefix to avoid redundancy in the meta keys.
+		$address_key = str_replace( array( 'shipping_', 'billing_' ), '', $meta_key );
+
+		// WC address meta keys without prefix.
+		$meta_keys = array( 'first_name', 'last_name', 'company', 'country', 'address_1', 'address_2', 'city', 'state', 'postcode', 'phone', 'email' );
+
+		if ( in_array( $address_key, $meta_keys, true ) ) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -305,7 +358,9 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 			$query->addOrderBy( 'created_on', true );
 			$query->setLimit( 1 );
 			$last_occurence = $query->getAdapter()->Execute( $query );
-			if ( isset( $last_occurence[0] ) && 9035 === $last_occurence[0]->alert_id ) {
+
+			$last_occurence_id = ( is_array( $last_occurence[0] ) ) ? $last_occurence[0]['alert_id'] : $last_occurence[0]->alert_id;
+			if ( isset( $last_occurence[0] ) && 9035 === $last_occurence_id ) {
 				$latest_event = $this->plugin->alerts->get_latest_events();
 				$latest_event = isset( $latest_event[0] ) ? $latest_event[0] : false;
 				$event_meta   = $latest_event ? $latest_event->GetMetaArray() : false;

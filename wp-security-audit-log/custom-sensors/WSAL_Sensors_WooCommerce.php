@@ -244,6 +244,82 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		add_action( 'woocommerce_before_delete_order_item', array( $this, 'event_order_items_removed' ), 10, 1 );
 		add_action( 'woocommerce_before_save_order_items', array( $this, 'event_order_items_quantity_changed' ), 10, 2 );
 		add_action( 'woocommerce_refund_deleted', array( $this, 'event_order_refund_removed' ), 10, 2 );
+		add_action( 'admin_action_edit', array( $this, 'order_opened_for_editing' ), 10 );
+	}
+
+	/**
+	 * Alert for Editing of Posts and Custom Post Types in Gutenberg.
+	 *
+	 * @since 3.2.4
+	 */
+	public function order_opened_for_editing() {
+		global $pagenow;
+
+		if ( 'post.php' !== $pagenow ) {
+			return;
+		}
+
+		$post_id = isset( $_GET['post'] ) ? (int) sanitize_text_field( wp_unslash( $_GET['post'] ) ) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+		// Check post id.
+		if ( empty( $post_id ) ) {
+			return;
+		}
+
+		if ( is_user_logged_in() && is_admin() ) {
+			// Get post.
+			$post = get_post( $post_id );
+
+			// Log event.
+			if ( 'shop_order' === $post->post_type ) {
+				$this->order_opened_in_editor( $post );
+			}
+		}
+	}
+
+	/**
+	 * Order Opened for Editing in WP Editors.
+	 *
+	 * @param WP_Post $post – Post object.
+	 */
+	public function order_opened_in_editor( $post ) {
+		if ( empty( $post ) ) {
+			return;
+		}
+
+		$current_path = isset( $_SERVER['SCRIPT_NAME'] ) ? esc_url_raw( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) . '?post=' . $post->ID : false;
+		$referrer     = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : false;
+
+		// Check referrer URL.
+		if ( ! empty( $referrer ) ) {
+			// Parse the referrer.
+			$parsed_url = wp_parse_url( $referrer );
+
+			// If the referrer is post-new then we can ignore this one.
+			if ( isset( $parsed_url['path'] ) && 'post-new' === basename( $parsed_url['path'], '.php' ) ) {
+				return $post;
+			}
+		}
+
+		if ( ! empty( $referrer ) && strpos( $referrer, $current_path ) !== false ) {
+			// Ignore this if we were on the same page so we avoid double audit entries.
+			return $post;
+		}
+
+		if ( ! empty( $post->post_title ) && ! self::was_triggered_recently( 9154 ) ) {
+			$event       = 9154;
+			$editor_link = $this->GetEditorLink( $post );
+			$this->plugin->alerts->trigger_event(
+				$event,
+				array(
+					'PostID'             => $post->ID,
+					'PostTitle'          => $post->post_title,
+					'PostStatus'         => $post->post_status,
+					'PostUrl'            => get_permalink( $post->ID ),
+					$editor_link['name'] => $editor_link['value'],
+				)
+			);
+		}
 	}
 
 	/**
@@ -262,6 +338,11 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 			$this->new_data   = $product_data;
 			$old_product_data = $this->_old_data;
+
+			if ( empty( $old_product_data ) ) {
+				return;
+			}
+
 			$values_to_lookup = array(
 				'sku',
 				'stock_status',
@@ -270,7 +351,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 				'weight',
 				'regular_price',
 				'sale_price',
-			);
+			);		
 
 			foreach ( $values_to_lookup as $lookup_key ) {
 				if ( isset( $this->new_data[ $lookup_key ] ) && $old_product_data[ $lookup_key ] !== $this->new_data[ $lookup_key ] || isset( $this->old_data[ $lookup_key ] ) && $this->new_data[ $lookup_key ] !== $old_product_data[ $lookup_key ] ) {
@@ -387,6 +468,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		if ( ! empty( $post ) && $post instanceof WP_Post && in_array( $post->post_type, array( 'product', 'shop_order', 'shop_coupon' ), true ) ) {
 			$this->_old_post                = $post;
 			$this->old_product              = 'product' === $post->post_type ? wc_get_product( $post->ID ) : null;
+			$this->_old_order               = 'shop_order' === $post->post_type ? wc_get_order( $post->ID ) : null;
 			$this->old_status               = $post->post_status;
 			$this->_old_link                = get_post_permalink( $post_id, false, true );
 			$this->_old_cats                = 'product' === $post->post_type ? $this->GetProductCategories( $this->_old_post ) : null;
@@ -1323,11 +1405,12 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * Alerts for viewing of product post type for WooCommerce.
 	 */
 	public function viewing_product() {
+		
 		// Retrieve the current post object.
 		$product = get_queried_object();
 
 		// Check product post type.
-		if ( ! empty( $product ) && $product instanceof WP_Post && 'product' !== $product->post_type || ! empty( $product ) && ! isset( $product->post_status ) ) {
+		if ( ! empty( $product ) && $product instanceof WP_Post && 'product' !== $product->post_type || ! empty( $product ) && ! isset( $product->post_status ) || ! function_exists( 'wc_get_product' ) ) {
 			return $product;
 		}
 
@@ -2014,6 +2097,120 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							$this->plugin->alerts->trigger_event( 9033, array( 'EventType' => $status ) );
 						}
 					}
+
+					if ( 'woocommerce_enable_checkout_login_reminder' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9144,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_enable_signup_and_login_from_checkout' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9145,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_enable_myaccount_registration' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9146,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_registration_generate_username' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9147,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_registration_generate_password' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9148,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_erasure_request_removes_order_data' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9149,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+
+					if ( 'woocommerce_erasure_request_removes_download_data' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9150,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_allow_bulk_remove_personal_data' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9151,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_registration_privacy_policy_text' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9152,
+								array(
+									'old_setting' => $old_value,
+									'new_setting' => $value,
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_checkout_privacy_policy_text' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9153,
+								array(
+									'old_setting' => $old_value,
+									'new_setting' => $value,
+								)
+							);
+						}
+					}
+
 				} if ( isset( $_GET['tab'] ) && 'tax' === sanitize_text_field( wp_unslash( $_GET['tab'] ) ) ) {
 					// Check prices entered with tax setting.
 					if ( isset( $_POST['woocommerce_prices_include_tax'] ) && 'woocommerce_prices_include_tax' === $option ) {
@@ -2123,7 +2320,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 						if ( $this->old_location_data !== $this->new_location_data ) {
 							sleep( 0.5 );
 							$this->new_location_data = sanitize_text_field( wp_unslash( $_POST['woocommerce_store_address'] ) ) . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_address_2'] ) ) . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_city'] ) ) . ', ' . WC()->countries->countries[ strtok( sanitize_text_field( wp_unslash( $_POST['woocommerce_default_country'] ) ), ':' ) ] . ', ' . sanitize_text_field( wp_unslash( $_POST['woocommerce_store_postcode'] ) );
-							if ( ! $this->was_triggered_recently( 9029 ) ) {
+							if ( ! self::was_triggered_recently( 9029 ) ) {
 								$this->plugin->alerts->trigger_event(
 									9029,
 									array(
@@ -2357,6 +2554,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							}
 						}
 					}
+
 				} elseif ( empty( $_GET['tab'] ) || 'advanced' === sanitize_text_field( wp_unslash( $_GET['tab'] ) ) ) {
 					if ( 'woocommerce_cart_page_id' === $option ) {
 						if ( $old_value !== $value ) {
@@ -2441,6 +2639,52 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							);
 						}
 					}
+				} elseif ( empty( $_GET['tab'] ) || 'shipping' === sanitize_text_field( wp_unslash( $_GET['tab'] ) ) ) {
+					if ( 'woocommerce_enable_shipping_calc' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9140,
+								array(
+									'EventType'  => ( 'yes' === $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_shipping_cost_requires_address' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9141,
+								array(
+									'EventType'  => ( $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_shipping_debug_mode' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9143,
+								array(
+									'EventType'  => ( $value ) ? 'enabled' : 'disabled',
+								)
+							);
+						}
+					}
+
+					if ( 'woocommerce_ship_to_destination' === $option ) {
+						if ( $old_value !== $value ) {
+							$this->plugin->alerts->trigger_event(
+								9142,
+								array(
+									'old_setting' => $old_value,
+									'new_setting' => $value,
+								)
+							);
+						}
+					}
+
 				}
 			}
 		}
@@ -2517,6 +2761,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					'delivery_url' => isset( $_POST['webhook_delivery_url'] ) ? $_POST['webhook_delivery_url'] : '',
 					'topic'        => isset( $_POST['webhook_topic'] ) ? $_POST['webhook_topic'] : '',
 					'status'       => isset( $_POST['webhook_status'] ) ? $_POST['webhook_status'] : '',
+					'secret'       => isset( $_POST['webhook_secret'] ) ? $_POST['webhook_secret'] : '',
 				);
 
 				// Get a current copy of the soon to be "old" version for comparison.
@@ -2545,6 +2790,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					'delivery_url' => $old_webhook->get_delivery_url(),
 					'topic'        => $old_webhook->get_topic(),
 					'status'       => $old_webhook->get_status(),
+					'secret'       => $old_webhook->get_secret(),
 				);
 
 				foreach ( $new_webhook_data as $key => $data ) {
@@ -2566,6 +2812,8 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 							'OldTopic'          => $old_webhook_data['topic'],
 							'Status'            => $new_webhook_data['status'],
 							'OldStatus'         => $old_webhook_data['status'],
+							'Secret'            => $new_webhook_data['secret'],
+							'OldSecret'         => $old_webhook_data['secret'],
 							'EditorLinkWebhook' => $editor_link,
 						)
 					);
@@ -2842,7 +3090,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			}
 			if ( ! empty( $product->post_title ) ) {
 				$event = 9072;
-				if ( ! $this->WasTriggered( $event ) && ! $this->WasTriggered( 9001 ) || ! $this->was_triggered_recently( 9000 ) ) {
+				if ( ! $this->WasTriggered( $event ) && ! $this->WasTriggered( 9001 ) || ! self::was_triggered_recently( 9000 ) ) {
 					$editor_link = $this->GetEditorLink( $product );
 					$this->plugin->alerts->trigger_event_if(
 						$event,
@@ -2888,8 +3136,14 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		$query->setLimit( 1 );
 		$last_occurence = $query->getAdapter()->Execute( $query );
 		if ( ! empty( $last_occurence ) ) {
-			if ( $last_occurence[0]->alert_id === $alert_id ) {
-				return true;
+			if ( is_array( $last_occurence[0] ) ) {
+				if ( $last_occurence[0]['alert_id'] === $alert_id ) {
+					return true;
+				}
+			} else {				
+				if ( $last_occurence[0]->alert_id === $alert_id ) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -3297,11 +3551,16 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 
 		$output = array();
 
-		if ( ! isset( $_POST['items'] ) ) {
-			return;
+		if ( isset( $_POST['items'] ) ) {
+			$posted = parse_str( $_POST['items'], $output );
+		} else {			
+			$output = wp_unslash( $_POST );
 		}
 
-		$posted = parse_str( $_POST['items'], $output );
+		if ( ! isset( $items['order_item_id'] ) ) {
+			return;
+		}
+		
 		foreach ( $items['order_item_id'] as $item_id ) {
 			if ( isset( $order->get_items()[ $item_id ] ) ) {
 				$item = $order->get_items()[ $item_id ];
@@ -3406,22 +3665,22 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 		if ( $manager->will_or_has_triggered( 9120 ) ) {
 			return false;
 		}
-		if ( $manager->will_or_has_triggered( 9130 ) || $this->was_triggered_recently( 9130 ) ) {
+		if ( $manager->will_or_has_triggered( 9130 ) || self::was_triggered_recently( 9130 ) ) {
 			return false;
 		}
-		if ( $manager->will_or_has_triggered( 9131 ) || $this->was_triggered_recently( 9131 ) ) {
+		if ( $manager->will_or_has_triggered( 9131 ) || self::was_triggered_recently( 9131 ) ) {
 			return false;
 		}
-		if ( $manager->will_or_has_triggered( 9132 ) || $this->was_triggered_recently( 9132 ) ) {
+		if ( $manager->will_or_has_triggered( 9132 ) || self::was_triggered_recently( 9132 ) ) {
 			return false;
 		}
-		if ( $manager->will_or_has_triggered( 9133 ) || $this->was_triggered_recently( 9133 ) ) {
+		if ( $manager->will_or_has_triggered( 9133 ) || self::was_triggered_recently( 9133 ) ) {
 			return false;
 		}
-		if ( $manager->will_or_has_triggered( 9134 ) || $this->was_triggered_recently( 9134 ) ) {
+		if ( $manager->will_or_has_triggered( 9134 ) || self::was_triggered_recently( 9134 ) ) {
 			return false;
 		}
-		if ( $manager->will_or_has_triggered( 9137 ) || $this->was_triggered_recently( 9137 ) ) {
+		if ( $manager->will_or_has_triggered( 9137 ) || self::was_triggered_recently( 9137 ) ) {
 			return false;
 		}
 		return true;
@@ -3441,25 +3700,67 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			return 0;
 		}
 
-		// Get editor link.
-		$edit_link = $this->GetEditorLink( $oldorder );
-
-		// Set event data.
-		$event_data = array(
-			'OrderID'          => esc_attr( $order_id ),
-			'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order_id ) ),
-			'OrderStatus'      => sanitize_text_field( $neworder->post_status ),
-			$edit_link['name'] => $edit_link['value'],
-		);
-
 		// Dont fire if we know an item was added/removed recently.
-		if ( $this->was_triggered_recently( 9120 ) || $this->was_triggered_recently( 9130 ) || $this->was_triggered_recently( 9131 ) || $this->was_triggered_recently( 9132 ) | $this->was_triggered_recently( 9133 ) || $this->was_triggered_recently( 9134 ) || $this->was_triggered_recently( 9135 ) || $this->was_triggered_recently( 9137 ) ) {
+		if ( self::was_triggered_recently( 9120 ) || self::was_triggered_recently( 9130 ) || self::was_triggered_recently( 9131 ) || self::was_triggered_recently( 9132 ) | self::was_triggered_recently( 9133 ) || self::was_triggered_recently( 9134 ) || self::was_triggered_recently( 9135 ) || self::was_triggered_recently( 9137 ) ) {
 			return;
 		}
 
-		// Log event.
-		$this->plugin->alerts->trigger_event_if( 9040, $event_data, array( $this, 'must_not_contain_refund_or_modification' ) );
+		$order = wc_get_order( $order_id );
+		$items = $order->get_items(['fee']);
 
+		$this->event_order_items_quantity_changed( $order_id, $items );
+
+		$difference = $this->order_recursive_array_diff( (array) $this->_old_order, (array) $order );
+
+		if ( ! empty( $difference ) ) {
+			// Get editor link.
+			$edit_link = $this->GetEditorLink( $oldorder );
+
+			// Set event data.
+			$event_data = array(
+				'OrderID'          => esc_attr( $order_id ),
+				'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order_id ) ),
+				'OrderStatus'      => sanitize_text_field( $neworder->post_status ),
+				$edit_link['name'] => $edit_link['value'],
+			);
+
+			// Log event.
+			$this->plugin->alerts->trigger_event_if( 9040, $event_data, array( $this, 'must_not_contain_refund_or_modification' ) );
+		}
+	}
+
+	/**
+	 * Little helper to recursively compare arrays, which is this case is WC order details.
+	 *
+	 * @param [type] $old_details
+	 * @param [type] $new_details
+	 * @return void
+	 */
+	public function order_recursive_array_diff( $old_details, $new_details ) { 
+		$r = array(); 
+		$ignored_keys = array(
+			'date_modified'
+		);
+		foreach ( $old_details as $k => $v ) {
+			if ( in_array( $k, $ignored_keys, true ) ) {
+				continue;
+			}
+			if ( array_key_exists( $k, $new_details )) { 
+				if ( is_array( $v ) ) { 
+					$rad = $this->order_recursive_array_diff( $v, $new_details[$k] ); 
+					if ( count( $rad )) {
+						$r[$k] = $rad;
+					} 
+				} else { 
+					if ( $v != $new_details[$k] ) { 
+						$r[$k] = $v; 
+					}
+				}
+			} else { 
+				$r[$k] = $v; 
+			} 
+		} 
+		return $r; 
 	}
 
 	/**
@@ -4872,8 +5173,18 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param mixed   $meta_value - Meta value.
 	 */
 	public function wc_user_meta_updated( $meta_id, $user_id, $meta_key, $meta_value ) {
-		if ( ! $this->is_woocommerce_user_meta( $meta_key ) || ! isset( $this->wc_user_meta[ $meta_id ] ) || ! is_object( $this->wc_user_meta[ $meta_id ] ) ) {
+		if ( ! $this->is_woocommerce_user_meta( $meta_key ) ) {
 			return;
+		}
+
+		$is_first_edit = false;
+
+		if ( ! isset( $this->wc_user_meta[ $meta_id ] ) || ! is_object( $this->wc_user_meta[ $meta_id ] ) ) {
+			$this->wc_user_meta[ $meta_id ] = (object) array(
+				'key'   => $meta_key,
+				'value' => 'None supplied', // Not translatable as its internal only, we use a translatable string for display later on.
+			);
+			$is_first_edit                  = true;
 		}
 
 		$current_value = get_user_meta( $user_id, $this->wc_user_meta[ $meta_id ]->key, true );
@@ -4930,7 +5241,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								array(
 									'TargetUsername' => $user ? $user->user_login : false,
 									'NewValue'       => sanitize_text_field( $new_address ),
-									'OldValue'       => sanitize_text_field( $old_address ),
+									'OldValue'       => ( $is_first_edit ) ? esc_html__( 'Not supplied', 'wsal-woocommerce' ) : sanitize_text_field( $old_address ),
 									'EditUserLink'   => add_query_arg( 'user_id', $user_id, admin_url( 'user-edit.php' ) ),
 									'Roles'          => is_array( $user->roles ) ? implode( ', ', $user->roles ) : $user->roles,
 								),
@@ -4987,7 +5298,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								array(
 									'TargetUsername' => $user ? $user->user_login : false,
 									'NewValue'       => sanitize_text_field( $new_address ),
-									'OldValue'       => sanitize_text_field( $old_address ),
+									'OldValue'       => ( $is_first_edit ) ? esc_html__( 'Not supplied', 'wsal-woocommerce' ) : sanitize_text_field( $old_address ),
 									'EditUserLink'   => add_query_arg( 'user_id', $user_id, admin_url( 'user-edit.php' ) ),
 									'Roles'          => is_array( $user->roles ) ? implode( ', ', $user->roles ) : $user->roles,
 								),
@@ -5163,69 +5474,6 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 			'tag_ID'    => $tag_id,
 		);
 		return ! empty( $tag_id ) ? add_query_arg( $tag_args, admin_url( 'term.php' ) ) : null;
-	}
-
-	/**
-	 * Check if the alert was triggered recently.
-	 *
-	 * Checks last 5 events if they occured less than 20 seconds ago.
-	 *
-	 * @param integer|array $alert_id - Alert code.
-	 * @return boolean
-	 */
-	protected function was_triggered_recently( $alert_id ) {
-
-		if ( method_exists( 'self', 'was_triggered_recently' ) ) {
-			return self::was_triggered_recently();
-		}
-
-		// if we have already checked this don't check again.
-		if ( isset( $this->cached_alert_checks ) && array_key_exists( $alert_id, $this->cached_alert_checks ) && $this->cached_alert_checks[ $alert_id ] ) {
-			return true;
-		}
-		$query = new WSAL_Models_OccurrenceQuery();
-		$query->addOrderBy( 'created_on', true );
-		$query->setLimit( 5 );
-		$last_occurences  = $query->getAdapter()->Execute( $query );
-		$known_to_trigger = false;
-		foreach ( $last_occurences as $last_occurence ) {
-			if ( $known_to_trigger ) {
-				break;
-			}
-			if ( ! empty( $last_occurence ) && ( $last_occurence->created_on + 20 ) > time() ) {
-				if ( ! is_array( $alert_id ) && $last_occurence->alert_id === $alert_id ) {
-					$known_to_trigger = true;
-				} elseif ( is_array( $alert_id ) && in_array( $last_occurence[0]->alert_id, $alert_id, true ) ) {
-					$known_to_trigger = true;
-				}
-			}
-		}
-		// once we know the answer to this don't check again to avoid queries.
-		$this->cached_alert_checks[ $alert_id ] = $known_to_trigger;
-		return $known_to_trigger;
-	}
-
-	/**
-	 * Check if the alert was triggered.
-	 *
-	 * @param integer|array $alert_id - Alert code.
-	 * @return boolean
-	 */
-	private function was_triggered( $alert_id ) {
-		$query = new WSAL_Models_OccurrenceQuery();
-		$query->addOrderBy( 'created_on', true );
-		$query->setLimit( 1 );
-		$last_occurence = $query->getAdapter()->Execute( $query );
-
-		if ( ! empty( $last_occurence ) ) {
-			if ( ! is_array( $alert_id ) && $last_occurence[0]->alert_id === $alert_id ) {
-				return true;
-			} elseif ( is_array( $alert_id ) && in_array( $last_occurence[0]->alert_id, $alert_id, true ) ) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	/**
