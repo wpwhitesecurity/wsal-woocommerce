@@ -5173,8 +5173,18 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 	 * @param mixed   $meta_value - Meta value.
 	 */
 	public function wc_user_meta_updated( $meta_id, $user_id, $meta_key, $meta_value ) {
-		if ( ! $this->is_woocommerce_user_meta( $meta_key ) || ! isset( $this->wc_user_meta[ $meta_id ] ) || ! is_object( $this->wc_user_meta[ $meta_id ] ) ) {
+		if ( ! $this->is_woocommerce_user_meta( $meta_key ) ) {
 			return;
+		}
+
+		$is_first_edit = false;
+
+		if ( ! isset( $this->wc_user_meta[ $meta_id ] ) || ! is_object( $this->wc_user_meta[ $meta_id ] ) ) {
+			$this->wc_user_meta[ $meta_id ] = (object) array(
+				'key'   => $meta_key,
+				'value' => 'None supplied', // Not translatable as its internal only, we use a translatable string for display later on.
+			);
+			$is_first_edit = true;
 		}
 
 		$current_value = get_user_meta( $user_id, $this->wc_user_meta[ $meta_id ]->key, true );
@@ -5231,7 +5241,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								array(
 									'TargetUsername' => $user ? $user->user_login : false,
 									'NewValue'       => sanitize_text_field( $new_address ),
-									'OldValue'       => sanitize_text_field( $old_address ),
+									'OldValue'       => ( $is_first_edit ) ? esc_html__( 'Not supplied', 'wsal-woocommerce' ) : sanitize_text_field( $old_address ),
 									'EditUserLink'   => add_query_arg( 'user_id', $user_id, admin_url( 'user-edit.php' ) ),
 									'Roles'          => is_array( $user->roles ) ? implode( ', ', $user->roles ) : $user->roles,
 								),
@@ -5288,7 +5298,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 								array(
 									'TargetUsername' => $user ? $user->user_login : false,
 									'NewValue'       => sanitize_text_field( $new_address ),
-									'OldValue'       => sanitize_text_field( $old_address ),
+									'OldValue'       => ( $is_first_edit ) ? esc_html__( 'Not supplied', 'wsal-woocommerce' ) : sanitize_text_field( $old_address ),
 									'EditUserLink'   => add_query_arg( 'user_id', $user_id, admin_url( 'user-edit.php' ) ),
 									'Roles'          => is_array( $user->roles ) ? implode( ', ', $user->roles ) : $user->roles,
 								),

@@ -65,6 +65,7 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 			add_action( 'woocommerce_product_set_stock', array( $this, 'product_stock_changed' ), 10, 1 );
 			add_action( 'woocommerce_variation_set_stock', array( $this, 'product_stock_changed' ), 10, 1 );
 			add_action( 'update_user_meta', array( $this, 'before_wc_user_meta_update' ), 10, 3 );
+			add_action( 'added_user_meta', array( $this, 'before_wc_user_meta_update' ), 10, 3 );
 		}
 	}
 
