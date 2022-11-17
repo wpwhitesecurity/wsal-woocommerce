@@ -361,9 +361,13 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 
 			$last_occurence_id = ( is_array( $last_occurence[0] ) ) ? $last_occurence[0]['alert_id'] : $last_occurence[0]->alert_id;
 			if ( isset( $last_occurence[0] ) && 9035 === $last_occurence_id ) {
+				$occ = new WSAL_Models_Occurrence();
+				$occ_id = ( is_array( $last_occurence[0] ) ) ? $last_occurence[0]['id'] : $last_occurence[0]->id;
+				$occ->load( 'id = %d', array( (int) $occ_id ) );
+				
 				$latest_event = $this->plugin->alerts->get_latest_events();
 				$latest_event = isset( $latest_event[0] ) ? $latest_event[0] : false;
-				$event_meta   = $latest_event ? $latest_event->GetMetaArray() : false;
+				$event_meta   = $latest_event ? $occ->get_meta_array() : false;
 				$order_id     = isset( $event_meta['OrderID'] ) ? $event_meta['OrderID'] : false;
 				$order_title  = isset( $event_meta['OrderTitle'] ) ? $event_meta['OrderTitle'] : false;
 			} else {
