@@ -11,7 +11,7 @@
  * Network: true
  *
  * WC requires at least: 5.0.0
- * WC tested up to: 6.4.1
+ * WC tested up to: 7.1.0
  *
  * @package Wsal
  * @subpackage Wsal Custom Events Loader
