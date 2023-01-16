@@ -7,7 +7,7 @@ Tags: activity log for WooCommerce, WP Activity Log extension, activity logs
 Requires at least: 5.0
 Tested up to: 6.1.1
 Stable tag: 1.5.0
-Requires PHP: 7.0
+Requires PHP: 7.2
 
 Keep a detailed log of your team's changes in the WooCommerce store, products, orders & more.
 
