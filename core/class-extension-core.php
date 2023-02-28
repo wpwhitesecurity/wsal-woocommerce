@@ -2,6 +2,7 @@
 
 namespace WPWhiteSecurity\ActivityLog\Extensions\Common;
 
+use WSAL\Helpers\Classes_Helper;
 use \WPWhiteSecurity\ActivityLog\Extensions\Common\PluginInstaller as PluginInstaller;
 
 if ( ! class_exists( '\WPWhiteSecurity\ActivityLog\Extensions\Common\Core' ) ) {
@@ -192,7 +193,7 @@ if ( ! class_exists( '\WPWhiteSecurity\ActivityLog\Extensions\Common\Core' ) ) {
 					<?php
 					self::$admin_notice_already_shown = true;
 				}
-			};
+			}
 		}
 
 		/**
