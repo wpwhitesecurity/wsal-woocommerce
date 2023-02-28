@@ -25,7 +25,27 @@ add_filter( 'wsal_togglealerts_obsolete_events', 'wsal_woocommerce_extension_tog
 // Special events.
 add_action( 'woocommerce_download_product', 'wsal_woocommerce_extension_detect_file_download', 10, 6 );
 
-add_action( 'wsal_sensors_manager_add', 'add_sensors' );
+add_action(
+	'wsal_sensors_manager_add',
+	/**
+	* Adds sensors classes to the Class Helper
+	*
+	* @return void
+	*
+	* @since latest
+	*/
+	function () {
+		require_once __DIR__ . '/../wp-security-audit-log/custom-sensors/class-woocommerce-public-sensor.php';
+		require_once __DIR__ . '/../wp-security-audit-log/custom-sensors/class-woocommerce-sensor.php';
+
+		Classes_Helper::add_to_class_map(
+			array(
+				'WSAL\\Plugin_Sensors\\WooCommerce_Public_Sensor' => __DIR__ . '/../wp-security-audit-log/custom-sensors/class-woocommerce-public-sensor.php',
+				'WSAL\\Plugin_Sensors\\WooCommerce_Sensor' => __DIR__ . '/../wp-security-audit-log/custom-sensors/class-woocommerce-sensor.php',
+			)
+		);
+	}
+);
 
 /**
  * Ensures our appended setting gets saved when updating via ToggleEvents screen.
@@ -408,24 +428,4 @@ function wsal_woocommerce_extension_togglealerts_obsolete_events( $obsolete_even
 	$new_events      = array( 9011, 9070, 9075 );
 	$obsolete_events = array_merge( $obsolete_events, $new_events );
 	return $obsolete_events;
-}
-
-
-/**
- * Adds sensors classes to the Class Helper
- *
- * @return void
- *
- * @since latest
- */
-function add_sensors() {
-	require_once __DIR__ . '/../wp-security-audit-log/custom-sensors/class-woocommerce-public-sensor.php';
-	require_once __DIR__ . '/../wp-security-audit-log/custom-sensors/class-woocommerce-sensor.php';
-
-	Classes_Helper::add_to_class_map(
-		array(
-			'WSAL\\Plugin_Sensors\\WooCommerce_Public_Sensor' => __DIR__ . '/../wp-security-audit-log/custom-sensors/class-woocommerce-public-sensor.php',
-			'WSAL\\Plugin_Sensors\\WooCommerce_Sensor' => __DIR__ . '/../wp-security-audit-log/custom-sensors/class-woocommerce-sensor.php',
-		)
-	);
 }
