@@ -35,13 +35,13 @@ add_action(
 	* @since latest
 	*/
 	function () {
-		require_once __DIR__ . '/../wp-security-audit-log/custom-sensors/class-woocommerce-public-sensor.php';
-		require_once __DIR__ . '/../wp-security-audit-log/custom-sensors/class-woocommerce-sensor.php';
+		require_once __DIR__ . '/../wp-security-audit-log/sensors/class-woocommerce-public-sensor.php';
+		require_once __DIR__ . '/../wp-security-audit-log/sensors/class-woocommerce-sensor.php';
 
 		Classes_Helper::add_to_class_map(
 			array(
-				'WSAL\\Plugin_Sensors\\WooCommerce_Public_Sensor' => __DIR__ . '/../wp-security-audit-log/custom-sensors/class-woocommerce-public-sensor.php',
-				'WSAL\\Plugin_Sensors\\WooCommerce_Sensor' => __DIR__ . '/../wp-security-audit-log/custom-sensors/class-woocommerce-sensor.php',
+				'WSAL\\Plugin_Sensors\\WooCommerce_Public_Sensor' => __DIR__ . '/../wp-security-audit-log/sensors/class-woocommerce-public-sensor.php',
+				'WSAL\\Plugin_Sensors\\WooCommerce_Sensor' => __DIR__ . '/../wp-security-audit-log/sensors/class-woocommerce-sensor.php',
 			)
 		);
 	}
