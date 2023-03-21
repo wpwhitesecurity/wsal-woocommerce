@@ -224,7 +224,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		 *
 		 * @var integer
 		 */
-		private $updated_shipping_field_count = 1;
+		private static $updated_shipping_field_count = 1;
 
 		/**
 		 * Listening to events using WP hooks.
