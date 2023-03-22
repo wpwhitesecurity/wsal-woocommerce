@@ -980,7 +980,7 @@ if ( ! class_exists( '\WSAL\Custom_Alerts\WooCommerce_Custom_Alerts' ) ) {
 							9032,
 							WSAL_HIGH,
 							esc_html__( 'User enabled/disabled the use of coupons during checkout', 'wsal-woocommerce' ),
-							esc_html__( 'Changed the status of the store setting <strong>use of coupons during checkout</strong>.', 'wsal-woocommerce' ),
+							__( 'Changed the status of the store setting <strong>use of coupons during checkout</strong>.', 'wsal-woocommerce' ),
 							array(),
 							array(),
 							'woocommerce-store',
