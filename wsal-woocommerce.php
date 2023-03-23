@@ -11,7 +11,7 @@
  * Network: true
  *
  * WC requires at least: 5.0.0
- * WC tested up to: 7.1.0
+ * WC tested up to: 7.5.1
  *
  * @package Wsal
  * @subpackage Wsal Custom Events Loader
@@ -20,7 +20,7 @@
 use WSAL\Helpers\Classes_Helper;
 
 /*
-	Copyright(c) 2022  WP White Security  (email : info@wpwhitesecurity.com)
+	Copyright(c) 2023  WP White Security  (email : info@wpwhitesecurity.com)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License, version 2, as
