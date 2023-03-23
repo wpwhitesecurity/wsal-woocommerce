@@ -5,6 +5,9 @@
  * @package WsalWooCommerce
  */
 
+use WSAL\Helpers\Classes_Helper;
+use WSAL\Helpers\Settings_Helper;
+
 /**
  * Add our filters.
  */
@@ -22,6 +25,28 @@ add_filter( 'wsal_togglealerts_obsolete_events', 'wsal_woocommerce_extension_tog
 // Special events.
 add_action( 'woocommerce_download_product', 'wsal_woocommerce_extension_detect_file_download', 10, 6 );
 
+add_action(
+	'wsal_sensors_manager_add',
+	/**
+	* Adds sensors classes to the Class Helper
+	*
+	* @return void
+	*
+	* @since latest
+	*/
+	function () {
+		require_once __DIR__ . '/../wp-security-audit-log/sensors/class-woocommerce-public-sensor.php';
+		require_once __DIR__ . '/../wp-security-audit-log/sensors/class-woocommerce-sensor.php';
+
+		Classes_Helper::add_to_class_map(
+			array(
+				'WSAL\\Plugin_Sensors\\WooCommerce_Public_Sensor' => __DIR__ . '/../wp-security-audit-log/sensors/class-woocommerce-public-sensor.php',
+				'WSAL\\Plugin_Sensors\\WooCommerce_Sensor' => __DIR__ . '/../wp-security-audit-log/sensors/class-woocommerce-sensor.php',
+			)
+		);
+	}
+);
+
 /**
  * Ensures our appended setting gets saved when updating via ToggleEvents screen.
  *
@@ -30,7 +55,7 @@ add_action( 'woocommerce_download_product', 'wsal_woocommerce_extension_detect_f
  */
 function wsal_woocommerce_extension_togglealerts_process_save_settings( $post_data ) {
 	if ( class_exists( '\WSAL\Helpers\Settings_Helper' ) ) {
-		\WSAL\Helpers\Settings_Helper::set_boolean_option_value( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
+		Settings_Helper::set_boolean_option_value( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
 	} else {
 		$wsal = WpSecurityAuditLog::GetInstance();
 		$wsal->SetGlobalBooleanSetting( 'wc-all-stock-changes', isset( $post_data['wc_all_stock_changes'] ) );
@@ -96,7 +121,7 @@ function wsal_woocommerce_extension_append_content_to_toggle( $alert_id ) {
 
 	if ( 9019 === $alert_id ) {
 		if ( class_exists( '\WSAL\Helpers\Settings_Helper' ) ) {
-			$wc_all_stock_changes = \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'wc-all-stock-changes', true );
+			$wc_all_stock_changes = Settings_Helper::get_boolean_option_value( 'wc-all-stock-changes', true );
 		} else {
 			$wsal                 = WpSecurityAuditLog::GetInstance();
 			$wc_all_stock_changes = $wsal->GetGlobalBooleanSetting( 'wc-all-stock-changes', true );
@@ -211,7 +236,7 @@ function wsal_woocommerce_extension_add_custom_meta_format( $value, $expression,
 	if ( '%StockOrderID%' === $expression ) {
 		$check_value = (string) $value;
 		if ( 'NULL' !== $check_value ) {
-			$new_order    = new WC_Order( strip_tags( $value ) );
+			$new_order    = new \WC_Order( strip_tags( $value ) );
 			$editor_title = wsal_woocommerce_extension_get_order_title( $new_order );
 			return isset( $editor_title ) ? '<strong>' . $editor_title . '</strong>' : '';
 		} else {
@@ -296,7 +321,7 @@ function wsal_woocommerce_extension_get_editor_link( $post ) {
 /**
  * Get order title from order object.
  *
- * @param  WC_Order $order - WC Order object.
+ * @param  \WC_Order $order - WC Order object.
  * @return string - Order title.
  */
 function wsal_woocommerce_extension_get_order_title( $order_id ) {
@@ -306,13 +331,13 @@ function wsal_woocommerce_extension_get_order_title( $order_id ) {
 	if ( is_a( $order_id, 'WC_Order' ) ) {
 		$order = $order_id;
 	} elseif ( is_int( $order_id ) ) {
-		$order = new WC_Order( $order_id );
+		$order = new \WC_Order( $order_id );
 	} else {
 		$order = wc_get_order( $order_id );
 	}
 
 	// Final check.
-	if ( ! $order || ! $order instanceof WC_Order || ! method_exists( $order, 'get_billing_first_name' ) ) {
+	if ( ! $order || ! $order instanceof \WC_Order || ! method_exists( $order, 'get_billing_first_name' ) ) {
 		return false;
 	}
 

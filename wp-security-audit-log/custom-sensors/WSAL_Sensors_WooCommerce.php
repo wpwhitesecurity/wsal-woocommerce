@@ -1432,7 +1432,7 @@ class WSAL_Sensors_WooCommerce extends WSAL_AbstractSensor {
 					array(
 						'PostID'             => esc_attr( $product->ID ),
 						'SKU'                => esc_attr( $this->get_product_sku( $product->ID ) ),
-						'PostType'           => sanitize_text_field( $product->post_type ),
+						'PostType'           => 'post', // Set to post to allow event to trigger (products are usually ignored).
 						'ProductStatus'      => sanitize_text_field( $product->post_status ),
 						'ProductTitle'       => sanitize_text_field( $product->post_title ),
 						'ProductUrl'         => get_permalink( $product->ID ),

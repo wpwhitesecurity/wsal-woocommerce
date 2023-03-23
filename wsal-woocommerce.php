@@ -6,16 +6,18 @@
  * Text Domain: wsal-woocommerce
  * Author: WP White Security
  * Author URI: http://www.wpwhitesecurity.com/
- * Version: 1.5.0
+ * Version: 1.5.1
  * License: GPL2
  * Network: true
  *
  * WC requires at least: 5.0.0
- * WC tested up to: 6.4.1
+ * WC tested up to: 7.1.0
  *
  * @package Wsal
  * @subpackage Wsal Custom Events Loader
  */
+
+use WSAL\Helpers\Classes_Helper;
 
 /*
 	Copyright(c) 2022  WP White Security  (email : info@wpwhitesecurity.com)
@@ -47,3 +49,23 @@ if ( ! defined( 'WSAL_CLASS_PREFIX' ) ) {
 
 // Include extension specific functions.
 require_once plugin_dir_path( __FILE__ ) . 'includes/wsal-functions.php';
+
+add_action(
+	'wsal_custom_alerts_register',
+	/**
+	* Adds sensors classes to the Class Helper
+	*
+	* @return void
+	*
+	* @since latest
+	*/
+	function () {
+		require_once __DIR__ . '/wp-security-audit-log/class-woocommerce-custom-alerts.php';
+
+		Classes_Helper::add_to_class_map(
+			array(
+				'WSAL\\Custom_Alerts\\WooCommerce_Custom_Alerts' => __DIR__ . '/wp-security-audit-log/class-woocommerce-custom-alerts.php',
+			)
+		);
+	}
+);

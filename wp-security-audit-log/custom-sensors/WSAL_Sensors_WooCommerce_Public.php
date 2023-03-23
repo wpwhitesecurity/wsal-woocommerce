@@ -346,7 +346,12 @@ class WSAL_Sensors_WooCommerce_Public extends WSAL_AbstractSensor {
 			);
 		}
 
-		$wc_all_stock_changes = $this->plugin->GetGlobalBooleanSetting( 'wc-all-stock-changes', true );
+		if ( class_exists( '\WSAL\Helpers\Settings_Helper' ) ) {
+			$wc_all_stock_changes = \WSAL\Helpers\Settings_Helper::get_boolean_option_value( 'wc-all-stock-changes', true );
+		} else {
+			$wsal                 = WpSecurityAuditLog::GetInstance();
+			$wc_all_stock_changes = $wsal->GetGlobalBooleanSetting( 'wc-all-stock-changes', true );
+		}
 
 		// If stock has changed then trigger the alert.
 		if ( ( $old_stock !== $new_stock ) && ( $wc_all_stock_changes ) ) {
