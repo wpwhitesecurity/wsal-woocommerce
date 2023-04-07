@@ -2829,8 +2829,8 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 						if ( $alert_needed ) {
 							$editor_link = self::create_webhook_editor_link( $webhook_id );
 							Alert_Manager::trigger_event(
-                                9122,
-                                array(
+								9122,
+								array(
 									'HookName'          => $new_webhook_data['name'],
 									'OldHookName'       => $old_webhook_data['name'],
 									'DeliveryURL'       => $new_webhook_data['delivery_url'],
@@ -2842,7 +2842,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 									'Secret'            => $new_webhook_data['secret'],
 									'OldSecret'         => $old_webhook_data['secret'],
 									'EditorLinkWebhook' => $editor_link,
-                                )
+								)
 							);
 						}
 					}
@@ -3167,10 +3167,8 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 					if ( $last_occurence[0]['alert_id'] === $alert_id ) {
 						return true;
 					}
-				} else {
-					if ( $last_occurence[0]->alert_id === $alert_id ) {
+				} elseif ( $last_occurence[0]->alert_id === $alert_id ) {
 						return true;
-					}
 				}
 			}
 			return false;
@@ -3579,7 +3577,14 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 			$output = array();
 
 			if ( isset( $_POST['items'] ) ) {
-				$posted = parse_str( $_POST['items'], $output );
+				if ( is_array( $_POST['items'] ) ) {
+					foreach ( $_POST['items'] as $key => $value ) {
+						$items['order_item_id'][]  = $key;
+						$output['order_item_qty'][$key] = $value;
+					}
+				} else {
+					parse_str( $_POST['items'], $output );
+				}
 			} else {
 				$output = wp_unslash( $_POST );
 			}
@@ -3776,10 +3781,8 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 						if ( count( $rad ) ) {
 							$r[ $k ] = $rad;
 						}
-					} else {
-						if ( $v !== $new_details[ $k ] ) {
+					} elseif ( $v !== $new_details[ $k ] ) {
 							$r[ $k ] = $v;
-						}
 					}
 				} else {
 					$r[ $k ] = $v;
@@ -4146,7 +4149,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 			$post_attributes = ! $post_attributes ? array() : $post_attributes;
 
 			if ( ! $data ) {
-				 $data = array_map( 'sanitize_text_field', wp_unslash( $_POST ) );
+				$data = array_map( 'sanitize_text_field', wp_unslash( $_POST ) );
 			}
 
 			if ( isset( self::$_old_product_attributes[0] ) ) {
@@ -5257,7 +5260,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 							$user = get_user_by( 'ID', $user_id );
 							if ( 9083 === $event_id ) {
 								// Add 1 to our changed fields counter.
-								self::$updated_field_count++;
+								++self::$updated_field_count;
 								Alert_Manager::trigger_event_if(
 									$event_id,
 									array(
@@ -5314,7 +5317,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 							$user = get_user_by( 'ID', $user_id );
 
 							if ( 9084 === $event_id ) {
-								self::$updated_shipping_field_count++;
+								++self::$updated_shipping_field_count;
 								Alert_Manager::trigger_event_if(
 									$event_id,
 									array(
@@ -5342,7 +5345,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		 * @return bool - If was repeat or not.
 		 */
 		public static function must_not_repeat_billing() {
-			self::$updated_field_count--;
+			--self::$updated_field_count;
 			if ( 1 === self::$updated_field_count ) {
 				return true;
 			}
@@ -5355,7 +5358,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		 * @return bool - If was repeat or not.
 		 */
 		public static function must_not_repeat_shipping() {
-			self::$updated_shipping_field_count--;
+			--self::$updated_shipping_field_count;
 			if ( 1 === self::$updated_shipping_field_count ) {
 				return true;
 			}
