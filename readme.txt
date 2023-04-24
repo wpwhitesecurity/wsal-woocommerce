@@ -5,8 +5,8 @@ License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.html
 Tags: activity log for WooCommerce, WP Activity Log extension, activity logs
 Requires at least: 5.0
-Tested up to: 6.1.1
-Stable tag: 1.5.1
+Tested up to: 6.2
+Stable tag: 1.5.2
 Requires PHP: 7.2
 
 Keep a detailed log of your team's changes in the WooCommerce store, products, orders & more.
@@ -75,6 +75,14 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 1. Changes in WooCommerce, products and more reported in the WordPress activity log.
 
 == Changelog ==
+
+= 1.5.2 (2024-04-25) =
+
+* **Plugin improvements**
+	* Support for WooCommerce HPOS.
+	
+* **Bug fixes**
+	* Fatal error when creating delivery and using the Partial delivery plugin.
 
 = 1.5.1 (2023-03-23) =
 
