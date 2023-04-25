@@ -344,7 +344,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 				return;
 			}
 
-			$current_path = isset( $_SERVER['SCRIPT_NAME'] ) ? esc_url_raw( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) . '?post=' . $post->ID : false;
+			$current_path = isset( $_SERVER['SCRIPT_NAME'] ) ? esc_url_raw( wp_unslash( $_SERVER['SCRIPT_NAME'] ) ) . '?post=' . $post->get_id() : false;
 			$referrer     = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : false;
 
 			// Check referrer URL.
@@ -369,10 +369,10 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 				Alert_Manager::trigger_event(
 					$event,
 					array(
-						'PostID'             => $post->ID,
-						'PostTitle'          => wsal_woocommerce_extension_get_order_title( $post->ID ),
-						'PostStatus'         => $post->post_status,
-						'PostUrl'            => get_permalink( $post->ID ),
+						'PostID'             => $post->get_id(),
+						'PostTitle'          => wsal_woocommerce_extension_get_order_title( $post->get_id() ),
+						'PostStatus'         => $post->get_status(),
+						'PostUrl'            => get_permalink( $post->get_id() ),
 						$editor_link['name'] => $editor_link['value'],
 					)
 				);
