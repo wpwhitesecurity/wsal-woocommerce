@@ -237,8 +237,11 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 
 			add_action( 'save_post', array( __CLASS__, 'event_changed' ), 10, 3 );
 			add_action( 'delete_post', array( __CLASS__, 'event_deleted' ), 10, 1 );
+			add_action( 'woocommerce_before_delete_order', array( __CLASS__, 'event_deleted' ), 10, 1 );
 			add_action( 'wp_trash_post', array( __CLASS__, 'event_trashed' ), 10, 1 );
+			add_action( 'woocommerce_trash_order', array( __CLASS__, 'event_trashed' ), 10, 1 );
 			add_action( 'untrash_post', array( __CLASS__, 'event_untrashed' ) );
+			add_action( 'woocommerce_untrash_order', array( __CLASS__, 'event_untrashed' ) );
 			add_action( 'wp_head', array( __CLASS__, 'viewing_product' ), 10 );
 			add_action( 'create_product_cat', array( __CLASS__, 'event_category_creation' ), 10, 1 );
 			add_filter( 'post_edit_form_tag', array( __CLASS__, 'editing_product' ), 10, 1 );
@@ -275,6 +278,30 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 			add_action( 'woocommerce_before_save_order_items', array( __CLASS__, 'event_order_items_quantity_changed' ), 10, 2 );
 			add_action( 'woocommerce_refund_deleted', array( __CLASS__, 'event_order_refund_removed' ), 10, 2 );
 			add_action( 'admin_action_edit', array( __CLASS__, 'order_opened_for_editing' ), 10 );
+
+			add_action( 'woocommerce_page_wc-orders', array( __CLASS__, 'orders_actions' ) );
+		}
+
+		/**
+		 * Covers order actions
+		 *
+		 * @return void
+		 *
+		 * @since latest
+		 */
+		public static function orders_actions() {
+
+			if ( isset( $_GET['action'] ) ) {
+				if ( 'edit' === $_GET['action'] && isset( $_GET['id'] ) && 0 < (int) $_GET['id'] ) {
+					// Get post.
+					$post = wc_get_order( \wp_unslash( \sanitize_text_field( $_GET['id'] ) ) );
+
+					// Log event.
+					if ( $post ) {
+						self::order_opened_in_editor( $post );
+					}
+				}
+			}
 		}
 
 		/**
@@ -298,10 +325,10 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 
 			if ( is_user_logged_in() && is_admin() ) {
 				// Get post.
-				$post = get_post( $post_id );
+				$post = wc_get_order( $post_id );
 
 				// Log event.
-				if ( 'shop_order' === $post->post_type ) {
+				if ( $post ) {
 					self::order_opened_in_editor( $post );
 				}
 			}
@@ -312,7 +339,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		 *
 		 * @param WP_Post $post – Post object.
 		 */
-		public static function order_opened_in_editor( $post ) {
+		private static function order_opened_in_editor( $post ) {
 			if ( empty( $post ) ) {
 				return;
 			}
@@ -336,14 +363,14 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 				return $post;
 			}
 
-			if ( ! empty( $post->post_title ) && ! Alert_Manager::was_triggered_recently( 9154 ) ) {
+			if ( ! Alert_Manager::was_triggered_recently( 9154 ) ) {
 				$event       = 9154;
 				$editor_link = self::get_editor_link( $post );
 				Alert_Manager::trigger_event(
 					$event,
 					array(
 						'PostID'             => $post->ID,
-						'PostTitle'          => $post->post_title,
+						'PostTitle'          => wsal_woocommerce_extension_get_order_title( $post->ID ),
 						'PostStatus'         => $post->post_status,
 						'PostUrl'            => get_permalink( $post->ID ),
 						$editor_link['name'] => $editor_link['value'],
@@ -1338,9 +1365,14 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		 * @param int $post_id - Product/Order ID.
 		 */
 		public static function event_trashed( $post_id ) {
-			$post = get_post( $post_id );
+			$post = wc_get_order( $post_id );
+			if ( false === $post ) {
+				$post = get_post( $post_id );
+			}
 			if ( empty( $post ) || ! $post instanceof \WP_Post ) {
-				return;
+				if ( ! is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
+					return;
+				}
 			}
 
 			if ( 'product' === $post->post_type ) {
@@ -1355,12 +1387,25 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 					)
 				);
 			} elseif ( 'shop_order' === $post->post_type ) {
+				$editor_link = self::get_editor_link( $post );
 				Alert_Manager::trigger_event(
 					9037,
 					array(
-						'OrderID'     => esc_attr( $post->ID ),
-						'OrderTitle'  => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post->ID ) ),
-						'OrderStatus' => sanitize_text_field( $post->post_status ),
+						'OrderID'            => esc_attr( $post->ID ),
+						'OrderTitle'         => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post->ID ) ),
+						'OrderStatus'        => sanitize_text_field( $post->post_status ),
+						$editor_link['name'] => $editor_link['value'],
+					)
+				);
+			} elseif ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
+				$editor_link = self::get_editor_link( $post );
+				Alert_Manager::trigger_event(
+					9037,
+					array(
+						'OrderID'            => esc_attr( $post->ID ),
+						'OrderTitle'         => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post->ID ) ),
+						'OrderStatus'        => sanitize_text_field( $post->post_status ),
+						$editor_link['name'] => $editor_link['value'],
 					)
 				);
 			}
@@ -1372,9 +1417,14 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		 * @param int $post_id - Product/Order ID.
 		 */
 		public static function event_deleted( $post_id ) {
-			$post = get_post( $post_id );
+			$post = wc_get_order( $post_id );
+			if ( false === $post ) {
+				$post = get_post( $post_id );
+			}
 			if ( empty( $post ) || ! $post instanceof \WP_Post ) {
-				return;
+				if ( ! is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
+					return;
+				}
 			}
 
 			if ( 'product' === $post->post_type ) {
@@ -1388,6 +1438,8 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 				);
 			} elseif ( 'shop_order' === $post->post_type ) {
 				Alert_Manager::trigger_event( 9039, array( 'OrderTitle' => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post_id ) ) ) );
+			} elseif ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
+				Alert_Manager::trigger_event( 9039, array( 'OrderTitle' => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post_id ) ) ) );
 			}
 		}
 
@@ -1397,9 +1449,14 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		 * @param int $post_id - Product ID.
 		 */
 		public static function event_untrashed( $post_id ) {
-			$post = get_post( $post_id );
+			$post = wc_get_order( $post_id );
+			if ( false === $post ) {
+				$post = get_post( $post_id );
+			}
 			if ( empty( $post ) || ! $post instanceof \WP_Post ) {
-				return;
+				if ( ! is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
+					return;
+				}
 			}
 
 			if ( 'product' === $post->post_type ) {
@@ -1415,6 +1472,17 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 					)
 				);
 			} elseif ( 'shop_order' === $post->post_type ) {
+				$editor_link = self::get_editor_link( $post );
+				Alert_Manager::trigger_event(
+					9038,
+					array(
+						'OrderID'            => esc_attr( $post->ID ),
+						'OrderTitle'         => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post_id ) ),
+						'OrderStatus'        => sanitize_text_field( $post->post_status ),
+						$editor_link['name'] => $editor_link['value'],
+					)
+				);
+			} elseif ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
 				$editor_link = self::get_editor_link( $post );
 				Alert_Manager::trigger_event(
 					9038,
@@ -3045,7 +3113,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		 */
 		private static function get_editor_link( $post ) {
 			// Meta value key.
-			if ( 'shop_order' === $post->post_type ) {
+			if ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) || 'shop_order' === $post->post_type ) {
 				$name = 'EditorLinkOrder';
 			} elseif ( 'shop_coupon' === $post->post_type ) {
 				$name = 'EditorLinkCoupon';
@@ -3054,7 +3122,11 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 			}
 
 			// Get editor post link URL.
-			$value = get_edit_post_link( $post->ID );
+			if ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
+				$value = $post->get_edit_order_url();
+			} else {
+				$value = get_edit_post_link( $post->ID );
+			}
 
 			// If the URL is not empty then set values.
 			if ( ! empty( $value ) ) {
@@ -3360,7 +3432,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		 * @param WC_Order $order       – WooCommerce order object.
 		 */
 		public static function event_order_status_changed( $order_id, $status_from, $status_to, $order ) {
-			$order_post = get_post( $order_id ); // Get order post object.
+			$order_post = wc_get_order( $order_id ); // Get order post object.
 			$edit_link  = self::get_editor_link( $order_post );
 			$event_data = array(
 				'OrderID'          => esc_attr( $order_id ),
@@ -3385,7 +3457,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 				$product = $item->get_product();
 				if ( $product instanceof \WC_Product ) {
 					$order      = wc_get_order( $order_id );
-					$order_post = get_post( $order_id );
+					$order_post = wc_get_order( $order_id );
 					$edit_link  = self::get_editor_link( $order_post );
 					$event_data = array(
 						'OrderID'          => esc_attr( $order_id ),
@@ -3393,7 +3465,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 						'ProductTitle'     => $product->get_name(),
 						'ProductID'        => $product->get_id(),
 						'SKU'              => self::get_product_sku( $product->get_id() ),
-						'OrderStatus'      => $order_post->post_status,
+						'OrderStatus'      => $order_post->get_status(),
 						'EventType'        => 'added',
 						$edit_link['name'] => $edit_link['value'],
 					);
@@ -3404,13 +3476,13 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 			if ( $item instanceof \WC_Order_Item_Fee ) {
 				$order = wc_get_order( $order_id );
 				if ( $order ) {
-					$order_post = get_post( $order_id );
+					$order_post = wc_get_order( $order_id );
 					$edit_link  = self::get_editor_link( $order_post );
 					$event_data = array(
 						'OrderID'          => esc_attr( $order_id ),
 						'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 						'FeeAmount'        => $item->get_amount(),
-						'OrderStatus'      => $order_post->post_status,
+						'OrderStatus'      => $order_post->get_status(),
 						'EventType'        => 'added',
 						$edit_link['name'] => $edit_link['value'],
 					);
@@ -3421,14 +3493,14 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 			if ( $item instanceof \WC_Order_Item_Coupon ) {
 				$order = wc_get_order( $order_id );
 				if ( $order ) {
-					$order_post = get_post( $order_id );
+					$order_post = wc_get_order( $order_id );
 					$edit_link  = self::get_editor_link( $order_post );
 					$event_data = array(
 						'OrderID'          => esc_attr( $order_id ),
 						'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 						'CouponName'       => $item->get_name(),
 						'CouponValue'      => $item->get_discount(),
-						'OrderStatus'      => $order_post->post_status,
+						'OrderStatus'      => $order_post->get_status(),
 						'EventType'        => 'added',
 						$edit_link['name'] => $edit_link['value'],
 					);
@@ -3439,13 +3511,13 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 			if ( $item instanceof \WC_Order_Item_Tax ) {
 				$order = wc_get_order( $order_id );
 				if ( $order ) {
-					$order_post = get_post( $order_id );
+					$order_post = wc_get_order( $order_id );
 					$edit_link  = self::get_editor_link( $order_post );
 					$event_data = array(
 						'OrderID'          => esc_attr( $order_id ),
 						'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
 						'TaxName'          => $item->get_name(),
-						'OrderStatus'      => $order_post->post_status,
+						'OrderStatus'      => $order_post->get_status(),
 						'EventType'        => 'added',
 						$edit_link['name'] => $edit_link['value'],
 					);
@@ -3456,12 +3528,12 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 			if ( $item instanceof \WC_Order_Item_Shipping ) {
 				$order = wc_get_order( $order_id );
 				if ( $order ) {
-					$order_post = get_post( $order_id );
+					$order_post = wc_get_order( $order_id );
 					$edit_link  = self::get_editor_link( $order_post );
 					$event_data = array(
 						'OrderID'          => esc_attr( $order_id ),
 						'OrderTitle'       => wsal_woocommerce_extension_get_order_title( $order ),
-						'OrderStatus'      => $order_post->post_status,
+						'OrderStatus'      => $order_post->get_status(),
 						'EventType'        => 'added',
 						$edit_link['name'] => $edit_link['value'],
 					);
@@ -3484,7 +3556,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 				$item    = $order->get_items()[ $item_id ];
 				$product = $item->get_product();
 
-				$order_post = get_post( $order_id );
+				$order_post = wc_get_order( $order_id );
 				$edit_link  = self::get_editor_link( $order_post );
 				$event_data = array(
 					'OrderID'          => esc_attr( $order_id ),
@@ -3502,7 +3574,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 			if ( isset( $order->get_fees()[ $item_id ] ) ) {
 				$item = $order->get_fees()[ $item_id ];
 
-				$order_post = get_post( $order_id );
+				$order_post = wc_get_order( $order_id );
 				$edit_link  = self::get_editor_link( $order_post );
 				$event_data = array(
 					'OrderID'          => esc_attr( $order_id ),
@@ -3518,7 +3590,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 			if ( isset( $order->get_coupons()[ $item_id ] ) ) {
 				$item = $order->get_coupons()[ $item_id ];
 
-				$order_post = get_post( $order_id );
+				$order_post = wc_get_order( $order_id );
 				$edit_link  = self::get_editor_link( $order_post );
 				$event_data = array(
 					'OrderID'          => esc_attr( $order_id ),
@@ -3535,7 +3607,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 			if ( isset( $order->get_taxes()[ $item_id ] ) ) {
 				$item = $order->get_taxes()[ $item_id ];
 
-				$order_post = get_post( $order_id );
+				$order_post = wc_get_order( $order_id );
 				$edit_link  = self::get_editor_link( $order_post );
 				$event_data = array(
 					'OrderID'          => esc_attr( $order_id ),
@@ -3551,7 +3623,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 			if ( isset( $order->get_shipping_methods()[ $item_id ] ) ) {
 				$item = $order->get_shipping_method()[ $item_id ];
 
-				$order_post = get_post( $order_id );
+				$order_post = wc_get_order( $order_id );
 				$edit_link  = self::get_editor_link( $order_post );
 				$event_data = array(
 					'OrderID'          => esc_attr( $order_id ),
@@ -3579,8 +3651,8 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 			if ( isset( $_POST['items'] ) ) {
 				if ( is_array( $_POST['items'] ) ) {
 					foreach ( $_POST['items'] as $key => $value ) {
-						$items['order_item_id'][]  = $key;
-						$output['order_item_qty'][$key] = $value;
+						$items['order_item_id'][]         = $key;
+						$output['order_item_qty'][ $key ] = $value;
 					}
 				} else {
 					parse_str( $_POST['items'], $output );
@@ -3600,7 +3672,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 						$product      = $item->get_product();
 						$old_quantity = $item->get_quantity();
 						$order        = wc_get_order( $order_id );
-						$order_post   = get_post( $order_id );
+						$order_post   = wc_get_order( $order_id );
 						$edit_link    = self::get_editor_link( $order_post );
 						if ( intval( $output['order_item_qty'][ $item_id ] ) !== intval( $old_quantity ) ) {
 							$event_data = array(
@@ -3622,7 +3694,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 					$item = $order->get_fees()[ $item_id ];
 					if ( $item instanceof \WC_Order_Item_Fee ) {
 						$order      = wc_get_order( $order_id );
-						$order_post = get_post( $order_id );
+						$order_post = wc_get_order( $order_id );
 						$edit_link  = self::get_editor_link( $order_post );
 						if ( intval( $output['line_total'][ $item_id ] ) !== intval( $item->get_amount() ) ) {
 							$event_data = array(
@@ -3804,7 +3876,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 			// Check for remove personal data action.
 			if ( 'remove_personal_data' === $action ) {
 				foreach ( $order_ids as $order_id ) {
-					$order_post = get_post( $order_id );
+					$order_post = wc_get_order( $order_id );
 
 					// Get editor link.
 					$edit_link = self::get_editor_link( $order_post );
@@ -3835,7 +3907,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		 */
 		public static function event_order_refunded( $order_id, $refund_id ) {
 			// Get order post object.
-			$order_obj        = get_post( $order_id );
+			$order_obj        = wc_get_order( $order_id );
 			$edit_link        = self::get_editor_link( $order_obj );
 			$order            = wc_get_order( $order_id );
 			$customer_user_id = $order->get_user_id();
@@ -3891,7 +3963,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		 */
 		public static function event_order_refund_removed( $refund_id, $order_id ) {
 			// Get order post object.
-			$order_obj        = get_post( $order_id );
+			$order_obj        = wc_get_order( $order_id );
 			$edit_link        = self::get_editor_link( $order_obj );
 			$order            = wc_get_order( $order_id );
 			$customer_user_id = $order->get_user_id();
@@ -4080,7 +4152,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 					return;
 				}
 
-				$post = get_post( $post_id );
+				$post = wc_get_order( $post_id );
 				if ( ! $post ) {
 					return;
 				}
@@ -4098,7 +4170,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 					return;
 				}
 
-				$post = get_post( $product_id );
+				$post = wc_get_order( $product_id );
 				if ( ! $post ) {
 					return;
 				}
@@ -4116,7 +4188,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 				}
 
 				// Get order post.
-				$order = get_post( $order_id );
+				$order = wc_get_order( $order_id );
 
 				// Get editor link.
 				$edit_link = self::get_editor_link( $order );
@@ -4127,7 +4199,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 					array(
 						'OrderID'          => esc_attr( $order_id ),
 						'OrderTitle'       => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $order_id ) ),
-						'OrderStatus'      => isset( $order->post_status ) ? sanitize_text_field( $order->post_status ) : false,
+						'OrderStatus'      => $order->get_status() ? sanitize_text_field( $order->get_status() ) : false,
 						$edit_link['name'] => $edit_link['value'],
 					),
 					array( __CLASS__, 'must_not_contain_refund_or_modification' )
@@ -5539,3 +5611,136 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		}
 	}
 }
+
+/**
+// Get Order ID and Key
+$order->get_id();
+$order->get_order_key();
+
+// Get Order Totals $0.00
+$order->get_formatted_order_total();
+$order->get_cart_tax();
+$order->get_currency();
+$order->get_discount_tax();
+$order->get_discount_to_display();
+$order->get_discount_total();
+$order->get_total_fees();
+$order->get_formatted_line_subtotal();
+$order->get_shipping_tax();
+$order->get_shipping_total();
+$order->get_subtotal();
+$order->get_subtotal_to_display();
+$order->get_tax_location();
+$order->get_tax_totals();
+$order->get_taxes();
+$order->get_total();
+$order->get_total_discount();
+$order->get_total_tax();
+$order->get_total_refunded();
+$order->get_total_tax_refunded();
+$order->get_total_shipping_refunded();
+$order->get_item_count_refunded();
+$order->get_total_qty_refunded();
+$order->get_qty_refunded_for_item();
+$order->get_total_refunded_for_item();
+$order->get_tax_refunded_for_item();
+$order->get_total_tax_refunded_by_rate_id();
+$order->get_remaining_refund_amount();
+
+// Get and Loop Over Order Items
+foreach ( $order->get_items() as $item_id => $item ) {
+	$product_id = $item->get_product_id();
+	$variation_id = $item->get_variation_id();
+	$product = $item->get_product(); // see link above to get $product info
+	$product_name = $item->get_name();
+	$quantity = $item->get_quantity();
+	$subtotal = $item->get_subtotal();
+	$total = $item->get_total();
+	$tax = $item->get_subtotal_tax();
+	$tax_class = $item->get_tax_class();
+	$tax_status = $item->get_tax_status();
+	$allmeta = $item->get_meta_data();
+	$somemeta = $item->get_meta( '_whatever', true );
+	$item_type = $item->get_type(); // e.g. "line_item", "fee"
+}
+
+// Other Secondary Items Stuff
+$order->get_items_key();
+$order->get_items_tax_classes();
+$order->get_item_count();
+$order->get_item_total();
+$order->get_downloadable_items();
+$order->get_coupon_codes();
+
+// Get Order Lines
+$order->get_line_subtotal();
+$order->get_line_tax();
+$order->get_line_total();
+
+// Get Order Shipping
+$order->get_shipping_method();
+$order->get_shipping_methods();
+$order->get_shipping_to_display();
+
+// Get Order Dates
+$order->get_date_created();
+$order->get_date_modified();
+$order->get_date_completed();
+$order->get_date_paid();
+
+// Get Order User, Billing & Shipping Addresses
+$order->get_customer_id();
+$order->get_user_id();
+$order->get_user();
+$order->get_customer_ip_address();
+$order->get_customer_user_agent();
+$order->get_created_via();
+$order->get_customer_note();
+$order->get_address_prop();
+$order->get_billing_first_name();
+$order->get_billing_last_name();
+$order->get_billing_company();
+$order->get_billing_address_1();
+$order->get_billing_address_2();
+$order->get_billing_city();
+$order->get_billing_state();
+$order->get_billing_postcode();
+$order->get_billing_country();
+$order->get_billing_email();
+$order->get_billing_phone();
+$order->get_shipping_first_name();
+$order->get_shipping_last_name();
+$order->get_shipping_company();
+$order->get_shipping_address_1();
+$order->get_shipping_address_2();
+$order->get_shipping_city();
+$order->get_shipping_state();
+$order->get_shipping_postcode();
+$order->get_shipping_country();
+$order->get_address();
+$order->get_shipping_address_map_url();
+$order->get_formatted_billing_full_name();
+$order->get_formatted_shipping_full_name();
+$order->get_formatted_billing_address();
+$order->get_formatted_shipping_address();
+
+// Get Order Payment Details
+$order->get_payment_method();
+$order->get_payment_method_title();
+$order->get_transaction_id();
+
+// Get Order URLs
+$order->get_checkout_payment_url();
+$order->get_checkout_order_received_url();
+$order->get_cancel_order_url();
+$order->get_cancel_order_url_raw();
+$order->get_cancel_endpoint();
+$order->get_view_order_url();
+$order->get_edit_order_url();
+
+// Get Order Status
+$order->get_status();
+
+// Get Thank You Page URL
+$order->get_checkout_order_received_url();
+*/

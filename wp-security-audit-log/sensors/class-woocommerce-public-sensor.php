@@ -34,14 +34,14 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Public_Sensor' ) ) {
 		 *
 		 * @var int
 		 */
-		private static $_old_stock = null;
+		private static $old_stock = null;
 
 		/**
 		 * Old Product Stock Status.
 		 *
 		 * @var string
 		 */
-		private static $_old_stock_status = null;
+		private static $old_stock_status = null;
 
 		/**
 		 * WC User Meta.
@@ -122,14 +122,20 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Public_Sensor' ) ) {
 		 */
 		private static function get_editor_link( $post ) {
 			// Meta value key.
-			if ( 'shop_order' === $post->post_type ) {
+			if ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) || 'shop_order' === $post->post_type ) {
 				$name = 'EditorLinkOrder';
 			} else {
 				$name = 'EditorLinkProduct';
 			}
 
 			// Get editor post link URL.
-			$value = get_edit_post_link( $post->ID );
+
+			// Get editor post link URL.
+			if ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
+				$value = $post->get_edit_order_url();
+			} else {
+				$value = get_edit_post_link( $post->ID );
+			}
 
 			// If the URL is not empty then set values.
 			if ( ! empty( $value ) ) {
@@ -186,8 +192,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Public_Sensor' ) ) {
 			$new_order = new \WC_Order( $order_id );
 
 			if ( $new_order && $new_order instanceof \WC_Order ) {
-				$order_post  = get_post( $order_id ); // Get order post object.
-				$order_title = ( null !== $order_post && $order_post instanceof \WP_Post ) ? $order_post->post_title : false;
+				$order_post = wc_get_order( $order_id ); // Get order post object.
 				$editor_link = self::get_editor_link( $order_post );
 				Alert_Manager::trigger_event(
 					9035,
@@ -223,8 +228,8 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Public_Sensor' ) ) {
 			$product_with_stock = wc_get_product( $product_id_with_stock );
 
 			// Set stock attributes of the product.
-			self::$_old_stock        = $product_with_stock->get_stock_quantity();
-			self::$_old_stock_status = $product_with_stock->get_stock_status();
+			self::$old_stock        = $product_with_stock->get_stock_quantity();
+			self::$old_stock_status = $product_with_stock->get_stock_status();
 
 			// Return original stock quantity.
 			return $order_quantity;
@@ -242,8 +247,8 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Public_Sensor' ) ) {
 			$old_product = wc_get_product( $product_id );
 
 			// Set stock attributes of the product.
-			self::$_old_stock        = $old_product->get_stock_quantity();
-			self::$_old_stock_status = $old_product->get_stock_status();
+			self::$old_stock        = $old_product->get_stock_quantity();
+			self::$old_stock_status = $old_product->get_stock_status();
 
 			// Return the original sql.
 			return $sql;
@@ -257,7 +262,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Public_Sensor' ) ) {
 		 * @param WC_Product $product - WooCommerce product object.
 		 */
 		public static function product_stock_changed( $product ) {
-			if ( is_null( self::$_old_stock ) && is_null( self::$_old_stock_status ) ) {
+			if ( is_null( self::$old_stock ) && is_null( self::$old_stock_status ) ) {
 				return;
 			}
 
@@ -285,7 +290,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Public_Sensor' ) ) {
 				$new_acc_stock = isset( $post_array['stock_quantity'] ) ? $post_array['stock_quantity'] : false;
 
 				// Get old stock quantity.
-				$old_stock = ! empty( self::$_old_stock ) ? self::$_old_stock : $old_acc_stock[ $product_id ];
+				$old_stock = ! empty( self::$old_stock ) ? self::$old_stock : $old_acc_stock[ $product_id ];
 
 				// Following cases handle the stock status.
 				if ( '0' === $old_acc_stock[ $product_id ] && '0' !== $new_acc_stock[ $product_id ] ) {
@@ -300,8 +305,8 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Public_Sensor' ) ) {
 					$old_stock_status = '';
 				}
 			} else {
-				$old_stock        = self::$_old_stock; // Get old stock quantity.
-				$old_stock_status = self::$_old_stock_status; // Get old stock status.
+				$old_stock        = self::$old_stock; // Get old stock quantity.
+				$old_stock_status = self::$old_stock_status; // Get old stock status.
 			}
 
 			$new_stock        = $product->get_stock_quantity(); // Get new stock quantity.
@@ -384,7 +389,6 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Public_Sensor' ) ) {
 						'NewValue'           => $new_stock,
 						'Username'           => $username,
 						'StockOrderID'       => $order_id,
-						'Username'           => $username,
 						$editor_link['name'] => $editor_link['value'],
 					)
 				);
