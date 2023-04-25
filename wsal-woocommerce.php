@@ -6,12 +6,12 @@
  * Text Domain: wsal-woocommerce
  * Author: WP White Security
  * Author URI: http://www.wpwhitesecurity.com/
- * Version: 1.5.1
+ * Version: 1.5.2
  * License: GPL2
  * Network: true
  *
  * WC requires at least: 5.0.0
- * WC tested up to: 7.5.1
+ * WC tested up to: 7.6.0
  *
  * @package Wsal
  * @subpackage Wsal Custom Events Loader
@@ -67,5 +67,14 @@ add_action(
 				'WSAL\\Custom_Alerts\\WooCommerce_Custom_Alerts' => __DIR__ . '/wp-security-audit-log/class-woocommerce-custom-alerts.php',
 			)
 		);
+	}
+);
+
+add_action(
+	'before_woocommerce_init',
+	function() {
+		if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+		}
 	}
 );

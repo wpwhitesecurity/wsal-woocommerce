@@ -1875,9 +1875,7 @@ if ( ! class_exists( '\WSAL\Custom_Alerts\WooCommerce_Custom_Alerts' ) ) {
 							esc_html__( 'User moved a WooCommerce order to trash', 'wsal-woocommerce' ),
 							esc_html__( 'Moved the order %OrderTitle% to trash', 'wsal-woocommerce' ),
 							array(),
-							array(
-								esc_html__( 'View order', 'wsal-woocommerce' ) => '%EditorLinkOrder%',
-							),
+							array(),
 							'woocommerce-order',
 							'deleted',
 						),
