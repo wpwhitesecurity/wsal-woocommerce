@@ -53,6 +53,27 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Public_Sensor' ) ) {
 		private static $wc_user_meta = array();
 
 		/**
+		 * Is that a login sensor or not?
+		 * Sensors doesn't need to have this property, except where they explicitly have to set that value.
+		 *
+		 * @var boolean
+		 *
+		 * @since 4.5.0
+		 */
+		private static $frontend_sensor = true;
+
+		/**
+		 * Is that a front end sensor? The sensors doesn't need to have that method implemented, except if they want to specifically set that value.
+		 *
+		 * @return boolean
+		 *
+		 * @since 4.5.0
+		 */
+		public static function is_frontend_sensor() {
+			return self::$frontend_sensor;
+		}
+
+		/**
 		 * Listening to events using WP hooks.
 		 */
 		public static function init() {
