@@ -1448,7 +1448,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 				}
 			}
 
-			if ( 'product' === $post->post_type ) {
+			if ( $post instanceof \WP_Post && 'product' === $post->post_type ) {
 				Alert_Manager::trigger_event(
 					9012,
 					array(
@@ -1459,18 +1459,18 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 						'ProductUrl'    => get_post_permalink( $post->ID ),
 					)
 				);
-			} elseif ( 'shop_order' === $post->post_type ) {
+			} elseif ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
 				$editor_link = self::get_editor_link( $post );
 				Alert_Manager::trigger_event(
 					9037,
 					array(
-						'OrderID'            => esc_attr( $post->ID ),
-						'OrderTitle'         => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post->ID ) ),
-						'OrderStatus'        => sanitize_text_field( $post->post_status ),
+						'OrderID'            => esc_attr( $post->get_id() ),
+						'OrderTitle'         => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post->get_id() ) ),
+						'OrderStatus'        => sanitize_text_field( $post->get_status() ),
 						$editor_link['name'] => $editor_link['value'],
 					)
 				);
-			} elseif ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
+			} elseif ( 'shop_order' === $post->post_type ) {
 				$editor_link = self::get_editor_link( $post );
 				Alert_Manager::trigger_event(
 					9037,
@@ -1500,7 +1500,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 				}
 			}
 
-			if ( 'product' === $post->post_type ) {
+			if (  $post instanceof \WP_Post && 'product' === $post->post_type ) {
 				Alert_Manager::trigger_event(
 					9013,
 					array(
@@ -1509,9 +1509,9 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 						'ProductTitle' => sanitize_text_field( $post->post_title ),
 					)
 				);
-			} elseif ( 'shop_order' === $post->post_type ) {
-				Alert_Manager::trigger_event( 9039, array( 'OrderTitle' => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post_id ) ) ) );
 			} elseif ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
+				Alert_Manager::trigger_event( 9039, array( 'OrderTitle' => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post_id ) ) ) );
+			} elseif ( 'shop_order' === $post->post_type ) {
 				Alert_Manager::trigger_event( 9039, array( 'OrderTitle' => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post_id ) ) ) );
 			}
 		}
@@ -1532,7 +1532,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 				}
 			}
 
-			if ( 'product' === $post->post_type ) {
+			if ( $post instanceof \WP_Post && 'product' === $post->post_type ) {
 				$editor_link = self::get_editor_link( $post );
 				Alert_Manager::trigger_event(
 					9014,
@@ -1544,18 +1544,18 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 						$editor_link['name'] => $editor_link['value'],
 					)
 				);
-			} elseif ( 'shop_order' === $post->post_type ) {
+			} elseif ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
 				$editor_link = self::get_editor_link( $post );
 				Alert_Manager::trigger_event(
 					9038,
 					array(
-						'OrderID'            => esc_attr( $post->ID ),
+						'OrderID'            => esc_attr( $post->get_id() ),
 						'OrderTitle'         => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post_id ) ),
-						'OrderStatus'        => sanitize_text_field( $post->post_status ),
+						'OrderStatus'        => sanitize_text_field( $post->get_status() ),
 						$editor_link['name'] => $editor_link['value'],
 					)
 				);
-			} elseif ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
+			} elseif ( 'shop_order' === $post->post_type ) {
 				$editor_link = self::get_editor_link( $post );
 				Alert_Manager::trigger_event(
 					9038,
