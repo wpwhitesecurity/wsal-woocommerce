@@ -261,7 +261,6 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 						}
 						add_action( 'pre_post_update', array( __CLASS__, 'get_before_post_edit_data' ), 10, 2 );
 
-						// add_action( 'save_post', array( __CLASS__, 'event_changed' ), 10, 3 );
 						\add_action( 'woocommerce_admin_process_product_object', array( __CLASS__, 'inline_product_changed' ), 10 );
 						add_action( 'delete_post', array( __CLASS__, 'event_deleted' ), 10, 1 );
 						add_action( 'woocommerce_before_delete_order', array( __CLASS__, 'event_deleted' ), 10, 1 );
@@ -647,10 +646,6 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 					) {
 					self::event_creation( self::$_old_post, $post );
 				} else {
-					// Delay the checks to accommodate WooCommerce inline product changes.
-					// if ( self::check_inline_edit() ) {
-					// return;
-					// }
 
 					// Get new woocommerce product object.
 					$new_product    = wc_get_product( $post->ID );
