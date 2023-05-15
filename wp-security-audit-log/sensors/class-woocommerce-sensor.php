@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace WSAL\Plugin_Sensors;
 
+use PhpParser\Node\Expr\Instanceof_;
 use WSAL\Controllers\Alert_Manager;
 use WSAL\Helpers\Settings_Helper;
 
@@ -227,62 +228,130 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		private static $updated_shipping_field_count = 1;
 
 		/**
+		 * That needs to be registered as a frontend sensor, when the admin sets the plugin to monitor the login from 3rd parties.
+		 *
+		 * @return boolean
+		 *
+		 * @since 4.5.1
+		 */
+		public static function is_frontend_sensor(): bool {
+			$frontend_events = Settings_Helper::get_frontend_events();
+			$should_load     = ( isset( $frontend_events['woocommerce'] ) && $frontend_events['woocommerce'] );
+
+			if ( $should_load ) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
 		 * Listening to events using WP hooks.
 		 */
 		public static function init() {
 
-			if ( \class_exists( '\WC' ) ) {
+			add_action(
+				'init',
+				function() {
 
-				if ( current_user_can( 'edit_posts' ) ) {
-					add_action( 'admin_init', array( __CLASS__, 'event_admin_init' ) );
+					if ( class_exists( '\woocommerce' ) ) {
+
+						if ( current_user_can( 'edit_posts' ) ) {
+							add_action( 'admin_init', array( __CLASS__, 'event_admin_init' ) );
+						}
+						add_action( 'pre_post_update', array( __CLASS__, 'get_before_post_edit_data' ), 10, 2 );
+
+						\add_action( 'woocommerce_admin_process_product_object', array( __CLASS__, 'inline_product_changed' ), 10 );
+						add_action( 'delete_post', array( __CLASS__, 'event_deleted' ), 10, 1 );
+						add_action( 'woocommerce_before_delete_order', array( __CLASS__, 'event_deleted' ), 10, 1 );
+						add_action( 'wp_trash_post', array( __CLASS__, 'event_trashed' ), 10, 1 );
+						add_action( 'woocommerce_trash_order', array( __CLASS__, 'event_trashed' ), 10, 1 );
+						add_action( 'untrash_post', array( __CLASS__, 'event_untrashed' ) );
+						add_action( 'woocommerce_untrash_order', array( __CLASS__, 'event_untrashed' ) );
+						add_action( 'wp_head', array( __CLASS__, 'viewing_product' ), 10 );
+						add_action( 'create_product_cat', array( __CLASS__, 'event_category_creation' ), 10, 1 );
+						add_filter( 'post_edit_form_tag', array( __CLASS__, 'editing_product' ), 10, 1 );
+						add_action( 'woocommerce_order_status_changed', array( __CLASS__, 'event_order_status_changed' ), 10, 4 );
+						add_action( 'woocommerce_order_refunded', array( __CLASS__, 'event_order_refunded' ), 10, 2 );
+						add_action( 'woocommerce_bulk_action_ids', array( __CLASS__, 'event_bulk_order_actions' ), 10, 2 );
+						add_action( 'woocommerce_attribute_added', array( __CLASS__, 'event_attribute_added' ), 10, 2 );
+						add_action( 'woocommerce_before_attribute_delete', array( __CLASS__, 'event_attribute_deleted' ), 10, 3 );
+						add_action( 'woocommerce_attribute_updated', array( __CLASS__, 'event_attribute_updated' ), 10, 3 );
+						add_action( 'wp_update_term_data', array( __CLASS__, 'event_product_cat_updated' ), 10, 4 );
+						add_action( 'update_term_meta', array( __CLASS__, 'event_cat_display_updated' ), 10, 4 );
+						add_action( 'delete_product_cat', array( __CLASS__, 'event_product_cat_deleted' ), 10, 4 );
+						add_action( 'delete_product_tag', array( __CLASS__, 'event_product_tag_deleted' ), 10, 4 );
+						add_action( 'wsal_before_post_meta_create_event', array( __CLASS__, 'log_coupon_meta_created_event' ), 10, 4 );
+						add_action( 'wsal_before_post_meta_update_event', array( __CLASS__, 'log_coupon_meta_update_events' ), 10, 5 );
+						add_action( 'wsal_before_post_meta_delete_event', array( __CLASS__, 'log_coupon_meta_delete_event' ), 10, 4 );
+						add_action( 'update_user_meta', array( __CLASS__, 'before_wc_user_meta_update' ), 10, 3 );
+						add_action( 'added_user_meta', array( __CLASS__, 'wc_user_meta_updated' ), 10, 4 );
+						add_action( 'updated_user_meta', array( __CLASS__, 'wc_user_meta_updated' ), 10, 4 );
+						add_action( 'woocommerce_before_product_object_save', array( __CLASS__, 'check_product_changes_before_save' ), 10, 2 );
+						add_action( 'woocommerce_after_product_object_save', array( __CLASS__, 'check_product_changes_after_save' ), 10, 1 );
+						add_action( 'woocommerce_product_quick_edit_save', array( __CLASS__, 'inline_product_changed' ), 10, 1 );
+						add_action( 'updated_option', array( __CLASS__, 'settings_updated' ), 10, 3 );
+						add_action( 'create_product_tag', array( __CLASS__, 'event_tag_creation' ), 10, 1 );
+						add_action( 'update_postmeta', array( __CLASS__, 'detect_stock_level_change' ), 10, 4 );
+						add_action( 'woocommerce_before_shipping_zone_object_save', array( __CLASS__, 'detect_shipping_zone_change' ), 10, 2 );
+						add_action( 'woocommerce_new_webhook', array( __CLASS__, 'webhook_added' ), 10, 2 );
+						add_action( 'woocommerce_webhook_deleted', array( __CLASS__, 'webhook_deleted' ), 10, 2 );
+						add_action( 'woocommerce_before_shipping_zone_object_save', array( __CLASS__, 'detect_shipping_zone_change' ), 10, 2 );
+
+						// Orders.
+						add_action( 'woocommerce_new_order_item', array( __CLASS__, 'event_order_items_added' ), 10, 3 );
+						add_action( 'woocommerce_before_delete_order_item', array( __CLASS__, 'event_order_items_removed' ), 10, 1 );
+						add_action( 'woocommerce_before_save_order_items', array( __CLASS__, 'event_order_items_quantity_changed' ), 10, 2 );
+						add_action( 'woocommerce_refund_deleted', array( __CLASS__, 'event_order_refund_removed' ), 10, 2 );
+						add_action( 'admin_action_edit', array( __CLASS__, 'order_opened_for_editing' ), 10 );
+
+						add_action( 'woocommerce_page_wc-orders', array( __CLASS__, 'orders_actions' ) );
+
+						add_action( 'woocommerce_before_data_object_save', array( __CLASS__, 'data_store' ), 10, 2 );
+					}
+				},
+				10,
+				2
+			);
+		}
+
+		/**
+		 * Called when Woo saves data (update)
+		 *
+		 * @param \WC_Webhook    $wc_data - The modified webhook.
+		 * @param \WC_Data_Store $data_store - The Woo data store.
+		 *
+		 * @return void
+		 *
+		 * @since latest
+		 */
+		public static function data_store( $wc_data, $data_store ) {
+			if ( 'WC_Webhook_Data_Store' === $data_store->get_current_class_name() ) {
+				if ( $wc_data->get_id() ) {
+					$changes = $wc_data->get_changes();
+					if ( ! empty( $changes ) ) {
+
+						$old_webhook = wc_get_webhook( $wc_data->get_id() );
+
+						$editor_link = self::create_webhook_editor_link( $wc_data->get_id() );
+						Alert_Manager::trigger_event(
+							9122,
+							array(
+								'HookName'          => $wc_data->get_name( 'edit' ),
+								'OldHookName'       => $old_webhook->get_name(),
+								'DeliveryURL'       => $wc_data->get_delivery_url( 'edit' ),
+								'OldDeliveryURL'    => $old_webhook->get_delivery_url(),
+								'Topic'             => $wc_data->get_topic( 'edit' ),
+								'OldTopic'          => $old_webhook->get_topic(),
+								'Status'            => $wc_data->get_status( 'edit' ),
+								'OldStatus'         => $old_webhook->get_status(),
+								'Secret'            => $wc_data->get_secret( 'edit' ),
+								'OldSecret'         => $old_webhook->get_secret(),
+								'EditorLinkWebhook' => $editor_link,
+							)
+						);
+					}
 				}
-				add_action( 'pre_post_update', array( __CLASS__, 'get_before_post_edit_data' ), 10, 2 );
-
-				add_action( 'save_post', array( __CLASS__, 'event_changed' ), 10, 3 );
-				add_action( 'delete_post', array( __CLASS__, 'event_deleted' ), 10, 1 );
-				add_action( 'woocommerce_before_delete_order', array( __CLASS__, 'event_deleted' ), 10, 1 );
-				add_action( 'wp_trash_post', array( __CLASS__, 'event_trashed' ), 10, 1 );
-				add_action( 'woocommerce_trash_order', array( __CLASS__, 'event_trashed' ), 10, 1 );
-				add_action( 'untrash_post', array( __CLASS__, 'event_untrashed' ) );
-				add_action( 'woocommerce_untrash_order', array( __CLASS__, 'event_untrashed' ) );
-				add_action( 'wp_head', array( __CLASS__, 'viewing_product' ), 10 );
-				add_action( 'create_product_cat', array( __CLASS__, 'event_category_creation' ), 10, 1 );
-				add_filter( 'post_edit_form_tag', array( __CLASS__, 'editing_product' ), 10, 1 );
-				add_action( 'woocommerce_order_status_changed', array( __CLASS__, 'event_order_status_changed' ), 10, 4 );
-				add_action( 'woocommerce_order_refunded', array( __CLASS__, 'event_order_refunded' ), 10, 2 );
-				add_action( 'woocommerce_bulk_action_ids', array( __CLASS__, 'event_bulk_order_actions' ), 10, 2 );
-				add_action( 'woocommerce_attribute_added', array( __CLASS__, 'event_attribute_added' ), 10, 2 );
-				add_action( 'woocommerce_before_attribute_delete', array( __CLASS__, 'event_attribute_deleted' ), 10, 3 );
-				add_action( 'woocommerce_attribute_updated', array( __CLASS__, 'event_attribute_updated' ), 10, 3 );
-				add_action( 'wp_update_term_data', array( __CLASS__, 'event_product_cat_updated' ), 10, 4 );
-				add_action( 'update_term_meta', array( __CLASS__, 'event_cat_display_updated' ), 10, 4 );
-				add_action( 'delete_product_cat', array( __CLASS__, 'event_product_cat_deleted' ), 10, 4 );
-				add_action( 'delete_product_tag', array( __CLASS__, 'event_product_tag_deleted' ), 10, 4 );
-				add_action( 'wsal_before_post_meta_create_event', array( __CLASS__, 'log_coupon_meta_created_event' ), 10, 4 );
-				add_action( 'wsal_before_post_meta_update_event', array( __CLASS__, 'log_coupon_meta_update_events' ), 10, 5 );
-				add_action( 'wsal_before_post_meta_delete_event', array( __CLASS__, 'log_coupon_meta_delete_event' ), 10, 4 );
-				add_action( 'update_user_meta', array( __CLASS__, 'before_wc_user_meta_update' ), 10, 3 );
-				add_action( 'added_user_meta', array( __CLASS__, 'wc_user_meta_updated' ), 10, 4 );
-				add_action( 'updated_user_meta', array( __CLASS__, 'wc_user_meta_updated' ), 10, 4 );
-				add_action( 'woocommerce_before_product_object_save', array( __CLASS__, 'check_product_changes_before_save' ), 10, 2 );
-				add_action( 'woocommerce_after_product_object_save', array( __CLASS__, 'check_product_changes_after_save' ), 10, 1 );
-				add_action( 'woocommerce_product_quick_edit_save', array( __CLASS__, 'inline_product_changed' ), 10, 1 );
-				add_action( 'updated_option', array( __CLASS__, 'settings_updated' ), 10, 3 );
-				add_action( 'create_product_tag', array( __CLASS__, 'event_tag_creation' ), 10, 1 );
-				add_action( 'update_postmeta', array( __CLASS__, 'detect_stock_level_change' ), 10, 4 );
-				add_action( 'woocommerce_before_shipping_zone_object_save', array( __CLASS__, 'detect_shipping_zone_change' ), 10, 2 );
-				add_action( 'woocommerce_new_webhook', array( __CLASS__, 'webhook_added' ), 10, 2 );
-				add_action( 'woocommerce_webhook_deleted', array( __CLASS__, 'webhook_deleted' ), 10, 2 );
-				add_action( 'woocommerce_before_shipping_zone_object_save', array( __CLASS__, 'detect_shipping_zone_change' ), 10, 2 );
-
-				// Orders.
-				add_action( 'woocommerce_new_order_item', array( __CLASS__, 'event_order_items_added' ), 10, 3 );
-				add_action( 'woocommerce_before_delete_order_item', array( __CLASS__, 'event_order_items_removed' ), 10, 1 );
-				add_action( 'woocommerce_before_save_order_items', array( __CLASS__, 'event_order_items_quantity_changed' ), 10, 2 );
-				add_action( 'woocommerce_refund_deleted', array( __CLASS__, 'event_order_refund_removed' ), 10, 2 );
-				add_action( 'admin_action_edit', array( __CLASS__, 'order_opened_for_editing' ), 10 );
-
-				add_action( 'woocommerce_page_wc-orders', array( __CLASS__, 'orders_actions' ) );
 			}
 		}
 
@@ -577,10 +646,6 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 					) {
 					self::event_creation( self::$_old_post, $post );
 				} else {
-					// Delay the checks to accomodate WooCommerce inline product changes.
-					if ( self::check_inline_edit() ) {
-						return;
-					}
 
 					// Get new woocommerce product object.
 					$new_product    = wc_get_product( $post->ID );
@@ -1049,7 +1114,6 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 					array(
 						'PostID'             => esc_attr( $newpost->ID ),
 						'SKU'                => esc_attr( self::get_product_sku( $newpost->ID ) ),
-						'PostType'           => sanitize_text_field( $newpost->post_type ),
 						'ProductStatus'      => sanitize_text_field( $newpost->post_status ),
 						'ProductTitle'       => sanitize_text_field( $newpost->post_title ),
 						'OldTitle'           => sanitize_text_field( $oldpost->post_title ),
@@ -1379,7 +1443,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 				}
 			}
 
-			if ( 'product' === $post->post_type ) {
+			if ( $post instanceof \WP_Post && 'product' === $post->post_type ) {
 				Alert_Manager::trigger_event(
 					9012,
 					array(
@@ -1390,18 +1454,18 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 						'ProductUrl'    => get_post_permalink( $post->ID ),
 					)
 				);
-			} elseif ( 'shop_order' === $post->post_type ) {
+			} elseif ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
 				$editor_link = self::get_editor_link( $post );
 				Alert_Manager::trigger_event(
 					9037,
 					array(
-						'OrderID'            => esc_attr( $post->ID ),
-						'OrderTitle'         => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post->ID ) ),
-						'OrderStatus'        => sanitize_text_field( $post->post_status ),
+						'OrderID'            => esc_attr( $post->get_id() ),
+						'OrderTitle'         => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post->get_id() ) ),
+						'OrderStatus'        => sanitize_text_field( $post->get_status() ),
 						$editor_link['name'] => $editor_link['value'],
 					)
 				);
-			} elseif ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
+			} elseif ( 'shop_order' === $post->post_type ) {
 				$editor_link = self::get_editor_link( $post );
 				Alert_Manager::trigger_event(
 					9037,
@@ -1431,7 +1495,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 				}
 			}
 
-			if ( 'product' === $post->post_type ) {
+			if (  $post instanceof \WP_Post && 'product' === $post->post_type ) {
 				Alert_Manager::trigger_event(
 					9013,
 					array(
@@ -1440,9 +1504,9 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 						'ProductTitle' => sanitize_text_field( $post->post_title ),
 					)
 				);
-			} elseif ( 'shop_order' === $post->post_type ) {
-				Alert_Manager::trigger_event( 9039, array( 'OrderTitle' => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post_id ) ) ) );
 			} elseif ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
+				Alert_Manager::trigger_event( 9039, array( 'OrderTitle' => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post_id ) ) ) );
+			} elseif ( 'shop_order' === $post->post_type ) {
 				Alert_Manager::trigger_event( 9039, array( 'OrderTitle' => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post_id ) ) ) );
 			}
 		}
@@ -1463,7 +1527,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 				}
 			}
 
-			if ( 'product' === $post->post_type ) {
+			if ( $post instanceof \WP_Post && 'product' === $post->post_type ) {
 				$editor_link = self::get_editor_link( $post );
 				Alert_Manager::trigger_event(
 					9014,
@@ -1475,18 +1539,18 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 						$editor_link['name'] => $editor_link['value'],
 					)
 				);
-			} elseif ( 'shop_order' === $post->post_type ) {
+			} elseif ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
 				$editor_link = self::get_editor_link( $post );
 				Alert_Manager::trigger_event(
 					9038,
 					array(
-						'OrderID'            => esc_attr( $post->ID ),
+						'OrderID'            => esc_attr( $post->get_id() ),
 						'OrderTitle'         => sanitize_text_field( wsal_woocommerce_extension_get_order_title( $post_id ) ),
-						'OrderStatus'        => sanitize_text_field( $post->post_status ),
+						'OrderStatus'        => sanitize_text_field( $post->get_status() ),
 						$editor_link['name'] => $editor_link['value'],
 					)
 				);
-			} elseif ( is_a( $post, '\Automattic\WooCommerce\Admin\Overrides\Order' ) ) {
+			} elseif ( 'shop_order' === $post->post_type ) {
 				$editor_link = self::get_editor_link( $post );
 				Alert_Manager::trigger_event(
 					9038,
@@ -2793,7 +2857,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		 */
 		private static function check_settings_change() {
 			// Verify WooCommerce settings page nonce.
-			if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'woocommerce-settings' ) ) {
+			if ( isset( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'woocommerce-settings' ) ) {
 				// Verify settings page via $_GET array.
 				if ( isset( $_GET['page'] ) && 'wc-settings' === sanitize_text_field( wp_unslash( $_GET['page'] ) ) ) {
 					if ( isset( $_GET['tab'] ) && 'checkout' === sanitize_text_field( wp_unslash( $_GET['tab'] ) ) ) {
@@ -3201,7 +3265,6 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 							array(
 								'PostID'             => esc_attr( $product->ID ),
 								'SKU'                => esc_attr( self::get_product_sku( $product->ID ) ),
-								'PostType'           => sanitize_text_field( $product->post_type ),
 								'ProductStatus'      => sanitize_text_field( $product->post_status ),
 								'ProductTitle'       => sanitize_text_field( $product->post_title ),
 								'ProductUrl'         => get_permalink( $product->ID ),

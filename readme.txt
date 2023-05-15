@@ -76,13 +76,19 @@ Please refer to our [Support & Documentation pages](https://wpactivitylog.com/su
 
 == Changelog ==
 
-= 1.5.2 (2024-04-25) =
+= 1.5.2 (2024-05-15) =
 
 * **Plugin improvements**
 	* Support for WooCommerce HPOS.
+	* Reviewed and improved the WooCommerce sensor to improve activity log reporting and capturing of events.
 	
 * **Bug fixes**
+	* Fixed: PHP notice reported when moving an order to trash.
 	* Fatal error when creating delivery and using the Partial delivery plugin.
+	* Fixed: No event is reported in the activity log when the coupon's discount type is changed.
+	* Fixed: Wrong activity log event ID reported when adding a new coupon.
+	* Fixed: Certain WooCommerce store settings changes were not being reported in the activity log.
+	* Fatal error when WooCommerce plugin is deactivated.
 
 = 1.5.1 (2023-03-23) =
 
