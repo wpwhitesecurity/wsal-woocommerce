@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace WSAL\Plugin_Sensors;
 
+use PhpParser\Node\Expr\Instanceof_;
 use WSAL\Controllers\Alert_Manager;
 use WSAL\Helpers\Settings_Helper;
 
@@ -306,11 +307,53 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 						add_action( 'admin_action_edit', array( __CLASS__, 'order_opened_for_editing' ), 10 );
 
 						add_action( 'woocommerce_page_wc-orders', array( __CLASS__, 'orders_actions' ) );
+
+						add_action( 'woocommerce_before_data_object_save', array( __CLASS__, 'data_store' ), 10, 2 );
 					}
 				},
 				10,
 				2
 			);
+		}
+
+		/**
+		 * Called when Woo saves data (update)
+		 *
+		 * @param \WC_Webhook    $wc_data - The modified webhook.
+		 * @param \WC_Data_Store $data_store - The Woo data store.
+		 *
+		 * @return void
+		 *
+		 * @since latest
+		 */
+		public static function data_store( $wc_data, $data_store ) {
+			if ( 'WC_Webhook_Data_Store' === $data_store->get_current_class_name() ) {
+				if ( $wc_data->get_id() ) {
+					$changes = $wc_data->get_changes();
+					if ( ! empty( $changes ) ) {
+
+						$old_webhook = wc_get_webhook( $wc_data->get_id() );
+
+						$editor_link = self::create_webhook_editor_link( $wc_data->get_id() );
+						Alert_Manager::trigger_event(
+							9122,
+							array(
+								'HookName'          => $wc_data->get_name( 'edit' ),
+								'OldHookName'       => $old_webhook->get_name(),
+								'DeliveryURL'       => $wc_data->get_delivery_url( 'edit' ),
+								'OldDeliveryURL'    => $old_webhook->get_delivery_url(),
+								'Topic'             => $wc_data->get_topic( 'edit' ),
+								'OldTopic'          => $old_webhook->get_topic(),
+								'Status'            => $wc_data->get_status( 'edit' ),
+								'OldStatus'         => $old_webhook->get_status(),
+								'Secret'            => $wc_data->get_secret( 'edit' ),
+								'OldSecret'         => $old_webhook->get_secret(),
+								'EditorLinkWebhook' => $editor_link,
+							)
+						);
+					}
+				}
+			}
 		}
 
 		/**
@@ -2819,7 +2862,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		 */
 		private static function check_settings_change() {
 			// Verify WooCommerce settings page nonce.
-			if ( isset( $_POST['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'woocommerce-settings' ) ) {
+			if ( isset( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'woocommerce-settings' ) ) {
 				// Verify settings page via $_GET array.
 				if ( isset( $_GET['page'] ) && 'wc-settings' === sanitize_text_field( wp_unslash( $_GET['page'] ) ) ) {
 					if ( isset( $_GET['tab'] ) && 'checkout' === sanitize_text_field( wp_unslash( $_GET['tab'] ) ) ) {
