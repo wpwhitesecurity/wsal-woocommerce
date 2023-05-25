@@ -3522,6 +3522,15 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 
 			if ( $item instanceof \WC_Order_Item_Product ) {
 				$product = $item->get_product();
+
+				error_log( print_r( 'event_order_items_added ALT', true ) );
+				error_log( print_r( '$item_id', true ) );
+				error_log( print_r( $item, true ) );
+				error_log( print_r( '$order_id', true ) );
+				error_log( print_r( $item_id, true ) );
+				error_log( print_r( '$item', true ) );
+				error_log( print_r( $order_id, true ) );
+				
 				if ( $product instanceof \WC_Product ) {
 					$order      = wc_get_order( $order_id );
 					$order_post = wc_get_order( $order_id );
@@ -3536,6 +3545,16 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 						'EventType'        => 'added',
 						$edit_link['name'] => $edit_link['value'],
 					);
+
+					error_log( print_r( '$_POST', true ) );
+					error_log( print_r( $_POST, true ) );
+					error_log( print_r( '$_REQ', true ) );
+					error_log( print_r( $_REQUEST, true ) );
+					error_log( print_r( '$order object', true ) );
+					error_log( print_r( $order, true ) );
+					error_log( print_r( 'considered new order?', true ) );
+					error_log( print_r( self::ignore_if_new_order(), true ) );
+
 					Alert_Manager::trigger_event_if( 9130, $event_data, array( __CLASS__, 'ignore_if_new_order' ) );
 				}
 			}
@@ -3623,6 +3642,10 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 				$item    = $order->get_items()[ $item_id ];
 				$product = $item->get_product();
 
+				error_log( print_r( 'event_order_items_removed ALT', true ) );
+				error_log( print_r( '$item_id', true ) );
+				error_log( print_r( $item_id, true ) );
+
 				$order_post = wc_get_order( $order_id );
 				$edit_link  = self::get_editor_link( $order_post );
 				$event_data = array(
@@ -3635,6 +3658,16 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 					'EventType'        => 'removed',
 					$edit_link['name'] => $edit_link['value'],
 				);
+
+				error_log( print_r( '$_POST', true ) );
+				error_log( print_r( $_POST, true ) );
+				error_log( print_r( '$_REQ', true ) );
+				error_log( print_r( $_REQUEST, true ) );
+				error_log( print_r( '$order object', true ) );
+				error_log( print_r( $order, true ) );
+				error_log( print_r( 'considered new order?', true ) );
+				error_log( print_r( self::ignore_if_new_order(), true ) );
+
 				Alert_Manager::trigger_event( 9130, $event_data );
 			}
 
