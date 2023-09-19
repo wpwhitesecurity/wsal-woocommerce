@@ -22,6 +22,8 @@ add_action( 'wsal_togglealerts_append_content_to_toggle', 'wsal_woocommerce_exte
 add_action( 'wsal_togglealerts_process_save_settings', 'wsal_woocommerce_extension_togglealerts_process_save_settings', 10, 1 );
 add_filter( 'wsal_togglealerts_obsolete_events', 'wsal_woocommerce_extension_togglealerts_obsolete_events' );
 
+add_action( 'admin_footer', 'wsal_woocommerce_extension_togglealerts_js_code' );
+
 // Special events.
 add_action( 'woocommerce_download_product', 'wsal_woocommerce_extension_detect_file_download', 10, 6 );
 
@@ -105,8 +107,7 @@ function wsal_woocommerce_extension_detect_file_download( $download_get_user_ema
 function wsal_woocommerce_extension_append_content_to_toggle( $alert_id ) {
 
 	if ( 9035 === $alert_id ) {
-		$settings               = WpSecurityAuditLog::GetInstance()->settings();
-		$frontend_events        = $settings::get_frontend_events();
+		$frontend_events        = Settings_Helper::get_frontend_events();
 		$enable_wc_for_visitors = ( isset( $frontend_events['woocommerce'] ) && $frontend_events['woocommerce'] ) ? true : false;
 		?>
 		<tr class="alert-wrapper" data-alert-cat="WooCommerce" data-alert-subcat="Products" data-is-attached-to-alert="9035">
@@ -415,8 +416,6 @@ function wsal_woocommerce_extension_togglealerts_js_code() {
 		<?php
 	}
 }
-
-add_action( 'admin_footer', 'wsal_woocommerce_extension_togglealerts_js_code' );
 
 /**
  * Add obsolete events to the togglealerts view.

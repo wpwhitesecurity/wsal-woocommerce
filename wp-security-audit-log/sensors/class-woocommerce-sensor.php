@@ -1495,7 +1495,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 				}
 			}
 
-			if (  $post instanceof \WP_Post && 'product' === $post->post_type ) {
+			if ( $post instanceof \WP_Post && 'product' === $post->post_type ) {
 				Alert_Manager::trigger_event(
 					9013,
 					array(
@@ -3516,9 +3516,17 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		 * @param int    $item_id - Item ID.
 		 * @param object $item - Item data.
 		 * @param int    $order_id - Order ID.
+		 *
 		 * @return void
 		 */
 		public static function event_order_items_added( $item_id, $item, $order_id ) {
+
+			if ( 0 === $order_id ) {
+				$order_id = (int) wc_get_order_id_by_order_item_id( $item_id );
+				if ( ! isset( $order_id ) || intval( $order_id ) <= 0 ) {
+					return;
+				}
+			}
 
 			if ( $item instanceof \WC_Order_Item_Product ) {
 				$product = $item->get_product();
@@ -5231,7 +5239,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 					$event_type = 'modified';
 					$event_id   = 9067;
 
-					$meta_key = ucfirst( str_replace( '_', ' ', $meta_key ) );
+					$meta_key = ucfirst( str_replace( '_', ' ', (string) $meta_key ) );
 
 					$previous_value = isset( $old_meta_obj->val ) ? $old_meta_obj->val : '0';
 
@@ -5358,7 +5366,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 					// Event id.
 					$event_id = false;
 
-					if ( false !== strpos( $meta_key, 'billing_' ) ) {
+					if ( false !== strpos( (string) $meta_key, 'billing_' ) ) {
 						$event_id = 9083;
 
 						$billing_address_fields = array( 'billing_first_name', 'billing_last_name', 'billing_company', 'billing_country', 'billing_address_1', 'billing_address_2', 'billing_city', 'billing_state', 'billing_postcode', 'billing_phone' );
@@ -5416,7 +5424,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 								);
 							}
 						}
-					} elseif ( false !== strpos( $meta_key, 'shipping_' ) ) {
+					} elseif ( false !== strpos( (string) $meta_key, 'shipping_' ) ) {
 						$event_id = 9084;
 
 						$shipping_address_fields = array( 'shipping_first_name', 'shipping_last_name', 'shipping_company', 'shipping_country', 'shipping_address_1', 'shipping_address_2', 'shipping_city', 'shipping_state', 'shipping_postcode', 'shipping_phone' );
@@ -5550,7 +5558,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		 */
 		private static function is_woocommerce_user_meta( $meta_key ) {
 			// Remove the prefix to avoid redundancy in the meta keys.
-			$address_key = str_replace( array( 'shipping_', 'billing_' ), '', $meta_key );
+			$address_key = str_replace( array( 'shipping_', 'billing_' ), '', (string) $meta_key );
 
 			// WC address meta keys without prefix.
 			$meta_keys = array( 'first_name', 'last_name', 'company', 'country', 'address_1', 'address_2', 'city', 'state', 'postcode', 'phone', 'email' );
@@ -5570,9 +5578,9 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Sensor' ) ) {
 		 * @return string
 		 */
 		private static function get_key_for_event( $meta_key ) {
-			$meta_key = str_replace( '_', ' ', $meta_key );
+			$meta_key = str_replace( '_', ' ', (string) $meta_key );
 			$meta_key = ucwords( $meta_key );
-			$meta_key = str_replace( ' ', '', $meta_key );
+			$meta_key = str_replace( ' ', '', (string) $meta_key );
 			return $meta_key;
 		}
 

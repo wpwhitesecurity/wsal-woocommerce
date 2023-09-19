@@ -120,7 +120,7 @@ if ( ! class_exists( '\WSAL\Plugin_Sensors\WooCommerce_Public_Sensor' ) ) {
 		 */
 		private static function is_woocommerce_user_meta( $meta_key ) {
 			// Remove the prefix to avoid redundancy in the meta keys.
-			$address_key = str_replace( array( 'shipping_', 'billing_' ), '', $meta_key );
+			$address_key = str_replace( array( 'shipping_', 'billing_' ), '', (string) $meta_key );
 
 			// WC address meta keys without prefix.
 			$meta_keys = array( 'first_name', 'last_name', 'company', 'country', 'address_1', 'address_2', 'city', 'state', 'postcode', 'phone', 'email' );
